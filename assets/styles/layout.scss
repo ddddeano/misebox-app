@@ -1,0 +1,35 @@
+.layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.header,
+.footer {
+  width: 100%;
+}
+
+.content {
+  flex: 1;
+  width: 100%;
+  padding: 0.2rem;
+  padding-top: 5rem;
+}
+
+/* Media Queries for Responsive Layout above mobile-first*/
+
+/* Tablet */
+@media screen and (min-width: 768px) {
+  .main-content {
+    max-width: 600px;
+    padding: 2rem;
+  }
+}
+
+/* Desktop */
+@media screen and (min-width: 1024px) {
+  .main-content {
+    max-width: 900px;
+    padding: 3rem;
+  }
+}

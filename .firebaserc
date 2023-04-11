@@ -1,0 +1,15 @@
+{
+  "projects": {
+    "default": "misebox-78f9c"
+  },
+  "targets": {
+    "misebox-78f9c": {
+      "hosting": {
+        "misebox": [
+          "misebox"
+        ]
+      }
+    }
+  },
+  "etags": {}
+}
