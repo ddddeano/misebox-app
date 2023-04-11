@@ -10,7 +10,7 @@
     <div class="delivery">
       <label for="delivery-zone" class="label">Delivery Zone:</label>
       <select id="delivery-zone" class="select" v-model="fulfillment.deliveryZone">
-        <option v-for="zone in zones" :key="zone" :value="zone">{{ zone.name }}</option>
+        <option v-for="zone in zoneNames" :key="zone" :value="zone">{{ zone }}</option>
       </select>
       <BasketDeliveryForm />
     </div>
@@ -21,20 +21,31 @@
 
 <script setup>
 const { paymentTypes } = usePaymentTypes();
-const { zones } = useDeliveryZones();
+const { zoneNames } = useDeliveryZones();
 
-const fulfillment = useFulfillment();
+console.log("zoneNames", zoneNames);
+
+const user = useFirebaseUser();
 const basket = useBasket();
+const fulfillment = useFulfillment();
 
-fulfillment.deliveryZone = zones[0];
+fulfillment.deliveryZone = zoneNames[0];
 
-async function processOrder() {
-  // const orderData = processOrderData();
-  // await $fetch("/api/processOrder", {
-  //   method: "POST",
-  //   body: orderData,
-  // });
-}
+// async function processOrder() {
+//   // const orderData = processOrderData(user.value.uid, basket, fulfillment);
+//   try {
+//     const response = await $fetch("/api/processOrder", {
+//       method: "POST",
+//       body: {
+//         hello: "world",
+//       },
+//     });
+//     console.log("POST orderData", orderData);
+//     console.log("Response:", response);
+//   } catch (error) {
+//     console.error(error);
+//   }
+// }
 </script>
 
 <style scoped lang="scss">

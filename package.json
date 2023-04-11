@@ -5,7 +5,8 @@
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "fire": "NITRO_PRESET=firebase npm run build"
   },
   "devDependencies": {
     "firebase-admin": "^11.5.0",

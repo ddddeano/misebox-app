@@ -1,7 +1,6 @@
 <template>
   <div class="checkout-auth">
     <div>Hello {{ user ? user.displayName : "Guest" }}</div>
-    {{ user }}
     <div v-if="!user">
       <label for="email">Email:</label>
       <input type="email" id="email" v-model="email" />

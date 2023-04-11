@@ -17,5 +17,7 @@ export const useDeliveryZones = () => {
     },
   ];
 
-  return { zones };
+  const zoneNames = zones.map((zone) => zone.name);
+
+  return { zones, zoneNames };
 };

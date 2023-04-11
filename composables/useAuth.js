@@ -8,11 +8,12 @@ export const initUser = async () => {
 
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      console.log("Auth State Changed: Firebase User:" + firebaseUser + "redirecting to Dashboard");
+      console.log("Auth State Changed: Firebase User");
     } else {
       console.log("Auth State Changed: user signed out");
     }
     firebaseUser.value = auth.currentUser;
+    console.log("Auth State Changed:", firebaseUser.value);
   });
 };
 export const signOutUser = async () => {

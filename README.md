@@ -31,7 +31,7 @@ npm install -D firebase-admin firebase-functions firebase-functions-test
 
 # deploy
 
-NITRO_PRESET=firebase npm run build
+"fire": "NITRO_PRESET=firebase npm run build"
 delete output/server/node_modules -> open server in integrated terminal -> npm i -> close -> npx firebase deploy in main terminal
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.

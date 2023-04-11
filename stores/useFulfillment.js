@@ -3,7 +3,7 @@ import { defineStore } from "pinia";
 export const useFulfillment = defineStore({
   id: "fulfillment",
   state: () => ({
-    payment: "",
+    payment: "Cash",
     deliveryZone: "",
     dwelling: "",
     street: "",

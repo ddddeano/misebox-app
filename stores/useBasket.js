@@ -3,7 +3,6 @@ import { useStorage } from "@vueuse/core";
 
 export const useBasket = defineStore("basket", {
   state: () => ({
-    userId: "",
     items: useStorage("basket-items", []),
   }),
   getters: {
