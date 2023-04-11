@@ -31,21 +31,21 @@ const fulfillment = useFulfillment();
 
 fulfillment.deliveryZone = zoneNames[0];
 
-// async function processOrder() {
-//   // const orderData = processOrderData(user.value.uid, basket, fulfillment);
-//   try {
-//     const response = await $fetch("/api/processOrder", {
-//       method: "POST",
-//       body: {
-//         hello: "world",
-//       },
-//     });
-//     console.log("POST orderData", orderData);
-//     console.log("Response:", response);
-//   } catch (error) {
-//     console.error(error);
-//   }
-// }
+async function processOrder() {
+  const orderData = processOrderData();
+  try {
+    const response = await $fetch("/api/processOrder", {
+      method: "POST",
+      body: {
+        orderData: orderData,
+      },
+    });
+    console.log("POST orderData", orderData);
+    console.log("Response:", response);
+  } catch (error) {
+    console.error(error);
+  }
+}
 </script>
 
 <style scoped lang="scss">

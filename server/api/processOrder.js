@@ -6,7 +6,6 @@ export default defineEventHandler(async (event) => {
   console.log(`Order Data:`, orderData);
   console.log(`paymentManager:`, orderData.paymentManager);
   const orderRef = await firestore.collection("orders").add({
-    hello: body.hello,
     paymentManager: orderData.paymentManager,
   });
   console.log(`Order created with ID: ${orderRef.id}`);
