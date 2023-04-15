@@ -15,7 +15,7 @@
     </div>
 
     <button @click="processOrder()">Confirm Order</button>
-    {{ readApi }}
+    {{ readApi }} ok
   </div>
 </template>
 
