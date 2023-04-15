@@ -42,11 +42,11 @@ export const usePaymentTypes = () => {
     const paymentType = paymentTypes.find((type) => type.name === paymentTypeName);
     return paymentType ? paymentType.managed : undefined;
   };
-  const payByMisebox = (orderRef) => {
+  const payByMisebox = (orderId) => {
     console.log("thanks for paying with misebox, please leave your cash somewhere safe for me");
-    navigateTo(`/basket/confirmation-${orderRef}`);
+    navigateTo(`/basket/confirmation-${orderId}`);
   };
-  const payByStripe = (orderRef) => {};
+  const payByStripe = (orderId) => {};
 
   return { paymentTypes, getManagerByPaymentType, payByMisebox };
 };

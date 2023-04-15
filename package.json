@@ -9,8 +9,8 @@
     "fire": "NITRO_PRESET=firebase npm run build"
   },
   "devDependencies": {
-    "firebase-admin": "^11.5.0",
-    "firebase-functions": "^4.2.1",
+    "firebase-admin": "^11.6.0",
+    "firebase-functions": "^4.3.0",
     "firebase-functions-test": "^3.0.0",
     "nuxt": "^3.3.2",
     "nuxt-icon": "^0.3.3"

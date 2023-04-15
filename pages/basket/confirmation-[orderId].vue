@@ -1,11 +1,12 @@
 <template>
   <div class="confirmation">
-    {{ orderRef }}
+    Thanks for your order
+    {{ orderId }}
   </div>
 </template>
 
 <script setup>
-const { orderRef } = useRoute().params;
+const { orderId } = useRoute().params;
 </script>
 
 <style scoped lang="scss"></style>

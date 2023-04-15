@@ -1,25 +1,34 @@
+import { firestore } from "../utils/firebase";
+
 export default defineEventHandler(async (event) => {
-  console.log("processOrder.js received event: ");
-  const body = await readBody(event);
-  const orderData = JSON.parse(body.orderData);
+  // Read request body
+  const { orderData } = await readBody(event);
 
-  console.log(`Order Data:`, orderData);
-  console.log(`paymentManager:`, orderData.paymentManager);
+  // const orderData = JSON.parse(string);
+
   const orderRef = await firestore.collection("orders").add({
-    paymentManager: orderData.paymentManager,
+    test: "order",
+    test2: orderData,
+    paymentManager: orderData.paymentManage,
+    userId: orderData.userId,
+    items: orderData.items,
+    totalPrice: orderData.totalPrice,
+    paymentMethod: orderData.paymentMethod,
+    deliveryZone: orderData.deliveryZone,
+    dwelling: orderData.dwelling,
+    street: orderData.street,
+    notes: orderData.notes,
   });
-  console.log(`Order created with ID: ${orderRef.id}`);
 
-  return {
-    status: 200,
-    body: {
-      message: "Order processed successfully",
-      orderId: orderRef.id,
-    },
+  const result = {
+    orderId: orderRef.id,
+    paymentManager: orderData.paymentManager,
   };
-});
 
-// import { firestore } from "../utils/firebase";
+  // const { data } = ;
+
+  return result;
+});
 
 // export default defineEventHandler(async (event) => {
 //   console.log("processOrder.js received event: ", event);
@@ -27,17 +36,6 @@ export default defineEventHandler(async (event) => {
 //     const orderData = await readBody(event);
 //     console.log("processOrder.js received orderData: ", orderData);
 
-//     const orderRef = await firestore.collection("orders").add({
-//       paymentManager: "misebox", // orderData.paymentManager,
-//       userid: "test", // orderData.userid,
-//       items: "test", //  orderData.items,
-//       totalPrice: "test", // orderData.totalPrice,
-//       paymentMethod: "test", //  orderData.paymentMethod,
-//       deliveryZone: "test", // orderData.deliveryZone,
-//       dwelling: "test", // orderData.dwelling,
-//       street: "test", // orderData.street,
-//       notes: "test", //  orderData.notes,
-//     });
 //
 
 //     console.log("Returning 200 response from processOrder.js");

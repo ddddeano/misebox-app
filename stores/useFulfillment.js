@@ -10,7 +10,7 @@ export const useFulfillment = defineStore({
     notes: "",
   }),
   getters: {
-    paymentManaged() {
+    paymentManager() {
       const { paymentTypes } = usePaymentTypes();
       const paymentType = paymentTypes.find((type) => type.name === this.payment);
 

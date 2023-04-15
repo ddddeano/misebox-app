@@ -6,7 +6,6 @@
     <div class="payment-types">
       <BasketPaymentType v-for="paymentType in paymentTypes" :key="paymentType.name" :paymentType="paymentType" />
     </div>
-
     <div class="delivery">
       <label for="delivery-zone" class="label">Delivery Zone:</label>
       <select id="delivery-zone" class="select" v-model="fulfillment.deliveryZone">
@@ -16,36 +15,35 @@
     </div>
 
     <button @click="processOrder()">Confirm Order</button>
+    {{ readApi }}
   </div>
 </template>
 
 <script setup>
-const { paymentTypes } = usePaymentTypes();
-const { zoneNames } = useDeliveryZones();
-
-console.log("zoneNames", zoneNames);
-
-const user = useFirebaseUser();
+const firebaseUser = useFirebaseUser();
 const basket = useBasket();
 const fulfillment = useFulfillment();
 
+const router = useRouter();
+const { paymentTypes } = usePaymentTypes();
+const { zoneNames } = useDeliveryZones();
+
 fulfillment.deliveryZone = zoneNames[0];
 
-async function processOrder() {
-  const orderData = processOrderData();
-  try {
-    const response = await $fetch("/api/processOrder", {
-      method: "POST",
-      body: {
-        orderData: orderData,
-      },
-    });
-    console.log("POST orderData", orderData);
-    console.log("Response:", response);
-  } catch (error) {
-    console.error(error);
-  }
-}
+const readApi = ref("pre");
+const id = ref("preID");
+const manager = ref("preManager");
+
+const processOrder = async () => {
+  const { payload: read } = await $fetch("/api/ninja", {
+    method: "POST",
+    body: JSON.stringify({ life: "success" }),
+  });
+
+  readApi.value = read;
+
+  // router.push(`/basket/confirmation-${orderId.value}`);
+};
 </script>
 
 <style scoped lang="scss">

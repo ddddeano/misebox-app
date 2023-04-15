@@ -3,16 +3,18 @@
     "source": ".output/server",
     "runtime": "nodejs18"
   },
-  "hosting": {
-    "site": "misebox-78f9c",
-    "public": ".output/public",
-    "cleanUrls": true,
-    "rewrites": [
-      {
-        "source": "**",
-        "function": "server"
-      }
-    ],
-    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
-  }
+  "hosting": [
+    {
+      "site": "misebox-78f9c",
+      "public": ".output/public",
+      "cleanUrls": true,
+      "rewrites": [
+        {
+          "source": "**",
+          "function": "server"
+        }
+      ],
+      "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
+    }
+  ]
 }

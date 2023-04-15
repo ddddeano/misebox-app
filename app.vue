@@ -3,11 +3,22 @@
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
+    <button @click="clicked()">Confirm Order</button>
+    data:{{ a.ninja }}
     <ColorGrid />
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+const a = ref("a");
+const clicked = async () => {
+  const { data: ninja } = await useFetch("/api/ninja", {
+    method: "post",
+    body: { ninja: "ninja" },
+  });
+  a.value = ninja.value;
+};
+</script>
 
 <style lang="scss">
 :root {

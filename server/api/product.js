@@ -1,5 +1,3 @@
-import { firestore } from "../utils/firebase";
-
 export default defineEventHandler(async (event) => {
   const { productId } = getQuery(event);
   console.log("fetching...", productId);
