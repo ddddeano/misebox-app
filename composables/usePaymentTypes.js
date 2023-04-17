@@ -43,10 +43,18 @@ export const usePaymentTypes = () => {
     return paymentType ? paymentType.managed : undefined;
   };
   const payByMisebox = (orderId) => {
-    console.log("thanks for paying with misebox, please leave your cash somewhere safe for me");
+    console.log("thanks for paying with Misebox, please leave your cash somewhere safe for me");
+
     navigateTo(`/basket/confirmation-${orderId}`);
   };
-  const payByStripe = (orderId) => {};
+  const payByStripe = (orderId) => {
+    console.log("thanks for paying with Stripe");
+    navigateTo(`/basket/confirmation-${orderId}`);
+  };
+  const payByTwint = (orderId) => {
+    console.log("thanks for paying with Twint");
+    navigateTo(`/basket/confirmation-${orderId}`);
+  };
 
-  return { paymentTypes, getManagerByPaymentType, payByMisebox };
+  return { paymentTypes, getManagerByPaymentType, payByMisebox, payByStripe };
 };

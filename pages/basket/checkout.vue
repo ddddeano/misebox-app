@@ -13,36 +13,55 @@
       </select>
       <BasketDeliveryForm />
     </div>
-
-    <button @click="processOrder()">Confirm Order</button>
-    {{ readApi }} ok
+    <button @click="processOrder(firebaseUser)">Confirm Order</button>
   </div>
 </template>
 
 <script setup>
+import { collection, addDoc } from "firebase/firestore";
 const firebaseUser = useFirebaseUser();
 const basket = useBasket();
 const fulfillment = useFulfillment();
+const { $firestore } = useNuxtApp();
 
 const router = useRouter();
 const { paymentTypes } = usePaymentTypes();
 const { zoneNames } = useDeliveryZones();
-
 fulfillment.deliveryZone = zoneNames[0];
 
-const readApi = ref("pre");
-const id = ref("preID");
-const manager = ref("preManager");
-
-const processOrder = async () => {
-  const { payload: read } = await $fetch("/api/ninja", {
-    method: "POST",
-    body: JSON.stringify({ life: "success" }),
+const processOrder = async (user) => {
+  const userId = user.uid;
+  const { orderData } = processOrderData(userId, basket, fulfillment);
+  // Add a new document with a generated id.
+  const orderRef = await addDoc(collection($firestore, "orders"), {
+    paymentManager: orderData.paymentManager,
+    userId: orderData.userId,
+    items: orderData.items,
+    totalPrice: orderData.totalPrice,
+    paymentMethod: orderData.paymentMethod,
+    deliveryZone: orderData.deliveryZone,
+    dwelling: orderData.dwelling,
+    street: orderData.street,
+    notes: orderData.notes,
   });
 
-  readApi.value = read;
+  console.log("Document written with ID: ", orderRef.id);
+  console.log("pay with ", orderData.paymentManager);
 
-  // router.push(`/basket/confirmation-${orderId.value}`);
+  // Determine the payment manager and call the appropriate payment method function
+  switch (orderData.paymentManager) {
+    case "stripe":
+      await payByStripe(orderRef.id);
+      break;
+    case "misebox":
+      usePaymentTypes().payByMisebox(orderRef.id);
+      break;
+    case "twint":
+      await payByTwint(orderRef.id);
+      break;
+    default:
+      console.error("Invalid payment manager:", orderData.paymentManager);
+  }
 };
 </script>
 

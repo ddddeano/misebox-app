@@ -1,34 +1,36 @@
-import { firestore } from "../utils/firebase";
+// server/api/order.js
 
-export default defineEventHandler(async (event) => {
-  // Read request body
-  const { orderData } = await readBody(event);
+export default async (req, res) => {
+  if (req.method === "POST") {
+    try {
+      const orderData = JSON.parse(req.body);
 
-  // const orderData = JSON.parse(string);
+      const orderRef = await firestore.collection("orders").add({
+        test2: orderData,
+        paymentManager: orderData.paymentManager,
+        userId: orderData.userId,
+        items: orderData.items,
+        totalPrice: orderData.totalPrice,
+        paymentMethod: orderData.paymentMethod,
+        deliveryZone: orderData.deliveryZone,
+        dwelling: orderData.dwelling,
+        street: orderData.street,
+        notes: orderData.notes,
+      });
 
-  const orderRef = await firestore.collection("orders").add({
-    test: "order",
-    test2: orderData,
-    paymentManager: orderData.paymentManage,
-    userId: orderData.userId,
-    items: orderData.items,
-    totalPrice: orderData.totalPrice,
-    paymentMethod: orderData.paymentMethod,
-    deliveryZone: orderData.deliveryZone,
-    dwelling: orderData.dwelling,
-    street: orderData.street,
-    notes: orderData.notes,
-  });
+      const result = {
+        orderId: orderRef.id,
+        paymentManager: orderData.paymentManager,
+      };
 
-  const result = {
-    orderId: orderRef.id,
-    paymentManager: orderData.paymentManager,
-  };
-
-  // const { data } = ;
-
-  return result;
-});
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(500).json({ error: error.message });
+    }
+  } else {
+    res.status(405).json({ error: "Method not allowed" });
+  }
+};
 
 // export default defineEventHandler(async (event) => {
 //   console.log("processOrder.js received event: ", event);

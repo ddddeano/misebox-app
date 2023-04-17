@@ -11,7 +11,7 @@
       </div>
       <div class="delivery-note">
         <Icon name="jam:alert" />
-        <p>DELIVERY: {{ categoryDetails?.deliveryNote }}</p>
+        <p>DELIVERY: {{ sourceDetails?.deliveryNote }}</p>
       </div>
     </template>
   </div>
@@ -32,7 +32,7 @@ const props = defineProps({
 });
 const expanded = ref(props.expanded);
 
-const { data: categoryDetails } = useFetch(`/api/category?category=${props.source}`);
+const { data: sourceDetails } = useFetch(`/api/sources?source=${props.source}`);
 
 const toggleExpansion = () => {
   expanded.value = !expanded.value;

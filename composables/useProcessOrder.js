@@ -27,11 +27,14 @@ function getBasketItemsForPaymentManager(paymentManager, basketItems) {
     return basketItems.map((item) => ({
       shortName: item.shortName,
       quantity: item.quantity,
+      source: item.source,
     }));
   } else if (paymentManager === "stripe") {
     return basketItems.map((item) => ({
-      priceId: item.priceId,
+      shortName: item.shortName,
       quantity: item.quantity,
+      source: item.source,
+      priceId: item.priceId,
     }));
   } else {
     throw new Error(`Payment manager ${paymentManager} not recognized.`);
