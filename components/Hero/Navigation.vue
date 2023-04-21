@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="navigation">
     <div class="title">{{ hero.title }}</div>
     <div class="subheading">{{ hero.subheading }}</div>
     <button @click="action">{{ hero.call }}</button>
@@ -22,12 +22,18 @@ const action = () => {
 </script>
 
 <style lang="scss" scoped>
-.hero {
-  .title {
-    line-height: 1.8rem;
-  }
-  button {
-    align-self: flex-end;
-  }
+.navigation {
+  padding: 1rem;
+  box-shadow: var(--box-shadow-element);
+  border-radius: 0.5rem;
+  // height: 475px;
+}
+
+.title {
+  line-height: 1.9rem;
+  margin-left: 0.3rem;
+}
+.subheading {
+  margin-bottom: 1.5rem;
 }
 </style>

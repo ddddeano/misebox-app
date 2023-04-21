@@ -57,14 +57,14 @@ const { data: heroes } = await useFetch("/api/heros");
 
 .heroes {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(2, minmax(0, 1fr)); /* Use fixed column widths */
   grid-gap: 20px;
 }
 
 .hero {
-  display: flex;
-  flex-direction: column;
+  height: 100%; /* Remove the fixed height */
 }
+
 .product {
   padding: 0rem;
   box-shadow: var(--box-shadow-element);
@@ -78,9 +78,6 @@ const { data: heroes } = await useFetch("/api/heros");
   }
 }
 .navigation {
-  padding: 1rem;
-  box-shadow: var(--box-shadow-element);
-  border-radius: 0.5rem;
   &:hover {
     border-radius: 0.5rem;
 

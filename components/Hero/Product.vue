@@ -13,4 +13,3 @@ const props = defineProps({
 
 const { data: product } = await useFetch(`/api/product?productId=${props.hero.productId}`);
 </script>
-<style lang="scss" scoped></style>

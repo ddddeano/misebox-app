@@ -37,7 +37,8 @@ const qty = computed(() => {
   overflow: hidden;
   transition: all 0.2s ease-in-out;
   min-width: 100%;
-  max-height: 500px;
+  height: 475px;
+  padding-top: 1rem;
   padding-bottom: 1rem;
   .product-name {
     font-weight: 400;
@@ -53,7 +54,11 @@ const qty = computed(() => {
     width: 100%;
     height: 200px;
     object-fit: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
+
   img {
     height: 200px;
   }
