@@ -1,5 +1,5 @@
 <template>
-  <div class="component-basket">
+  <div class="basket-icon">
     <Icon name="ph:bag-simple-fill" />
   </div>
 </template>
@@ -9,7 +9,7 @@ const basket = useBasket();
 </script>
 
 <style scoped lang="scss">
-.component-basket {
+.basket-icon {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -17,7 +17,7 @@ const basket = useBasket();
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 50%;
-  color: var(--quaternary-color-dark);
+  // color: var(--quaternary-color-dark);
   margin-right: 1rem;
 }
 </style>

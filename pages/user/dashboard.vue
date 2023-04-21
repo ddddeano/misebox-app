@@ -1,12 +1,16 @@
 <template>
-  <div class="page dashboard">Dashbaord</div>
-  <div class="header">
-    <Framework-Avatar :url="user.photoURL" />
-    <div class="userName">{{ user.displayName }}</div>
-    <button @click="signOutUser()">Sign Out</button>
+  <div class="page">
+    <h1 class="title">Dashboard</h1>
+    <div class="header">
+      <Framework-Avatar :url="user.photoURL" />
+      <button @click="signOutUser()">Sign Out</button>
+    </div>
+    <div class="user-info">
+      <li>{{ user.displayName }}</li>
+      <li>{{ user.email }}</li>
+      <li>{{ user.displayName }}</li>
+    </div>
   </div>
-
-  <div class="user">{{ user }}</div>
 </template>
 
 <script setup>
@@ -21,5 +25,10 @@ const user = useFirebaseUser();
   display: flex;
   flex-direction: row;
   align-items: center;
+  justify-content: space-between;
+  padding-inline: 1rem;
+}
+.user-info {
+  padding-inline: 2rem;
 }
 </style>

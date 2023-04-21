@@ -24,7 +24,7 @@ const toDashboard = () => {
   height: 3rem;
   margin-right: 1rem;
   border-radius: 50%;
-  border: 2px solid var(--primary-color);
+  border: 2px solid var(--secondary-color);
   overflow: hidden;
 }
 

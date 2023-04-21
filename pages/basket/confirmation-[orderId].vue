@@ -1,10 +1,10 @@
 <template>
-  <div class="confirmation">
+  <div v-if="order" class="confirmation">
     {{ order }}
     <h1>Thanks for your order! {{ customer }}</h1>
-    <div class="order-confirmation" v-if="order">
+    <div class="order-confirmation">
       <h2>Order Details</h2>
-
+      <BasketConfirmedUser :userId="order.userId" />
       <div class="delivery-info">
         <h3>Delivery Info</h3>
         <div>Delivery Zone: {{ order.deliveryZone }}</div>
@@ -43,6 +43,7 @@
       </div>
     </div>
   </div>
+  <div else>no order</div>
 </template>
 
 <script setup>
@@ -67,10 +68,12 @@ onMounted(async () => {
 
   onSnapshot(orderRef, (doc) => {
     const data = doc.data();
-    order.value = data;
-    shopItems.value = data.items.filter((item) => item.source === "shop");
-    productionItems.value = data.items.filter((item) => item.source === "production");
-    kitchenItems.value = data.items.filter((item) => item.source === "kitchen");
+    if (data) {
+      order.value = data;
+      shopItems.value = data.items.filter((item) => item.source === "shop");
+      productionItems.value = data.items.filter((item) => item.source === "production");
+      kitchenItems.value = data.items.filter((item) => item.source === "kitchen");
+    }
   });
 });
 </script>
@@ -129,7 +132,7 @@ onMounted(async () => {
     width: 90%;
     margin: 1rem;
     padding: 1.5rem;
-    background-color: #fff;
+    // background-color: #fff;
     box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     transition: all 0.3s ease-in-out;

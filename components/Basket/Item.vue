@@ -39,12 +39,12 @@ const totalPrice = computed(() => {
 .basket-item {
   display: flex;
   flex-direction: row;
-  background: var(--secondary-color);
+  // background: var(--secondary-color);
   justify-content: space-between;
   align-items: center;
   border-radius: 10px;
   margin-bottom: 0.1rem;
-  border: 1px solid var(--secondary-color-light);
+  // border: 1px solid var(--secondary-color-light);
   width: auto;
 }
 
@@ -74,7 +74,7 @@ const totalPrice = computed(() => {
 .quantity-btn {
   border: none;
   background-color: transparent;
-  color: var(--quaternary-color);
+  // color: var(--quaternary-color);
   font-size: 3rem;
   font-weight: 700;
   cursor: pointer;
@@ -83,7 +83,7 @@ const totalPrice = computed(() => {
 }
 
 .quantity-btn:hover {
-  color: var(--quinary-color);
+  // color: var(--quinary-color);
 }
 
 .price {

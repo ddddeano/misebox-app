@@ -32,12 +32,12 @@ const emitLinkClicked = () => {
 }
 
 .nav-links a {
-  color: var(--primary-color);
+  // color: var(--primary-color);
   font-size: 1rem;
   line-height: 1.5;
   letter-spacing: 0.1em;
   transition: all 0.3s ease;
-  border-bottom: 2px solid var(--tertiary-color);
+  // border-bottom: 2px solid var(--tertiary-color);
   border-top-left-radius: 4px;
   border-top-right-radius: 4px;
   padding: 0.6rem 1rem;
@@ -48,8 +48,8 @@ const emitLinkClicked = () => {
 .nav-links a:hover,
 .nav-links a:focus,
 .nav-links a.active {
-  color: white;
-  background-color: var(--primary-color);
+  // color: white;
+  // background-color: var(--primary-color);
   /* Keep the rounded corners on hover, focus, and active */
 }
 

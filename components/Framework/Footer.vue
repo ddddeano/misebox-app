@@ -34,7 +34,7 @@
 <style scoped>
 /* Footer Styles */
 footer {
-  color: var(--primary-color);
+  /* color: var(--primary-color); */
   text-align: center;
   padding: 2rem;
 }
@@ -82,10 +82,10 @@ footer {
 }
 
 .social-links a {
-  color: var(--secondary-color);
+  /* color: var(--secondary-color); */
 }
 
 .social-links a:hover {
-  color: var(--tertiary-color);
+  /* color: var(--tertiary-color); */
 }
 </style>

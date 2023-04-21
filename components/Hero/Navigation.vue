@@ -1,41 +1,33 @@
 <template>
-    <div class="hero navigation-hero">
-        <div class="title">{{ hero.title }}</div>
-        <div class="subheading">{{ hero.subheading }}</div>
-        <button class="call-to-action" @click="action">{{ hero.call }}</button>
-    </div>
+  <div>
+    <div class="title">{{ hero.title }}</div>
+    <div class="subheading">{{ hero.subheading }}</div>
+    <button @click="action">{{ hero.call }}</button>
+  </div>
 </template>
-  
+
 <script setup>
 const router = useRouter();
 
 const props = defineProps({
-    hero: {
-        type: Object,
-        required: true,
-    },
+  hero: {
+    type: Object,
+    required: true,
+  },
 });
 
 const action = () => {
-    router.push(`/${props.hero.slug}`);
+  router.push(`/${props.hero.slug}`);
 };
 </script>
-  
+
 <style lang="scss" scoped>
-.navigation-hero {
-    background-color: var(--secondary-color-light);
-}
-
-.subheading {
-    font-size: 1rem;
-    line-height: 1.4;
-    padding: 0.4rem;
-    font-weight: 300
-}
-
-button {
+.hero {
+  .title {
+    line-height: 1.8rem;
+  }
+  button {
     align-self: flex-end;
-    white-space: nowrap;
+  }
 }
 </style>
-  

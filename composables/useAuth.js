@@ -1,5 +1,7 @@
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 
+export const errorMessage = ref("");
+
 export const initUser = async () => {
   const auth = getAuth();
   const firebaseUser = useFirebaseUser();
@@ -36,7 +38,7 @@ export const createAccount = async (email, password) => {
   const auth = getAuth();
   const credentials = await createUserWithEmailAndPassword(auth, email, password).catch((error) => {
     const errorCode = error.code;
-    const errorMessage = error.message;
+    errorMessage.value = error.message;
   });
   console.log("user" + credentials);
   return credentials;
@@ -46,7 +48,7 @@ export const signInUser = async (email, password) => {
   const auth = getAuth();
   const credentials = await signInWithEmailAndPassword(auth, email, password).catch((error) => {
     const errorCode = error.code;
-    const errorMessage = error.message;
+    errorMessage.value = error.message;
   });
   console.log("user" + credentials);
   return credentials;

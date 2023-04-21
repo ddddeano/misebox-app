@@ -9,7 +9,7 @@
           </client-only>
         </div>
         <client-only>
-          <Framework-Basket class="basket-icon" @click="navigateTo('/basket')" v-if="basket.getTotalItems > 0" />
+          <Framework-BasketIcon class="basket-icon" @click="navigateTo('/basket')" v-if="basket.getTotalItems > 0" />
           <Framework-Avatar :url="user?.photoURL || url" />
           <Framework-ToggleNavButton v-show="device === 'mobile'" :rotate="showNav" @toggle-nav="toggleNav" />
         </client-only>
@@ -51,7 +51,6 @@ header {
   height: 4.5rem;
   box-shadow: var(--box-shadow-element);
   z-index: 999;
-  background-color: var(--secondary-color-light);
   padding: 0 1rem;
 }
 
@@ -74,7 +73,7 @@ header {
   width: 100%;
   max-width: 250px;
   height: 100%;
-  background-color: var(--secondary-color);
+  // background-color: var(--secondary-color);
   top: 4.5rem;
   left: 0;
   padding-left: 2rem;

@@ -32,19 +32,19 @@ const selectOption = () => {
   padding: 10px;
   border: 1px solid var(--tertiary-color-dark);
   border-radius: 12px;
-  background-color: var(--secondary-color-light);
+  // background-color: var(--secondary-color-light);
   margin-bottom: 1rem;
 }
 
 .payment-type.disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  background-color: var(--alert-color-light);
+  // background-color: var(--alert-color-light);
 }
 
 .payment-type.active {
-  background-color: var(--quinary-color);
-  color: var(--secondary-color-light);
+  // background-color: var(--quinary-color);
+  // color: var(--secondary-color-light);
 }
 
 .payment-type:hover {

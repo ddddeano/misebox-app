@@ -55,7 +55,7 @@ const toggleExpansion = () => {
 
     .icon {
       font-size: 2.1rem;
-      color: var(--quaternary-color);
+      // color: var(--quaternary-color);
       cursor: pointer;
       transition: transform 0.2s ease-in-out;
       position: relative;
@@ -67,14 +67,14 @@ const toggleExpansion = () => {
       margin-left: 0.5rem;
       font-size: 1.2rem;
       font-weight: bold;
-      color: #3c3c3c;
+      // color: #3c3c3c;
       width: 100%;
     }
 
     .total {
       margin: 0;
       font-size: 0.9rem;
-      color: var(--quaternary-color);
+      // color: var(--quaternary-color);
       min-width: fit-content;
     }
   }
@@ -86,7 +86,7 @@ const toggleExpansion = () => {
     display: flex;
     flex-direction: row;
     align-items: center;
-    color: var(--accent-color);
+    // color: var(--accent-color);
 
     .icon {
       margin-right: 0.5rem;

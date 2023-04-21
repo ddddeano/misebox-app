@@ -1,10 +1,17 @@
 <template>
   <div class="index">
-    <div class="welcome">Welcome to Misebox! a food and tech micro nestled above Lake Brienz, Switzerland.</div>
-    <div class="welcome delivery">Now offering collection, or delivery to; Ringgenberg, and the Bödeli!</div>
-    <div v-for="hero in heroes" :key="hero.id">
-      <HeroProduct v-if="hero.type === 'Product'" :hero="hero" />
-      <HeroNavigation v-if="hero.type === 'Navigation'" :hero="hero" />
+    <div class="welcome">Welcome to Misebox! A food and tech micro nestled above Lake Brienz, Switzerland.</div>
+    <div class="content">
+      <div class="pops">
+        <div class="pop">Now offering collection, or delivery to Ringgenberg and the Bödeli!</div>
+        <div class="pop">Explore our Shop, Kitchen, and Production concepts</div>
+      </div>
+      <div class="heroes">
+        <div v-for="hero in heroes" :key="hero.id" class="hero">
+          <HeroProduct class="product" v-if="hero.type === 'Product'" :hero="hero" />
+          <HeroNavigation class="navigation" v-if="hero.type === 'Navigation'" :hero="hero" />
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -14,46 +21,72 @@ const { data: heroes } = await useFetch("/api/heros");
 </script>
 
 <style scoped lang="scss">
-.delivery {
-  background-color: var(--secondary-color-light);
+.content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.welcome {
+  font-family: "Didact Gothic", sans-serif;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 1rem;
+  box-shadow: var(--box-shadow-element);
+  padding: 1rem;
+  border-radius: 0.5rem;
+  line-height: 2rem;
+}
+
+.pops {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  background-color: var(--primary-color);
+  margin-bottom: 1rem;
+}
+
+.pop {
+  font-size: 1.2rem;
+  font-weight: bold;
+  text-align: center;
+  padding: 1rem;
+  line-height: 1.7rem;
+}
+
+.heroes {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 20px;
 }
 
 .hero {
   display: flex;
   flex-direction: column;
+}
+.product {
+  padding: 0rem;
   box-shadow: var(--box-shadow-element);
-  padding: 1rem;
-  margin-bottom: 1rem;
   border-radius: 0.5rem;
-  overflow: hidden;
-  transition: all 0.2s ease-in-out;
-  min-width: 100%;
-}
+  &:hover {
+    border-radius: 0.5rem;
 
-.hero:hover {
-  transform: translateY(-0.25rem);
-  box-shadow: var(--box-shadow-hover);
+    box-shadow: var(--box-shadow-hover);
+    background-color: var(--secondary-color);
+    color: var(--primary-color-light);
+  }
 }
+.navigation {
+  padding: 1rem;
+  box-shadow: var(--box-shadow-element);
+  border-radius: 0.5rem;
+  &:hover {
+    border-radius: 0.5rem;
 
-.hero .title {
-  font-size: 1.2rem;
-  font-weight: 900;
-}
-
-button {
-  padding: 0.5rem 1rem;
-  border: none;
-  border-radius: 0.25rem;
-  background-color: var(--primary-color-light);
-  color: #fff;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.2s ease-in-out;
-  margin-top: auto;
-}
-
-button:hover {
-  background-color: var(--primary-color);
-  box-shadow: var(--box-shadow-hover);
+    box-shadow: var(--box-shadow-hover);
+    background-color: var(--primary-color);
+    color: var(--secondary-color-light);
+  }
 }
 </style>

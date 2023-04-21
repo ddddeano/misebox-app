@@ -69,8 +69,7 @@ const processOrder = async (user) => {
 .checkout {
   padding: 1rem;
 }
-.title {
-}
+
 .price {
 }
 .payment-types {
@@ -80,7 +79,7 @@ const processOrder = async (user) => {
   align-items: center;
 }
 .delivery {
-  background-color: var(--secondary-color-light);
+  // background-color: var(--secondary-color-light);
   padding: 0.1rem 2rem;
   border-radius: 1rem;
   padding-bottom: 2rem;

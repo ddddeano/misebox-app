@@ -1,13 +1,13 @@
 <template>
-  <div class="index index-user">
-    <div class="title">Authentication</div>
-    <div class="user">{{ user ? `Already signed in! ${user.displayName}` : "Guest" }}</div>
-
-    <div v-if="user">
+  <div class="index">
+    <h1 class="title">Authentication</h1>
+    <h4>{{ user ? `Already signed in! ${user.displayName || "New User"}` : "no user, create account or sign back in:" }}</h4>
+    <div class="action" v-if="user">
       <button @click="signOutUser()">Sign Out</button>
-      <router-link to="/user/dashboard">Go to Dashboard</router-link>
+
+      <button @click="$router.push('/user/dashboard')">Dashboard</button>
     </div>
-    <AuthForm />
+    <AuthForm v-else />
   </div>
 </template>
 
@@ -16,7 +16,13 @@ const user = useFirebaseUser();
 </script>
 
 <style scoped lang="scss">
-.index-user {
-  background-color: var(--notification-color-light);
+.action {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1rem;
+  button {
+    margin-inline: 1rem;
+  }
 }
 </style>
