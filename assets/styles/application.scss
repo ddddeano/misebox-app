@@ -6,15 +6,30 @@ body {
 header {
   background-color: var(--secondary-color-light);
 }
+.mobile-nav-container {
+  background-color: var(--secondary-color-light);
+}
 
-// button {
-//   background-color: var(--primary-color);
-//   color: var(--secondary-color);
-// }
-
-// button:hover {
-//   background-color: var(--primary-color-dark);
-// }
+.nav-links a {
+  color: var(--primary-color-light);
+}
+.nav-links a:hover,
+.nav-links a:focus,
+.nav-links a.active {
+  color: var(--primary-color);
+}
+.nav-links a.active {
+  color: var(--primary-color-light);
+  border-bottom: 2px solid var(--secondary-color-dark);
+}
+button {
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+}
+button:hover {
+  background-color: var(--primary-color);
+  color: var(--secondary-color);
+}
 
 // input,
 // select {

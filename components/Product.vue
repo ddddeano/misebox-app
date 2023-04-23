@@ -37,9 +37,9 @@ const qty = computed(() => {
   overflow: hidden;
   transition: all 0.2s ease-in-out;
   min-width: 100%;
-  height: 475px;
   padding-top: 1rem;
   padding-bottom: 1rem;
+
   .product-name {
     font-weight: 400;
     font-size: 1.2rem;
@@ -81,7 +81,7 @@ const qty = computed(() => {
 .product-minus {
   position: absolute;
   top: 200px;
-  right: calc((100% - 200px) / 2);
+  right: 10px;
   box-shadow: var(--box-shadow-button);
   font-size: 0.8rem;
   font-weight: bold;
@@ -96,6 +96,9 @@ const qty = computed(() => {
   align-items: center;
   background-color: var(--secondary-color-dark);
   color: var(--primary-color);
+  @media (min-width: 576px) {
+    right: 50px;
+  }
 }
 
 .product-qty.show,

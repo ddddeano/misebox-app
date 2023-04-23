@@ -1,13 +1,8 @@
 <template>
   <header>
-    <div class="mobile-elements">
+    <div class="elements">
       <Framework-Logo @click="closeNav" />
       <div class="header-right">
-        <div v-show="device !== 'mobile'">
-          <client-only>
-            <Framework-NavigationLinks />
-          </client-only>
-        </div>
         <client-only>
           <Framework-BasketIcon class="basket-icon" @click="navigateTo('/basket')" v-if="basket.getTotalItems > 0" />
           <Framework-Avatar :url="user?.photoURL || url" />
@@ -16,6 +11,7 @@
       </div>
     </div>
     <div class="trans-wrapper">
+      <div class="overlay" v-show="device === 'mobile' && showNav" @click="closeNav"></div>
       <client-only>
         <transition name="mobile-nav-transition">
           <Framework-NavigationLinks class="mobile-nav-container" v-show="device === 'mobile' && showNav" @link-clicked="closeNav" />
@@ -54,7 +50,14 @@ header {
   padding: 0 1rem;
 }
 
-.mobile-elements {
+.big-screen {
+  position: fixed;
+  top: 4.5rem;
+  width: 100%;
+  z-index: 998;
+  padding: 0 1rem;
+}
+.elements {
   display: flex;
   align-items: center;
   justify-content: space-between;

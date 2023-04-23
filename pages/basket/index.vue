@@ -1,13 +1,13 @@
 <template>
   <div class="index">
-    <h1 class="title">Confirm Basket</h1>
-    <div class="description">have a look at your basket</div>
+    <h1 class="title">Basket Confirmation</h1>
+    <div class="description">confirm your basket</div>
     <div class="basket-summary">
       <div v-for="source in basket.sources" :key="source">
         <BasketSummary :expanded="true" :source="source" />
       </div>
     </div>
-    <button @click="checkout">Confirm</button>
+    <button class="button" @click="checkout">Confirm</button>
   </div>
 </template>
 
@@ -20,4 +20,9 @@ const checkout = () => {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.button {
+  display: flex;
+  margin: auto;
+}
+</style>

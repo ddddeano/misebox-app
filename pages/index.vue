@@ -1,42 +1,21 @@
 <template>
   <div class="index">
     <div class="welcome">Welcome to Misebox! A food and tech micro nestled above Lake Brienz, Switzerland.</div>
-    <div class="content">
-      <div class="pops">
-        <div class="pop">Now offering collection, or delivery to Ringgenberg and the Bödeli!</div>
-        <div class="pop">Explore our Shop, Kitchen, and Production concepts</div>
-      </div>
-      <div class="heroes">
-        <div v-for="hero in heroes" :key="hero.id" class="hero">
-          <HeroProduct class="product" v-if="hero.type === 'Product'" :hero="hero" />
-          <HeroNavigation class="navigation" v-if="hero.type === 'Navigation'" :hero="hero" />
-        </div>
-      </div>
+    <div class="pops">
+      <div class="pop">Now offering collection, or delivery to Ringgenberg and the Bödeli!</div>
+      <div class="pop">Explore our Shop, Kitchen, and Production concepts</div>
     </div>
+    <HeroGrid />
   </div>
 </template>
 
-<script setup>
-const { data: heroes } = await useFetch("/api/heros");
-</script>
+<script setup></script>
 
 <style scoped lang="scss">
-.content {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  flex-wrap: wrap;
-}
-
 .welcome {
-  font-family: "Didact Gothic", sans-serif;
-  font-size: 1.5rem;
-  text-align: center;
-  margin-bottom: 1rem;
   box-shadow: var(--box-shadow-element);
-  padding: 1rem;
   border-radius: 0.5rem;
-  line-height: 2rem;
+  margin-inline: 00.5rem;
 }
 
 .pops {
@@ -53,37 +32,5 @@ const { data: heroes } = await useFetch("/api/heros");
   text-align: center;
   padding: 1rem;
   line-height: 1.7rem;
-}
-
-.heroes {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr)); /* Use fixed column widths */
-  grid-gap: 20px;
-}
-
-.hero {
-  height: 100%; /* Remove the fixed height */
-}
-
-.product {
-  padding: 0rem;
-  box-shadow: var(--box-shadow-element);
-  border-radius: 0.5rem;
-  &:hover {
-    border-radius: 0.5rem;
-
-    box-shadow: var(--box-shadow-hover);
-    background-color: var(--secondary-color);
-    color: var(--primary-color-light);
-  }
-}
-.navigation {
-  &:hover {
-    border-radius: 0.5rem;
-
-    box-shadow: var(--box-shadow-hover);
-    background-color: var(--primary-color);
-    color: var(--secondary-color-light);
-  }
 }
 </style>

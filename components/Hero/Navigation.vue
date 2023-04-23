@@ -1,7 +1,7 @@
 <template>
   <div class="navigation">
     <div class="title">{{ hero.title }}</div>
-    <div class="subheading">{{ hero.subheading }}</div>
+    <div v-if="hero.subheading" class="subheading">{{ hero.subheading }}</div>
     <button @click="action">{{ hero.call }}</button>
   </div>
 </template>
@@ -26,7 +26,6 @@ const action = () => {
   padding: 1rem;
   box-shadow: var(--box-shadow-element);
   border-radius: 0.5rem;
-  // height: 475px;
 }
 
 .title {
@@ -34,6 +33,6 @@ const action = () => {
   margin-left: 0.3rem;
 }
 .subheading {
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
 </style>
