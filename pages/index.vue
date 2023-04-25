@@ -15,9 +15,8 @@
 .welcome {
   box-shadow: var(--box-shadow-element);
   border-radius: 0.5rem;
-  margin-inline: 00.5rem;
+  margin-inline: 0.5rem;
 }
-
 .pops {
   display: flex;
   flex-direction: row;

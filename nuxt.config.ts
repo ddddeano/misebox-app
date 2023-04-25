@@ -3,7 +3,8 @@ export default defineNuxtConfig({
   nitro: {
     preset: "firebase",
   },
-  ssr: true,
+  css: ["@/assets/styles/colorTheme1.scss", "@/assets/styles/defaults.scss", "@/assets/styles/global.scss", "@/assets/styles/application.scss"],
+  // ssr: true,
   target: "server",
   runtimeConfig: {
     public: {

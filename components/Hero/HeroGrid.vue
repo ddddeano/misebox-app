@@ -50,10 +50,11 @@ const gridFilter = (heroes, layout, index) => {
 .mobile-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
-  grid-gap: 20px;
+  grid-gap: 8px;
   grid-auto-rows: minmax(0, auto);
   align-items: start;
-  column-gap: 20px; /* Add this line to set the gap between columns */
+  column-gap: 8px;
+  padding-inline: 0.3rem;
 }
 
 .larger-grid {
@@ -85,7 +86,7 @@ const gridFilter = (heroes, layout, index) => {
 }
 
 .column {
-  row-gap: 20px; /* Add this line to set the gap between rows in a column */
+  row-gap: 8px; /* Add this line to set the gap between rows in a column */
 }
 
 .hero {
@@ -98,8 +99,6 @@ const gridFilter = (heroes, layout, index) => {
 
 .product {
   padding: 0rem;
-  box-shadow: var(--box-shadow-element);
-  border-radius: 0.5rem;
 
   &:hover {
     border-radius: 0.5rem;

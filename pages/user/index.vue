@@ -1,7 +1,7 @@
 <template>
   <div class="index">
     <h1 class="title">Authentication</h1>
-    <h4>{{ user ? `Already signed in! ${user.displayName || "New User"}` : "no user, create account or sign back in:" }}</h4>
+    <h4>{{ user ? `Already signed in! as: ${user.displayName || "New User"}` : "no user, create account or sign back in:" }}</h4>
     <div class="action" v-if="user">
       <button @click="signOutUser()">Sign Out</button>
 

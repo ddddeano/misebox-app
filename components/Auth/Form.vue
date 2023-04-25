@@ -11,7 +11,7 @@
         <input type="password" id="password" v-model="password" />
       </div>
     </div>
-    <alert>{{ message(em) }}</alert>
+    <div>{{ message(em) }}</div>
     <button @click="signInUser(email, password)">Sign In</button>
     <button @click="createAccount(email, password)">Create Account</button>
 

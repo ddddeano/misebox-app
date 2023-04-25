@@ -60,7 +60,8 @@ label {
 p {
   margin-top: 0;
 }
-.index {
+.index,
+.page {
   .title {
     font-size: 2rem;
     font-weight: bold;
@@ -84,7 +85,6 @@ p {
     width: 800px;
   }
 }
-
 .icon {
   // <IconCSS name="uil:github" class="icon" />
   font-size: 2rem;

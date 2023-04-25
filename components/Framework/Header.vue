@@ -5,7 +5,7 @@
       <div class="header-right">
         <client-only>
           <Framework-BasketIcon class="basket-icon" @click="navigateTo('/basket')" v-if="basket.getTotalItems > 0" />
-          <Framework-Avatar :url="user?.photoURL || url" />
+          <Framework-Avatar size="medium" :url="user?.photoURL || url" />
           <Framework-ToggleNavButton v-show="device === 'mobile'" :rotate="showNav" @toggle-nav="toggleNav" />
         </client-only>
       </div>

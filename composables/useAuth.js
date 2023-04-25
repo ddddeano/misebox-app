@@ -1,4 +1,5 @@
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, deleteUser } from "firebase/auth";
+import { doc, setDoc } from "firebase/firestore";
 
 export const errorMessage = ref("");
 
@@ -22,14 +23,23 @@ export const signOutUser = async () => {
   const auth = getAuth();
   const result = await auth.signOut();
   console.log("user" + result);
+  router.push("/");
   return result;
 };
 
 export const googleAuth = async () => {
   const provider = new GoogleAuthProvider();
   signInWithPopup(getAuth(), provider)
-    .then((result) => {
+    .then(async (result) => {
       console.log("signing in with Google");
+      console.dir("result DIR:", result);
+      const isNewUser = result.additionalUserInfo?.isNewUser;
+      if (isNewUser) {
+        const userId = result.user.uid;
+        processNewUser("google", userId);
+      } else {
+        console.log("Returning user:", result.user.uid);
+      }
     })
     .catch((error) => {});
 };
@@ -40,6 +50,7 @@ export const createAccount = async (email, password) => {
     const errorCode = error.code;
     errorMessage.value = error.message;
   });
+  processNewUser(email, credentials.user.id);
   console.log("user" + credentials);
   return credentials;
 };
@@ -52,4 +63,29 @@ export const signInUser = async (email, password) => {
   });
   console.log("user" + credentials);
   return credentials;
+};
+
+export const processNewUser = async (method, id) => {
+  await setDoc(
+    doc(db, "users", id, {
+      method: method,
+      avatar: "https://unsplash.com/photos/K4mSJ7kc0As?utm_source=unsplash&utm_medium=referral&utm_content=creditShareLink",
+    })
+  );
+  console.log("new user", id);
+};
+
+export const deleteUserFromAuth = async () => {
+  const auth = getAuth();
+  const userId = auth.currentUser.uid;
+  try {
+    await deleteUser(auth, userId);
+    console.log("User deleted from Firebase Authentication");
+
+    // Return success message
+    return "User successfully deleted from Firebase Authentication";
+  } catch (error) {
+    console.error(error);
+    return "Error deleting user from Firebase Authentication";
+  }
 };

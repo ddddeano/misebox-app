@@ -18,11 +18,7 @@ const { data: products } = await useFetch("/api/products?source=shop");
 .products {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  grid-gap: 20px;
-}
-
-.product {
-  box-shadow: var(--box-shadow-element);
-  border-radius: 0.5rem;
+  grid-gap: 8px;
+  padding-inline: 0.3rem;
 }
 </style>

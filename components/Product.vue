@@ -39,6 +39,8 @@ const qty = computed(() => {
   min-width: 100%;
   padding-top: 1rem;
   padding-bottom: 1rem;
+  box-shadow: var(--box-shadow-element);
+  border-radius: 0.5rem;
 
   .product-name {
     font-weight: 400;
@@ -81,7 +83,7 @@ const qty = computed(() => {
 .product-minus {
   position: absolute;
   top: 200px;
-  right: 10px;
+  right: 14px;
   box-shadow: var(--box-shadow-button);
   font-size: 0.8rem;
   font-weight: bold;
