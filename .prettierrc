@@ -1,0 +1,11 @@
+{
+  "bracketSpacing": true,
+  "overrides": [
+    {
+      "files": "firebasehooks/*.js",
+      "options": {
+        "bracketSpacing": false
+      }
+    }
+  ]
+}

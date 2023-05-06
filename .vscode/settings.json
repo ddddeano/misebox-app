@@ -1,3 +1,8 @@
 {
-    "workbench.colorTheme": "Abyss",
+    "workbench.colorTheme": "Monokai", // "Abyss"
+    "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": false,
+    "prettier.enable": true,
+    "[javascript]": {
+        "editor.formatOnSave": true,
+    }
 }

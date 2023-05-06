@@ -8,6 +8,9 @@ $colors: (
   secondary-color: $secondary-color,
   secondary-color-light: lighten($secondary-color, 17%),
   secondary-color-dark: darken($secondary-color, 17%),
+  delivery-shop: #f5a623,
+  delivery-kitchen: #4caf50,
+  delivery-production: #2196f3,
 );
 
 :root {

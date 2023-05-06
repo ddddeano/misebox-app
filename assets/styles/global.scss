@@ -32,6 +32,14 @@ button {
   border: none;
   cursor: pointer;
   outline: none;
+
+  &.icon-text-button {
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 12px 12px 24px;
+    box-shadow: inherit;
+  }
 }
 
 button:hover {
@@ -78,8 +86,9 @@ p {
     font-family: "Didact Gothic", sans-serif;
     font-size: 1.5rem;
     text-align: center;
-    margin-bottom: 1rem;
-    padding: 1rem;
+    margin-bottom: 0.5rem;
+    padding-inline: 1rem;
+    line-height: normal;
   }
   @media screen and (min-width: 800px) {
     width: 800px;
@@ -88,4 +97,11 @@ p {
 .icon {
   // <IconCSS name="uil:github" class="icon" />
   font-size: 2rem;
+}
+.delivery-info {
+  color: white;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1rem;
+  background-color: var(--color); /* Apply the custom color property */
 }

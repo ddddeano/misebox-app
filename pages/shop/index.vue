@@ -1,7 +1,12 @@
 <template>
   <div class="index">
     <h1 class="title">Shop</h1>
-    <div class="description">Have a look at our lovely products, more items being added frequently!</div>
+    <div class="description">
+      Have a look at our lovely products, more items being added frequently!
+    </div>
+    <div class="delivery-info" style="--color: var(--delivery-shop)">
+      Delivery info for the shop section
+    </div>
     <div class="products">
       <div v-for="product in products" :key="product.id">
         <Product :product="product" />
