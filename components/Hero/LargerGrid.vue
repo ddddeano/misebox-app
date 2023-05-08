@@ -1,5 +1,5 @@
 <template>
-  <div v-show="device !== 'mobile'" class="larger-grid">
+  <div class="larger-grid">
     <div class="column">
       <div v-for="hero in gridFilter(heroes, 3, 0)" :key="hero.id" class="hero">
         <HeroProduct
@@ -61,6 +61,7 @@ const props = defineProps({
   grid-gap: 20px;
   grid-auto-rows: minmax(0, auto);
   align-items: start;
+  margin-inline: 0.5rem;
 }
 
 @media (min-width: 768px) {

@@ -3,31 +3,10 @@
     <NuxtLayout>
       <NuxtPage />
     </NuxtLayout>
-    <button @click="callFunction()">Firebase</button>
-    <div>LoadStaus:{{ isLoading }}</div>
-    <div>Result{{ result }}</div>
   </div>
 </template>
 
-<script setup>
-const { $functions } = useNuxtApp();
-import { httpsCallable } from "firebase/functions";
-
-const error = ref("");
-const result = ref("before");
-const isLoading = ref(false);
-
-const callFunction = async () => {
-  const myFunction = httpsCallable($functions, "myFunction");
-  myFunction({ name: "Deano" })
-    .then((result) => {
-      console.log(result.data);
-    })
-    .catch((error) => {
-      console.error(error);
-    });
-};
-</script>
+<script setup></script>
 
 <style lang="scss">
 :root {

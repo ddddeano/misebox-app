@@ -6,7 +6,7 @@
           class="icon-text-button toggle-button"
           @click="clickDeliveryToggle()"
         >
-          <span class="text">Check Deliveries</span>
+          <span class="text">Deliveries</span>
           <Icon class="icon" name="jam:chevron-circle-down" />
         </button>
       </div>
@@ -20,7 +20,7 @@
         </button>
       </div>
     </div>
-    <div v-show="viewDeliveryInfos" class="delivery-infos delivery-infos-show">
+    <div v-show="viewDeliveryInfos" class="pop delivery show">
       <div class="delivery-heading">Delivery Information</div>
 
       <div class="delivery-list">
@@ -42,17 +42,7 @@
         </div>
       </div>
     </div>
-    <div
-      v-show="viewChocolateInfos"
-      class="chocolate-infos chocolate-infos-show"
-    >
-      <h1>Chocolate</h1>
-      <p>
-        if you understand the history of chocolate then you will know that
-        switzerland did not become famouse for its chocolate, but rather how it
-        Revolutionised the industry!!!
-      </p>
-    </div>
+    <div v-show="viewChocolateInfos" class="pop chocolate show">Chocolate</div>
   </div>
 </template>
 
@@ -71,6 +61,10 @@ const clickChocolateToggle = () => {
 </script>
 
 <style scoped lang="scss">
+.quicklook {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
 .ca-buttons {
   display: flex;
   flex-direction: row;
@@ -80,58 +74,24 @@ const clickChocolateToggle = () => {
 
 .toggle-button {
   width: 100%;
-  min-width: 150px;
+  min-width: 170px;
+  background-color: var(--primary-color);
+  color: var(--secondary-color-dark);
+  border: 1px solid var(--secondary-color-dark);
 }
 
 .icon {
   font-size: 1rem;
-  color: white;
+  color: var(--secondary-color-dark);
   transition: transform 0.2s ease-in-out;
   margin-left: 1rem;
   vertical-align: -0.2rem;
 }
 
-.delivery-infos {
-  align-items: center;
-  background-color: var(--primary-color);
-  padding: 1rem;
-  border-radius: 0.5rem;
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease-out;
-}
-
-.delivery-heading {
-  font-size: 1.5rem;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 1rem;
-}
-
-.delivery-list {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-
-.delivery-item {
-  display: flex;
-  gap: 1rem;
-}
-
-.delivery-item-title {
-  font-size: 1.2rem;
-  font-weight: bold;
-  text-transform: uppercase;
-}
-
-.delivery-item-details {
-  font-size: 1rem;
-  flex-grow: 1;
-}
-
-.delivery-infos-show {
-  max-height: 1000px;
-  transition: max-height 0.5s ease-in-out;
+.pop {
+  .show {
+    max-height: 1000px;
+    transition: max-height 1s ease-in-out;
+  }
 }
 </style>
