@@ -7,14 +7,14 @@ exports.newUserSignUp = functions.auth.user().onCreate((user) => {
   const miseboxDefaultImageUrl =
     "gs://misebox-78f9c.appspot.com/charlesdeluvio-K4mSJ7kc0As-unsplash.jpg";
   return admin
-    .firestore()
-    .collection("users")
-    .doc(user.uid)
-    .set({
-      provider: provider,
-      welcome: "New User!",
-      imageurl: provider.photoURL || miseboxDefaultImageUrl,
-    });
+      .firestore()
+      .collection("users")
+      .doc(user.uid)
+      .set({
+        provider: provider,
+        badge: "New User!",
+        imageUrl: provider.photoURL || miseboxDefaultImageUrl,
+      });
 });
 
 // allable functions

@@ -9,11 +9,14 @@
     "fire": "NITRO_PRESET=firebase npm run build"
   },
   "devDependencies": {
+    "eslint": "^8.40.0",
+    "eslint-config-prettier": "^8.8.0",
     "firebase-admin": "^11.6.0",
     "firebase-functions": "^4.3.0",
     "firebase-functions-test": "^3.0.0",
     "nuxt": "^3.3.2",
-    "nuxt-icon": "^0.3.3"
+    "nuxt-icon": "^0.3.3",
+    "prettier": "^2.8.8"
   },
   "dependencies": {
     "@pinia/nuxt": "^0.4.7",

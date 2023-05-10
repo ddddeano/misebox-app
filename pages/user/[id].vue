@@ -1,8 +1,9 @@
 <template>
   <div class="page">
     <h1 class="title">Dashboard</h1>
-    {{ user }}
-    <div class="header">
+    {{ userInfo }}
+    <!-- {{ user.uid }} -->
+    <!-- <div class="header">
       <Framework-Avatar size="large" :url="user.photoURL" />
       <div>
         <button @click="signOutUser()">Sign Out</button>
@@ -13,7 +14,7 @@
       <li><strong>Name:</strong> {{ user.displayName }}</li>
       <li><strong>Email:</strong> {{ user.email }}</li>
       <li><strong>Username:</strong> {{ user.displayName }}</li>
-    </div>
+    </div> -->
   </div>
 </template>
 
@@ -23,7 +24,10 @@
 definePageMeta({
   middleware: ["auth"],
 });
-const user = useFirebaseUser();
+
+const { id } = useRoute().params
+const { data: userInfo } = await useFetch(`/api/fetch-user-info?id=${id}`);
+
 </script>
 
 <style scoped lang="scss">

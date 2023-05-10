@@ -1,27 +1,22 @@
 <template>
-  <div :class="['component-avatar', `size-${size}`]" @click="toDashboard">
+  <div :class="['component-avatar', `size-${size}`]">
     <img :src="url" alt="User's avatar" />
   </div>
 </template>
 
 <script setup>
 const props = defineProps({
+  url: {
+    type: String,
+    required: true
+  },
   size: {
     type: String,
     required: true,
     validator: (value) => ["small", "medium", "large"].includes(value),
   },
-  url: {
-    type: String,
-    required: true,
-  },
 });
 
-const router = useRouter();
-
-const toDashboard = () => {
-  router.push("/user/dashboard");
-};
 </script>
 
 <style scoped>

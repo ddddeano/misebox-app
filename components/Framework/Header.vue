@@ -2,10 +2,11 @@
   <header>
     <div class="elements">
       <Framework-Logo @click="closeNav" />
+      {{ url }}
       <div class="header-right">
         <client-only>
           <Framework-BasketIcon class="basket-icon" @click="navigateTo('/basket')" v-if="basket.getTotalItems > 0" />
-          <Framework-Avatar size="medium" :url="user?.photoURL || url" />
+          <Framework-Avatar class="avatar" @click="navigateToDashboard()" size="medium" :url="url"/>
           <Framework-ToggleNavButton v-show="device === 'mobile'" :rotate="showNav" @toggle-nav="toggleNav" />
         </client-only>
       </div>
@@ -25,14 +26,28 @@
 const { device } = useDevice();
 const { showNav, toggleNav, closeNav } = useShowNav();
 const basket = useBasket();
-
 const user = useFirebaseUser();
+const router = useRouter()
 
-const url = "https://images.pexels.com/photos/1851164/pexels-photo-1851164.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2";
+const url = ref("../../assets/none.svg");
 
-// "https://images.pexels.com/photos/1851164/pexels-photo-1851164.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+ 
+watch(user, async (newUser) => {
+  if (newUser) {
+    const { data: userInfo } = await useFetch(`/api/fetch-user-info?id=${user.value.uid}`);
+      console.log(userInfo.value);
+      url.value = userInfo.value.imageUrl
+  }
+});
 
-// const avatarUrl = "https://img.freepik.com/premium-vector/cute-cat-eating-burger-cartoon-illustration_257245-310.jpg?w=1800";
+const navigateToDashboard = () => {
+  if (user.value) {
+    router.push(`/user/${user.value.uid}`);
+  } else {
+    router.push('/user');
+  }
+};
+
 </script>
 
 <style scoped lang="scss">
@@ -49,7 +64,9 @@ header {
   z-index: 999;
   padding: 0 1rem;
 }
-
+.avatar {
+  cursor: pointer
+}
 .big-screen {
   position: fixed;
   top: 4.5rem;
