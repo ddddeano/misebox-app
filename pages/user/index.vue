@@ -28,7 +28,7 @@ const { $firestore } = useNuxtApp();
 const { user, signOutUser, exists } = useMiseboxUser($firestore);
 
 const navigateToDashboard = () => {
-  if (user.value) {
+  if (exists) {
     router.push(`/user/${user.value.uid}`);
   } else {
     router.push('/user');
