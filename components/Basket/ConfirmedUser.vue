@@ -24,3 +24,12 @@ onMounted(async () => {
   });
 });
 </script>
+
+
+onMounted(async() => {
+  const { firestore } = useFirebase();
+  const docRef = doc(firestore, `animals`, 'dog');
+  onSnapshot(docRef, (snap) => {
+      data.value = snap.data();
+  });
+});

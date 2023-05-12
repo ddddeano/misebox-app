@@ -5,9 +5,7 @@ import {
   onAuthStateChanged,
   GoogleAuthProvider,
   signInWithPopup,
-  deleteUser,
 } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
 
 export const errorMessage = ref("");
 
@@ -27,13 +25,7 @@ export const initUser = async () => {
     console.log("Auth State Changed:", firebaseUser.value);
   });
 };
-export const signOutUser = async () => {
-  const auth = getAuth();
-  const result = await auth.signOut();
-  console.log("user" + result);
-  router.push("/");
-  return result;
-};
+
 
 export const googleAuth = async () => {
   const provider = new GoogleAuthProvider();

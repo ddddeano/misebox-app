@@ -2,11 +2,10 @@
   <header>
     <div class="elements">
       <Framework-Logo @click="closeNav" />
-      {{ url }}
       <div class="header-right">
         <client-only>
           <Framework-BasketIcon class="basket-icon" @click="navigateTo('/basket')" v-if="basket.getTotalItems > 0" />
-          <Framework-Avatar class="avatar" @click="navigateToDashboard()" size="medium" :url="url"/>
+          <Framework-Avatar class="avatar" @click="navigateToDashboard()" size="medium" :url="user.imageUrl"/>
           <Framework-ToggleNavButton v-show="device === 'mobile'" :rotate="showNav" @toggle-nav="toggleNav" />
         </client-only>
       </div>
@@ -26,29 +25,18 @@
 const { device } = useDevice();
 const { showNav, toggleNav, closeNav } = useShowNav();
 const basket = useBasket();
-const user = useFirebaseUser();
-const router = useRouter()
-
-const url = ref("../../assets/none.svg");
-
- 
-watch(user, async (newUser) => {
-  if (newUser) {
-    const { data: userInfo } = await useFetch(`/api/fetch-user-info?id=${user.value.uid}`);
-      console.log(userInfo.value);
-      url.value = userInfo.value.imageUrl
-  }
-});
+const { user } = useMiseboxUser()
+const router = useRouter();
 
 const navigateToDashboard = () => {
-  if (user.value) {
+  if (user.exists) {
     router.push(`/user/${user.value.uid}`);
   } else {
     router.push('/user');
   }
 };
-
 </script>
+
 
 <style scoped lang="scss">
 header {
@@ -116,10 +104,5 @@ header {
   transition: all 0.2s ease-in-out;
   cursor: pointer;
 }
-// @media (min-width: 576px) {
-//   /* Target devices larger than mobile */
-//   header {
-//     padding-top: 3rem; /* Adjust padding for larger devices */
-//   }
-// }
+
 </style>

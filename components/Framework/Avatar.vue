@@ -21,6 +21,9 @@ const props = defineProps({
 
 <style scoped>
 .component-avatar {
+  display: flex;
+  justify-content: center;
+  align-items: center;
   border-radius: 50%;
   border: 2px solid var(--secondary-color);
   overflow: hidden;
@@ -44,9 +47,10 @@ const props = defineProps({
   margin-right: 1.5rem;
 }
 
-.avatar img {
+img {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  object-position: center;
 }
 </style>

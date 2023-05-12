@@ -6,15 +6,28 @@ exports.newUserSignUp = functions.auth.user().onCreate((user) => {
   const provider = user.providerData[0];
   const miseboxDefaultImageUrl =
     "gs://misebox-78f9c.appspot.com/charlesdeluvio-K4mSJ7kc0As-unsplash.jpg";
+  console.log("provider:", provider);
+  console.log("imageUrl:", provider.photoURL || miseboxDefaultImageUrl);
+
   return admin
-      .firestore()
-      .collection("users")
-      .doc(user.uid)
-      .set({
-        provider: provider,
-        badge: "New User!",
-        imageUrl: provider.photoURL || miseboxDefaultImageUrl,
-      });
+    .firestore()
+    .collection("users")
+    .doc(user.uid)
+    .set({
+      provider: provider,
+      badge: "New User!",
+      imageUrl: provider.photoURL || miseboxDefaultImageUrl,
+      displayName: provider.displayName || "",
+      email: provider.email || "",
+      faves: [],
+      payment: "Cash",
+      deliveryZone: "",
+      dwelling: "",
+      street: "",
+      notes: "",
+      ordersMade: 0,
+      ordersCompleted: 0,
+    });
 });
 
 // allable functions
