@@ -4,17 +4,38 @@
       <Framework-Logo @click="closeNav" />
       <div class="header-right">
         <client-only>
-          <Framework-BasketIcon class="basket-icon" @click="navigateTo('/basket')" v-if="basket.getTotalItems > 0" />
-          <Framework-Avatar class="avatar" @click="navigateToDashboard()" size="medium" :url="user.imageUrl"/>
-          <Framework-ToggleNavButton v-show="device === 'mobile'" :rotate="showNav" @toggle-nav="toggleNav" />
+          <Framework-BasketIcon
+            class="basket-icon"
+            @click="navigateTo('/basket')"
+            v-if="basket.getTotalItems > 0"
+          />
+          <Framework-Avatar
+            class="avatar"
+            @click="navigateToDashboard()"
+            size="medium"
+            :url="user.userInfo.imageUrl"
+          />
+          <Framework-ToggleNavButton
+            v-show="device === 'mobile'"
+            :rotate="showNav"
+            @toggle-nav="toggleNav"
+          />
         </client-only>
       </div>
     </div>
     <div class="trans-wrapper">
-      <div class="overlay" v-show="device === 'mobile' && showNav" @click="closeNav"></div>
+      <div
+        class="overlay"
+        v-show="device === 'mobile' && showNav"
+        @click="closeNav"
+      ></div>
       <client-only>
         <transition name="mobile-nav-transition">
-          <Framework-NavigationLinks class="mobile-nav-container" v-show="device === 'mobile' && showNav" @link-clicked="closeNav" />
+          <Framework-NavigationLinks
+            class="mobile-nav-container"
+            v-show="device === 'mobile' && showNav"
+            @link-clicked="closeNav"
+          />
         </transition>
       </client-only>
     </div>
@@ -25,18 +46,17 @@
 const { device } = useDevice();
 const { showNav, toggleNav, closeNav } = useShowNav();
 const basket = useBasket();
-const { user } = useMiseboxUser()
+const user = useMiseboxUserStore();
 const router = useRouter();
 
 const navigateToDashboard = () => {
   if (user.exists) {
-    router.push(`/user/${user.value.uid}`);
+    router.push(`/user/${user.userInfo.id}`);
   } else {
     router.push('/user');
   }
 };
 </script>
-
 
 <style scoped lang="scss">
 header {
@@ -53,7 +73,7 @@ header {
   padding: 0 1rem;
 }
 .avatar {
-  cursor: pointer
+  cursor: pointer;
 }
 .big-screen {
   position: fixed;
@@ -104,5 +124,4 @@ header {
   transition: all 0.2s ease-in-out;
   cursor: pointer;
 }
-
 </style>

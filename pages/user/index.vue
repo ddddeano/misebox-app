@@ -1,14 +1,14 @@
 <template>
-  <div class="profile-card">
+  <div class="page">
     <h1 class="title">Authentication</h1>
-    <div class="card" v-if="exists">
+    <div class="card" v-if="user.exists">
       <div class="avatar">
-        <img :src="user.imageUrl" :alt="user.displayName" />
+        <img :src="user.userInfo.imageUrl" :alt="user.userInfo.displayName" />
       </div>
       <div class="details">
-        <h4>{{ user.displayName }}</h4>
-        <p>{{ user.badge }}</p>
-        <p>{{ user.deliveryZone }}</p>
+        <h4>{{ user.userInfo.displayName }}</h4>
+        <p>{{ user.userInfo.badge }}</p>
+        <p>{{ user.userInfo.deliveryZone }}</p>
         <div class="action">
           <button @click="signOutUser()">Sign Out</button>
           <button @click="navigateToDashboard()">Dashboard</button>
@@ -18,18 +18,17 @@
     <div class="message" v-else>
       <h4>no user, create account or sign back in:</h4>
     </div>
-    <AuthForm />
+    <AuthForm v-if="!user.exists" />
   </div>
 </template>
 
 <script setup>
 const router = useRouter();
-const { $firestore } = useNuxtApp();
-const { user, signOutUser, exists } = useMiseboxUser($firestore);
+const user = useMiseboxUserStore();
 
 const navigateToDashboard = () => {
-  if (exists) {
-    router.push(`/user/${user.value.uid}`);
+  if (user.exists) {
+    router.push(`/user/${user.userInfo.id}`);
   } else {
     router.push('/user');
   }
@@ -37,18 +36,15 @@ const navigateToDashboard = () => {
 </script>
 
 <style scoped lang="scss">
-.profile-card {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
 .card {
   display: flex;
   flex-direction: column;
   align-items: center;
   margin-top: 2rem;
-  border: 1px solid var(--secondary-color);
+  border-radius: 8px;
+  border: 2px solid var(--secondary-color);
+  box-shadow: var(--box-shadow-element);
+  padding: 1rem;
 }
 
 .avatar img {
@@ -56,6 +52,7 @@ const navigateToDashboard = () => {
   height: 120px;
   border-radius: 50%;
   object-fit: cover;
+  border: 2px solid var(--secondary-color);
 }
 
 .details {

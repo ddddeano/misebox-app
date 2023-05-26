@@ -58,10 +58,14 @@ audio:not([controls]) {
   display: none;
 }
 
-[type="checkbox"],
-[type="radio"] {
+[type='checkbox'],
+[type='radio'] {
   box-sizing: border-box;
   padding: 0;
+}
+
+Icon {
+  cursor: pointer;
 }
 
 @media screen and (min-width: 480px) {

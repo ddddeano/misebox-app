@@ -23,12 +23,12 @@
 
 <script setup>
 const em = errorMessage;
-const email = ref("");
-const password = ref("");
+const email = ref('');
+const password = ref('');
 
 const message = (em) => {
   if (em.length > 0) {
-    return "Error please try again";
+    return 'Error please try again';
   }
 };
 </script>
@@ -48,5 +48,6 @@ button,
 .googleAuth {
   margin-top: 1rem;
   width: 250px;
+  cursor: pointer;
 }
 </style>

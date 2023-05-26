@@ -1,74 +1,69 @@
 import {
   getAuth,
-  createUserWithEmailAndPassword,
-  signInWithEmailAndPassword,
   onAuthStateChanged,
   GoogleAuthProvider,
   signInWithPopup,
-} from "firebase/auth";
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+} from 'firebase/auth';
 
-export const errorMessage = ref("");
+export const errorMessage = ref('');
 
 export const initUser = async () => {
   const auth = getAuth();
-  const firebaseUser = useFirebaseUser();
-  firebaseUser.value = auth.currentUser;
-  const router = useRouter();
+  const miseboxUserStore = useMiseboxUserStore();
 
-  onAuthStateChanged(auth, (user) => {
+  onAuthStateChanged(auth, async (user) => {
     if (user) {
-      console.log("Auth State Changed: Firebase User");
+      console.log('Auth State Changed: User');
+      await miseboxUserStore.logInMiseBox(user.uid);
     } else {
-      console.log("Auth State Changed: user signed out");
+      console.log('Auth State Changed: User signed out');
+      miseboxUserStore.resetMiseboxUser();
     }
-    firebaseUser.value = auth.currentUser;
-    console.log("Auth State Changed:", firebaseUser.value);
   });
-};
-
-
-export const googleAuth = async () => {
-  const provider = new GoogleAuthProvider();
-  signInWithPopup(getAuth(), provider)
-    .then(async (result) => {
-      console.log("signing in with Google");
-      console.dir("result DIR:", result);
-      const isNewUser = result.additionalUserInfo?.isNewUser;
-      if (isNewUser) {
-        const userId = result.user.uid;
-        processNewUser("google", userId);
-      } else {
-        console.log("Returning user:", result.user.uid);
-      }
-    })
-    .catch((error) => {});
 };
 
 export const createAccount = async (email, password) => {
   const auth = getAuth();
-  const credentials = await createUserWithEmailAndPassword(
-    auth,
-    email,
-    password
-  ).catch((error) => {
-    const errorCode = error.code;
+
+  try {
+    await createUserWithEmailAndPassword(auth, email, password);
+  } catch (error) {
     errorMessage.value = error.message;
-  });
-  processNewUser(email, credentials.user.id);
-  console.log("user" + credentials);
-  return credentials;
+  }
+};
+
+export const googleAuth = async () => {
+  const provider = new GoogleAuthProvider();
+  const auth = getAuth();
+
+  try {
+    await signInWithPopup(auth, provider);
+    console.log('Signing in with Google');
+  } catch (error) {
+    console.error(error);
+  }
 };
 
 export const signInUser = async (email, password) => {
   const auth = getAuth();
-  const credentials = await signInWithEmailAndPassword(
-    auth,
-    email,
-    password
-  ).catch((error) => {
-    const errorCode = error.code;
+  try {
+    await signInWithEmailAndPassword(auth, email, password);
+  } catch (error) {
     errorMessage.value = error.message;
-  });
-  console.log("user" + credentials);
-  return credentials;
+  }
+};
+
+export const signOutUser = async () => {
+  const auth = getAuth();
+  const miseboxUserStore = useMiseboxUserStore();
+
+  try {
+    await signOut(auth);
+    miseboxUserStore.resetMiseboxUser();
+  } catch (error) {
+    console.error(error);
+  }
 };

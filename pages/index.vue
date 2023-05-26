@@ -4,6 +4,13 @@
       Welcome to Misebox! A food and tech micro nestled above Lake Brienz,
       Switzerland.
     </div>
+    <MoleculesCalenderDay
+      :day="16"
+      :month="5"
+      :year="2023"
+      :booked="true"
+      bookingId="ABC123"
+    />
     <HeroQuickLookButtons />
     <HeroGrid />
   </div>

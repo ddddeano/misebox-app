@@ -6,9 +6,7 @@
   </div>
 </template>
 
-<script setup>
-const { data: userInfo} = await useFetch("/api/fetch-user-info?id=AMVb5i33W9YWq60LK7OY2NDx5Vq2")
-</script>
+<script setup></script>
 
 <style lang="scss">
 :root {

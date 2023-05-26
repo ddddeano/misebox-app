@@ -1,56 +1,112 @@
 <template>
-  <div class="page">
-    <h1 class="title">Dashboard</h1>
-    {{ userInfo }}
-    <!-- {{ user.uid }} -->
-    <!-- <div class="header">
-      <Framework-Avatar size="large" :url="user.photoURL" />
-      <div>
-        <button @click="signOutUser()">Sign Out</button>
-        <button @click="deleteUserFromAuth()">Delete Account</button>
+  <div>
+    <div class="text-fields">
+      {{ user.userInfo }}
+      <label for="displayName">Display Name:</label>
+      <input
+        type="text"
+        name="displayName"
+        id="displayName"
+        v-model="user.userInfo.displayName"
+        @input="updateField('displayName')"
+        :placeholder="user.userInfo.displayName"
+        :class="{ updated: showUpdateEffect.displayName }"
+      />
+
+      <label for="email">Email:</label>
+      <input
+        type="email"
+        name="email"
+        id="email"
+        v-model="user.userInfo.email"
+        @input="updateField('email')"
+        :placeholder="user.userInfo.email"
+        :class="{ updated: showUpdateEffect.email }"
+      />
+    </div>
+    <div class="logins">
+      {{ user.userInfo.logins }}
+    </div>
+    <div class="avatar-selection">
+      <div
+        v-for="(avatarUrl, index) in avatarUrls"
+        :key="index"
+        class="avatar-container"
+      >
+        <img
+          class="avatar"
+          @click="updateField('imageUrl')"
+          :src="avatarUrl"
+          :class="{
+            'selected-avatar': user.userInfo.imageUrl === avatarUrl,
+            updated: showUpdateEffect.imageUrl,
+          }"
+          alt="Avatar"
+        />
       </div>
     </div>
-    <div class="user-info">
-      <li><strong>Name:</strong> {{ user.displayName }}</li>
-      <li><strong>Email:</strong> {{ user.email }}</li>
-      <li><strong>Username:</strong> {{ user.displayName }}</li>
-    </div> -->
   </div>
 </template>
 
-<Icon name="jam:minus-rectangle-f" />
-
 <script setup>
-definePageMeta({
-  middleware: ["auth"],
+const user = useMiseboxUserStore();
+const avatarUrls = useAvatarUrls();
+
+const showUpdateEffect = reactive({
+  displayName: false,
+  email: false,
+  imageUrl: false,
 });
 
-const { id } = useRoute().params
-const { data: userInfo } = await useFetch(`/api/fetch-user-info?id=${id}`);
+const updateField = async (fieldName) => {
+  await user.updateFieldInFirebase(fieldName);
 
+  showUpdateEffect[fieldName] = true;
+  setTimeout(() => {
+    showUpdateEffect[fieldName] = false;
+  }, 1000);
+};
 </script>
 
-<style scoped lang="scss">
-.header {
+<style scoped>
+input.updated {
+  animation: updated-animation 1s ease-out;
+}
+
+@keyframes updated-animation {
+  0%,
+  100% {
+    background-color: white;
+  }
+  50% {
+    background-color: rgba(0, 255, 0, 0.2);
+  }
+}
+
+.avatar-selection {
   display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: space-between;
-  padding-inline: 1rem;
-  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin: 20px 0;
 }
-.user-info {
-  padding-inline: 2rem;
+
+.avatar-container {
+  margin: 10px;
 }
-strong {
-  margin-right: 0.5rem;
+
+.avatar-container img {
+  width: 100px;
+  height: 100px;
+  object-fit: cover;
+  cursor: pointer;
+  border: 2px solid transparent;
 }
-ul {
-  list-style: none;
-  padding: 0;
-  margin: 0;
+
+.selected-avatar {
+  border-color: #00a1ff;
 }
-li {
-  margin-bottom: 0.5rem;
+
+.text-fields {
+  margin-left: 1rem;
 }
 </style>

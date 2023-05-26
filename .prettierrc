@@ -10,8 +10,8 @@
       "options": {
         "semi": true,
         "singleQuote": false,
-        "tabWidth": 2,
-        "indent": 4
+        "useTabs": false,
+        "indent": 6
       }
     }
   ]
