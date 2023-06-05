@@ -9,6 +9,9 @@ export default defineNuxtConfig({
     '@/assets/styles/global.scss',
     '@/assets/styles/application.scss',
   ],
+  modules: [
+    ['@pinia/nuxt', { autoImports: ['defineStore', 'definePiniaStore'] }],
+  ],
   // ssr: true,
   target: 'server',
   runtimeConfig: {

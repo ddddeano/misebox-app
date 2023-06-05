@@ -24,6 +24,7 @@
     "@pinia/nuxt": "^0.4.7",
     "@vueuse/nuxt": "^9.13.0",
     "firebase": "^9.19.1",
+    "moment": "^2.29.4",
     "pinia": "^2.0.33",
     "sass": "^1.60.0",
     "unctx": "^2.1.2"

@@ -33,9 +33,17 @@ export const useMiseboxUserStore = defineStore('miseboxUser', {
     },
 
     async updateOnLogIn(fulfilled) {
+      console.log('triggered', this.userInfo.logins);
       if (fulfilled) {
         this.userInfo.logins += 1;
+
+        if (this.userInfo.logins === 1) {
+          this.userInfo.badge = 'new user';
+        } else if (this.userInfo.logins === 2) {
+          this.userInfo.badge = 'welcome back';
+        }
         await this.updateFieldInFirebase('logins');
+        await this.updateFieldInFirebase('badge');
       }
     },
     async setMiseboxUser(id) {
@@ -43,47 +51,51 @@ export const useMiseboxUserStore = defineStore('miseboxUser', {
         try {
           const { $firestore } = useNuxtApp();
           const userRef = doc($firestore, 'users', id);
-          let fulfilled = false;
 
-          onSnapshot(userRef, (snapshot) => {
-            const userInfo = snapshot.data();
+          const unsubscribe = onSnapshot(userRef, (snapshot) => {
+            console.log(snapshot.id, 'snapshot');
+            const userData = snapshot.data();
             this.userInfo = {
-              id: userInfo.id,
-              displayName: userInfo.displayName,
-              imageUrl: userInfo.imageUrl || DEFAULT_IMAGE_URL,
-              badge: userInfo.badge,
-              email: userInfo.email,
-              faves: userInfo.faves,
-              payment: userInfo.payment || 'Cash',
-              deliveryZone: userInfo.deliveryZone,
-              dwelling: userInfo.dwelling,
-              street: userInfo.street,
-              notes: userInfo.notes,
-              ordersMade: userInfo.ordersMade || 0,
-              ordersCompleted: userInfo.ordersCompleted || 0,
-              logins: userInfo.logins || 0,
-              notifications: userInfo.notifications || [],
+              id: snapshot.id,
+              displayName: userData.displayName,
+              imageUrl: userData.imageUrl || DEFAULT_IMAGE_URL,
+              badge: userData.badge,
+              email: userData.email,
+              faves: userData.faves,
+              payment: userData.payment || 'Cash',
+              deliveryZone: userData.deliveryZone,
+              dwelling: userData.dwelling,
+              street: userData.street,
+              notes: userData.notes,
+              ordersMade: userData.ordersMade || 0,
+              ordersCompleted: userData.ordersCompleted || 0,
+              logins: userData.logins || 0,
+              notifications: userData.notifications || [],
             };
 
             console.log('Misebox User set:', this.userInfo);
             this.exists = true;
-            fulfilled = true;
-          });
+            unsubscribe();
 
-          resolve({ fulfilled });
+            resolve({ fulfilled: true }); // Resolve the promise with fulfilled: true
+          });
         } catch (error) {
           console.error('Error fetching user info:', error);
           this.resetMiseboxUser();
-          reject(error); // Reject the promise in case of error
+          reject(error);
         }
       });
     },
 
     async updateFieldInFirebase(fieldName) {
+      console.log(fieldName, 'fieldName');
       try {
         const { $firestore } = useNuxtApp();
-        const userRef = doc($firestore, 'users', this.userInfo.id);
 
+        console.log(this.userInfo.id, 'id');
+
+        const userRef = doc($firestore, 'users', this.userInfo.id);
+        console.log(userRef, 'ref');
         await updateDoc(userRef, {
           [fieldName]: this.userInfo[fieldName],
         });
