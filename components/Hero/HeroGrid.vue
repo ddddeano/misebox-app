@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-const { data: heroes } = await useFetch("/api/heros");
+const { data: heroes } = await useFetch('/api/heros');
 const { device } = useDevice();
 </script>
 
@@ -27,8 +27,6 @@ const { device } = useDevice();
   justify-content: center;
   grid-row: span 2;
   .product {
-    padding: 0rem;
-
     &:hover {
       border-radius: 0.5rem;
       box-shadow: var(--box-shadow-hover);

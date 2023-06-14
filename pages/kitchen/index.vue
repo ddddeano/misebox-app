@@ -1,62 +1,64 @@
 <template>
   <div class="index">
     <h1 class="title">Kitchen</h1>
-    <p class="description">Kitchen is open. Select a day to book your slot.</p>
-    <div>{{ store.calendarDates }}</div>
-    <div class="grid">
+    <CalendarProductsToggle
+      v-if="device === 'mobile'"
+      @update:view="handleToggle"
+    />
+    <div class="content" :class="{ 'content--split': device !== 'mobile' }">
       <div
-        class="grid-item"
-        v-for="day in calendarDates"
-        :key="day.dateString"
-        @click="selectDay(day)"
+        class="products"
+        v-show="device !== 'mobile' || (device === 'mobile' && showProducts)"
       >
-        {{ day.dateString }}
-        <div v-if="selectedDay.dateString === day.dateString">
-          <div
-            v-for="slot in day.kitchen.slots"
-            :key="slot.time"
-            @click.stop="bookSlot(slot)"
-          >
-            {{ slot.time }}: {{ slot.status }}
-          </div>
+        <div v-for="product in products" :key="product.id">
+          <Product :product="product" />
         </div>
       </div>
+      <CalendarGrid
+        source="kitchen"
+        v-show="device !== 'mobile' || (device === 'mobile' && !showProducts)"
+      />
     </div>
   </div>
 </template>
 
 <script setup>
-const store = useCalendarStore();
-store.fetchFirestoreDates();
+const { device } = useDevice();
+const { data: products } = useFetch('/api/products?source=kitchen');
+const calendar = useCalendarStore();
+const showProducts = ref(true);
 
-const calendarDates = store.calendarDates;
+onMounted(() => {
+  calendar.loadCalendar();
+});
 
-const selectedDay = ref(null);
-
-function selectDay(day) {
-  selectedDay.value = day;
-}
-
-function bookSlot(slot) {
-  // handle booking logic here
-  console.log(`Booked: ${slot.time}`);
-}
+const handleToggle = (view) => {
+  showProducts.value = view === 'products';
+};
 </script>
 
-<style lang="scss" scoped>
-.grid {
-  display: flex;
-  flex-wrap: wrap;
-  margin: auto;
+<style scoped lang="scss">
+.title {
+  margin-bottom: 0.5em;
+  text-align: center;
+  font-weight: bold;
+  font-size: 2em;
 }
 
-.grid-item {
-  width: 200px;
-  height: 200px;
-  border: 1px solid #ddd;
-  margin: 10px;
-  padding: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  cursor: pointer;
+.content {
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-gap: 1em;
+}
+
+.content--split {
+  grid-template-columns: 1fr 1fr;
+}
+
+.products {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 8px;
+  padding-inline: 0.3rem;
 }
 </style>

@@ -14,9 +14,11 @@ export const useMiseboxUserStore = defineStore('miseboxUser', {
       email: '',
       faves: [],
       payment: 'Cash',
-      deliveryZone: '',
-      dwelling: '',
-      street: '',
+      defaultAddress: {
+        deliveryZone: '',
+        dwelling: '',
+        street: '',
+      },
       notes: '',
       ordersMade: 0,
       ordersCompleted: 0,
@@ -28,8 +30,8 @@ export const useMiseboxUserStore = defineStore('miseboxUser', {
 
   actions: {
     async logInMiseBox(id) {
-      const { fulfilled } = await this.setMiseboxUser(id);
-      await this.updateOnLogIn(fulfilled);
+      await this.getAndSetMiseboxUser(id);
+      await this.updateOnLogIn(this.exists);
     },
 
     async updateOnLogIn(fulfilled) {
@@ -46,58 +48,71 @@ export const useMiseboxUserStore = defineStore('miseboxUser', {
         await this.updateFieldInFirebase('badge');
       }
     },
-    async setMiseboxUser(id) {
-      return new Promise((resolve, reject) => {
-        try {
-          const { $firestore } = useNuxtApp();
-          const userRef = doc($firestore, 'users', id);
 
-          const unsubscribe = onSnapshot(userRef, (snapshot) => {
-            console.log(snapshot.id, 'snapshot');
-            const userData = snapshot.data();
+    async getAndSetMiseboxUser(id) {
+      const { $firestore } = useNuxtApp();
+      const userRef = doc($firestore, 'users', id);
+
+      onSnapshot(
+        userRef,
+        (docSnapshot) => {
+          if (docSnapshot.exists()) {
+            const userData = docSnapshot.data();
             this.userInfo = {
-              id: snapshot.id,
+              id: docSnapshot.id,
               displayName: userData.displayName,
               imageUrl: userData.imageUrl || DEFAULT_IMAGE_URL,
               badge: userData.badge,
               email: userData.email,
               faves: userData.faves,
               payment: userData.payment || 'Cash',
-              deliveryZone: userData.deliveryZone,
-              dwelling: userData.dwelling,
-              street: userData.street,
+              defaultAddress: {
+                deliveryZone: userData.defaultAddress.deliveryZone,
+                dwelling: userData.defaultAddress.dwelling,
+                street: userData.defaultAddress.street,
+              },
               notes: userData.notes,
               ordersMade: userData.ordersMade || 0,
               ordersCompleted: userData.ordersCompleted || 0,
               logins: userData.logins || 0,
               notifications: userData.notifications || [],
             };
-
-            console.log('Misebox User set:', this.userInfo);
             this.exists = true;
-            unsubscribe();
-
-            resolve({ fulfilled: true }); // Resolve the promise with fulfilled: true
-          });
-        } catch (error) {
+            console.log('Misebox User set:', this.userInfo);
+          } else {
+            console.error(`No such document! ID: ${id}`);
+            this.resetMiseboxUser();
+          }
+        },
+        (error) => {
           console.error('Error fetching user info:', error);
-          this.resetMiseboxUser();
-          reject(error);
-        }
-      });
+        },
+      );
     },
 
     async updateFieldInFirebase(fieldName) {
       console.log(fieldName, 'fieldName');
       try {
         const { $firestore } = useNuxtApp();
-
         console.log(this.userInfo.id, 'id');
 
         const userRef = doc($firestore, 'users', this.userInfo.id);
         console.log(userRef, 'ref');
+
+        // Define path to nested field value
+        let fieldValue;
+        let fieldParts = fieldName.split('.');
+        if (fieldParts.length > 1) {
+          fieldValue = fieldParts.reduce(
+            (obj, part) => obj[part],
+            this.userInfo,
+          );
+        } else {
+          fieldValue = this.userInfo[fieldName];
+        }
+
         await updateDoc(userRef, {
-          [fieldName]: this.userInfo[fieldName],
+          [fieldName]: fieldValue,
         });
 
         console.log(`Field ${fieldName} updated in Firebase`);
@@ -115,9 +130,11 @@ export const useMiseboxUserStore = defineStore('miseboxUser', {
         email: '',
         faves: [],
         payment: 'Cash',
-        deliveryZone: '',
-        dwelling: '',
-        street: '',
+        defaultAddress: {
+          deliveryZone: '',
+          dwelling: '',
+          street: '',
+        },
         notes: '',
         ordersMade: 0,
         ordersCompleted: 0,

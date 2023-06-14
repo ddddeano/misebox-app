@@ -1,7 +1,7 @@
-@import url("https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Poppins:wght@300;500;700&display=swap");
+@import url('https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Poppins:wght@300;500;700&display=swap');
 
 body {
-  font-family: "Poppins", sans-serif;
+  font-family: 'Poppins', sans-serif;
   margin: 0;
   padding: 0;
   overflow-x: hidden;
@@ -12,7 +12,7 @@ html {
   padding-top: 0;
 }
 h1 {
-  margin: auto;
+  margin: 0;
 }
 h2,
 h3,
@@ -70,10 +70,12 @@ p {
 }
 .index,
 .page {
+  padding: 0.5em;
+  align-items: center;
+
   .title {
     font-size: 2rem;
     font-weight: bold;
-    margin-left: 1rem;
   }
   .subheading {
     font-size: 1rem;
@@ -83,7 +85,7 @@ p {
   }
   .description,
   .welcome {
-    font-family: "Didact Gothic", sans-serif;
+    font-family: 'Didact Gothic', sans-serif;
     font-size: 1.5rem;
     text-align: center;
     margin-bottom: 0.5rem;

@@ -4,13 +4,17 @@
       Welcome to Misebox! A food and tech micro nestled above Lake Brienz,
       Switzerland.
     </div>
-
     <HeroQuickLookButtons />
     <HeroGrid />
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+const calendar = useCalendarStore();
+onMounted(() => {
+  calendar.loadCalendar();
+});
+</script>
 
 <style scoped lang="scss">
 .welcome {

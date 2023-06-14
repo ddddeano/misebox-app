@@ -1,20 +1,30 @@
 <template>
-  <div class="product">
+  <div :class="['product', product.source]">
     <div class="product-name">{{ product.name }}</div>
     <div class="product-image-container">
       <img :src="product.images[0]" alt="" />
-      <div class="product-qty" @click="basket.incrementQuantity(product.productId)" :class="{ show: qty > 0 }">{{ qty }}</div>
-      <div class="product-minus" @click="basket.decrementQuantity(product.productId)" :class="{ show: qty > 0 }">-</div>
+      <div
+        class="product-qty"
+        @click="incrementQuantity"
+        :class="{ show: qty > 0 }"
+      >
+        {{ qty }}
+      </div>
+      <div
+        class="product-minus"
+        @click="decrementQuantity"
+        :class="{ show: qty > 0 }"
+      >
+        -
+      </div>
     </div>
     <div class="short-name">{{ product.shortName }}</div>
     <div class="product-price">{{ product.price }}</div>
-    <button @click="basket.addItem(product)">Add to Basket</button>
+    <button class="cart-button" @click="addItem">Add to cart</button>
   </div>
 </template>
 
 <script setup>
-const basket = useBasket();
-
 const props = defineProps({
   product: {
     type: Object,
@@ -22,9 +32,23 @@ const props = defineProps({
   },
 });
 
+const fulfillment = useFulfillment();
+
 const qty = computed(() => {
-  return basket.getQuantityForProduct(props.product.productId);
+  return fulfillment.getQuantityForProduct(props.product.productId);
 });
+
+const addItem = () => {
+  fulfillment.addItem(props.product);
+};
+
+const incrementQuantity = () => {
+  fulfillment.incrementQuantity(props.product.productId);
+};
+
+const decrementQuantity = () => {
+  fulfillment.decrementQuantity(props.product.productId);
+};
 </script>
 
 <style lang="scss" scoped>
@@ -41,12 +65,13 @@ const qty = computed(() => {
   padding-bottom: 1rem;
   box-shadow: var(--box-shadow-element);
   border-radius: 0.5rem;
+  text-align: center;
 
   .product-name {
     font-weight: 400;
     font-size: 1.2rem;
-    margin-bottom: 1rem;
     text-align: center;
+    padding-inline: 0.5rem;
   }
   .short-name {
     font-size: 1.2rem;
@@ -54,16 +79,13 @@ const qty = computed(() => {
   }
   .product-image-container {
     width: 100%;
-    height: 200px;
-    object-fit: cover;
+    height: 10rem;
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 0.5rem;
   }
 
-  img {
-    height: 200px;
-  }
   .product-price {
     border: 2px solid var(--primary-color);
     border-radius: 1.5rem;
@@ -75,7 +97,7 @@ const qty = computed(() => {
   }
 
   .product-price::after {
-    content: " CHF ";
+    content: ' CHF ';
   }
 }
 
@@ -102,12 +124,27 @@ const qty = computed(() => {
     right: 50px;
   }
 }
-
+.cart-button {
+  margin-inline: 1.5rem;
+}
 .product-qty.show,
 .product-minus.show {
   opacity: 1;
 }
 .product-minus {
   margin-top: 2rem;
+}
+
+/* Specific overrides for each source */
+.product.shop {
+  /* Add shop-specific styles here */
+}
+
+.product.kitchen {
+  /* Add kitchen-specific styles here */
+}
+
+.product.production {
+  /* Add production-specific styles here */
 }
 </style>

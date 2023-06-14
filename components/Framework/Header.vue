@@ -7,7 +7,7 @@
           <Framework-BasketIcon
             class="basket-icon"
             @click="navigateTo('/basket')"
-            v-if="basket.getTotalItems > 0"
+            v-if="fulfillment.getTotalItems > 0"
           />
           <Framework-Avatar
             class="avatar"
@@ -45,7 +45,7 @@
 <script setup>
 const { device } = useDevice();
 const { showNav, toggleNav, closeNav } = useShowNav();
-const basket = useBasket();
+const fulfillment = useFulfillment();
 const user = useMiseboxUserStore();
 const router = useRouter();
 

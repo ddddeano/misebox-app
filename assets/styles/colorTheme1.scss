@@ -1,16 +1,28 @@
-$primary-color: #d9e3ac;
-$secondary-color: #5f7055;
+$primary-color: #d9e3ac; //slightly desaturated green
+$secondary-color: #5f7055; //deep greenish grey
+$delivery-kitchen-available: #4caf50; //strong green
+$delivery-kitchen-unavailable: #fe3e03; //vibrant red
+$delivery-kitchen-booked: #8916e8; //vibrant purple
+$selected: #2196f3;
 
 $colors: (
   primary-color: $primary-color,
   primary-color-light: lighten($primary-color, 15%),
-  primary-color-dark: darken($primary-color, 5%),
+  primary-color-dark: darken($primary-color, 15%),
   secondary-color: $secondary-color,
   secondary-color-light: lighten($secondary-color, 17%),
   secondary-color-dark: darken($secondary-color, 17%),
   delivery-shop: #f5a623,
-  delivery-kitchen: #4caf50,
+  delivery-kitchen-available: $delivery-kitchen-available,
+  delivery-kitchen-unavailable: $delivery-kitchen-unavailable,
+  delivery-kitchen-booked: $delivery-kitchen-booked,
+
+  delivery-kitchen-available-dark: darken($delivery-kitchen-available, 15%),
+  delivery-kitchen-unavailable-dark: darken($delivery-kitchen-unavailable, 15%),
+  delivery-kitchen-booked-dark: darken($delivery-kitchen-booked, 15%),
+  secondary-color-dark-text: darken($secondary-color, 15%),
   delivery-production: #2196f3,
+  selected: $selected,
 );
 
 :root {

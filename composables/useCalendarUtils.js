@@ -1,81 +1,94 @@
 import moment from 'moment';
 
 export function generatePeriod(startOffset = 0, endOffset = 0, unit = 'weeks') {
-  return {
-    start: moment().add(startOffset, unit).format('YYYY-MM-DD'),
-    end: moment().add(endOffset, unit).format('YYYY-MM-DD'),
-  };
-}
+  const startDate = moment().add(startOffset, unit).format('YYYY-MM-DD');
+  const endDate = moment().add(endOffset, unit).format('YYYY-MM-DD');
 
-export function generateCalendar(currentPeriod, firestore) {
-  let start = new Date(currentPeriod.start);
-  const end = new Date(currentPeriod.end);
-  const dateArray = [];
+  const dates = [];
+  let currentDate = moment(startDate);
 
-  while (start <= end) {
-    dateArray.push(new Date(start));
-    start.setDate(start.getDate() + 1);
+  while (currentDate.isSameOrBefore(endDate)) {
+    dates.push(currentDate.format('YYYY-MM-DD'));
+    currentDate.add(1, 'days');
   }
 
-  return dateArray.map((date) => {
-    const dateString = date.toISOString().slice(0, 10);
-    const firestoreDay = firestore.find(
-      (doc) => doc && doc.dateString === dateString,
+  return { dates, startDate, endDate };
+}
+
+export function generateGlobalCalendar(currentPeriod, firestoreCalendar) {
+  const { startDate, endDate } = currentPeriod;
+
+  const globalCalendar = currentPeriod.dates.map((dateString) => {
+    const dayData = firestoreCalendar.find(
+      (day) => day.dateString === dateString,
     );
+    return dayData ? { ...dayData } : { dateString };
+  });
 
-    const kitchenSlotArray = [
-      '11:00',
-      '12:00',
-      '13:00',
-      '14:00',
-      '15:00',
-      '16:00',
-      '17:00',
-    ];
+  return globalCalendar;
+}
 
-    const kitchenSlots = kitchenSlotArray.map((slot) => {
+export function generateProductionCalendar(globalCalendar) {
+  const productionCalendar = globalCalendar.map((day) => {
+    const { dateString, production } = day;
+    const status = production ? production.status : 'open';
+
+    return {
+      dateString,
+      status,
+    };
+  });
+
+  return productionCalendar;
+}
+
+export function generateShopCalendar(globalCalendar) {
+  const shopCalendar = globalCalendar.map((day) => {
+    const { dateString, shop } = day;
+    const status = shop ? shop.status : 'open';
+
+    return {
+      dateString,
+      status,
+    };
+  });
+  return shopCalendar;
+}
+
+export function generateKitchenCalendar(globalCalendar) {
+  const kitchenSlotArray = [
+    '11:00',
+    '12:00',
+    '13:00',
+    '14:00',
+    '15:00',
+    '16:00',
+    '17:00',
+  ];
+
+  const kitchenCalendar = globalCalendar.map((day) => {
+    const { dateString, kitchen } = day;
+
+    const slots = kitchenSlotArray.map((slot) => {
       const slotFromFirestore =
-        firestoreDay &&
-        firestoreDay.kitchen &&
-        firestoreDay.kitchen.slots &&
-        firestoreDay.kitchen.slots.find((s) => s.time === slot);
-
+        kitchen && kitchen.slots && kitchen.slots.find((s) => s.time === slot);
       let status = slotFromFirestore ? slotFromFirestore.status : 'available';
-
       return {
         time: slot,
         status: status,
       };
     });
 
-    const kitchenStatus = kitchenSlots.some(
-      (slot) => slot.status === 'available' || slot.status === 'unavailable',
-    )
+    const status = slots.some((slot) => slot.status === 'available')
       ? 'open'
       : 'closed';
 
-    const kitchen = {
-      status: kitchenStatus,
-      slots: kitchenSlots,
-    };
-
-    const production = {
-      status:
-        firestoreDay && firestoreDay.production
-          ? firestoreDay.production.status
-          : 'open',
-    };
-
-    const shop = {
-      status:
-        firestoreDay && firestoreDay.shop ? firestoreDay.shop.status : 'open',
-    };
-
     return {
       dateString,
-      kitchen,
-      production,
-      shop,
+      status,
+      slots,
     };
   });
+
+  return kitchenCalendar;
 }
