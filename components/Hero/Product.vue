@@ -1,9 +1,11 @@
 <template>
   <div>
-    <Product v-if="product" :product="product" />
+    <ProductCard v-if="product" :product="product" />
   </div>
 </template>
 <script setup>
+import ProductCard from '../ProductCard.vue';
+
 const props = defineProps({
   hero: {
     type: Object,
@@ -11,5 +13,7 @@ const props = defineProps({
   },
 });
 
-const { data: product } = await useFetch(`/api/product?productId=${props.hero.productId}`);
+const { data: product } = await useFetch(
+  `/api/product?productId=${props.hero.productId}`,
+);
 </script>

@@ -3,9 +3,17 @@
     <h4 class="name">{{ item.shortName }}</h4>
     <div class="quantity-price">
       <div class="quantity-component">
-        <Icon class="quantity-btn" name="jam:minus-rectangle-f" @click="decrementQuantity" />
+        <Icon
+          class="quantity-btn"
+          name="jam:minus-rectangle-f"
+          @click="decrementQuantity"
+        />
         <span class="quantity">{{ item.quantity }}</span>
-        <Icon class="quantity-btn" name="jam:plus-rectangle-f" @click="incrementQuantity" />
+        <Icon
+          class="quantity-btn"
+          name="jam:plus-rectangle-f"
+          @click="incrementQuantity"
+        />
       </div>
       <div class="price">{{ totalPrice.toFixed(2) }}</div>
     </div>
@@ -20,14 +28,14 @@ const props = defineProps({
   },
 });
 
-const basket = useBasket();
+const fulfillment = useFulfillment();
 
 const incrementQuantity = () => {
-  basket.addItem(props.item);
+  fulfillment.addItem(props.item.source, props.item);
 };
 
 const decrementQuantity = () => {
-  basket.removeItem(props.item);
+  fulfillment.removeItem(props.item.source, props.item);
 };
 
 const totalPrice = computed(() => {
@@ -35,21 +43,19 @@ const totalPrice = computed(() => {
 });
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .basket-item {
   display: flex;
   flex-direction: row;
-  // background: var(--secondary-color);
   justify-content: space-between;
   align-items: center;
   border-radius: 10px;
   margin-bottom: 0.1rem;
-  // border: 1px solid var(--secondary-color-light);
   width: auto;
 }
 
 .name {
-  font-size: 0.7rem;
+  font-size: 0.9rem; /* adjust as needed */
   padding-left: 1rem;
 }
 
@@ -74,8 +80,7 @@ const totalPrice = computed(() => {
 .quantity-btn {
   border: none;
   background-color: transparent;
-  // color: var(--quaternary-color);
-  font-size: 3rem;
+  font-size: 1.5rem; /* adjust as needed */
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s ease;
@@ -83,11 +88,11 @@ const totalPrice = computed(() => {
 }
 
 .quantity-btn:hover {
-  // color: var(--quinary-color);
+  /* Add hover styles here */
 }
 
 .price {
-  font-size: 0.8rem;
+  font-size: 0.9rem; /* adjust as needed */
   text-align: right;
   width: 3rem;
 }

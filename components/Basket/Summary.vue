@@ -1,45 +1,66 @@
 <template>
   <div class="basket-summary">
     <div class="header">
-      <Icon class="icon" @click="toggleExpansion" name="jam:chevron-circle-down" :class="{ rotate: expanded }" />
-      <h2 class="title">{{ categoryDetails?.categoryName }}</h2>
-      <div class="total">{{ basket.getTotalItemsBySource(source) }} Items | {{ basket.getTotalPriceBySource(source) }}</div>
+      <div v-if="fulfillment.baskets[basket.name].slot.day !== null">
+        <CalendarDay
+          :source="basket.name"
+          :day="fulfillment.baskets[basket.name].slot.day"
+          :time="fulfillment.baskets[basket.name].slot.time"
+          :isBasketView="true"
+        />
+      </div>
+      <h2 class="title">{{ basket.name }}</h2>
+      <div class="total">
+        {{ getTotalItemsBySource() }} Items | {{ getTotalPriceBySource() }}
+      </div>
     </div>
-    <template v-if="expanded">
-      <div v-for="item in basket.getItemsBySource(source)" :key="item.productId">
-        <BasketItem :item="item" />
-      </div>
-      <div class="delivery-note">
-        <Icon name="jam:alert" />
-        <p>DELIVERY: {{ sourceDetails?.deliveryNote }}</p>
-      </div>
-    </template>
+
+    <div
+      v-if="fulfillment.baskets[basket.name].slot.day == null"
+      class="date-options"
+    >
+      <CalendarGrid :source="basket.name" view="basket" />
+    </div>
+    <div
+      v-for="item in getItemsBySource()"
+      :key="item.productId"
+      class="basket-item"
+    >
+      <BasketItem :item="item" />
+    </div>
   </div>
 </template>
 
 <script setup>
-const basket = useBasket();
-
 const props = defineProps({
-  source: {
-    type: String,
-    required: true,
-  },
-  expanded: {
-    type: Boolean,
+  basket: {
+    type: Object,
     required: true,
   },
 });
-const expanded = ref(props.expanded);
 
-const { data: sourceDetails } = useFetch(`/api/sources?source=${props.source}`);
+const fulfillment = useFulfillment();
 
-const toggleExpansion = () => {
-  expanded.value = !expanded.value;
+const getTotalItemsBySource = () => {
+  const sourceItems = fulfillment.baskets[props.basket.name]?.items;
+  return sourceItems
+    ? sourceItems.reduce((total, item) => total + item.quantity, 0)
+    : 0;
+};
+
+const getTotalPriceBySource = () => {
+  const sourceItems = fulfillment.baskets[props.basket.name]?.items;
+  return sourceItems
+    ? sourceItems.reduce((total, item) => total + item.price * item.quantity, 0)
+    : 0;
+};
+
+const getItemsBySource = () => {
+  return fulfillment.baskets[props.basket.name]?.items || [];
 };
 </script>
 
-<style lang="scss" scoped>
+<style scoped lang="scss">
 .basket-summary {
   width: 100%;
   border-radius: 4px;
@@ -52,45 +73,32 @@ const toggleExpansion = () => {
     align-items: center;
     margin-bottom: 1rem;
     width: 100%;
-
-    .icon {
-      font-size: 2.1rem;
-      // color: var(--quaternary-color);
-      cursor: pointer;
-      transition: transform 0.2s ease-in-out;
-      position: relative;
-      top: 1px;
-    }
+    border-bottom: 1px solid #e5e5e5;
+    padding-bottom: 10px;
 
     .title {
       margin-right: auto;
       margin-left: 0.5rem;
       font-size: 1.2rem;
       font-weight: bold;
-      // color: #3c3c3c;
       width: 100%;
     }
 
     .total {
       margin: 0;
       font-size: 0.9rem;
-      // color: var(--quaternary-color);
       min-width: fit-content;
     }
-  }
-  .icon.rotate {
-    transform: rotate(90deg);
-  }
 
-  .delivery-note {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    // color: var(--accent-color);
-
-    .icon {
-      margin-right: 0.5rem;
+    .date-options {
+      height: 200px;
+      overflow-y: scroll;
     }
+  }
+
+  .basket-item {
+    border-bottom: 1px solid #e5e5e5;
+    padding: 10px 0;
   }
 }
 </style>

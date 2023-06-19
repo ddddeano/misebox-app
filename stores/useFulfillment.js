@@ -1,4 +1,3 @@
-// fulfillment.js
 import { defineStore } from 'pinia';
 
 export const useFulfillment = defineStore({
@@ -6,40 +5,122 @@ export const useFulfillment = defineStore({
   state: () => ({
     baskets: {
       kitchen: {
-        slot: null,
+        name: 'kitchen',
+        slot: {
+          day: null,
+          time: null,
+        },
         items: [],
       },
       shop: {
-        slot: null,
+        name: 'shop',
+        slot: {
+          day: null,
+        },
         items: [],
       },
       production: {
-        slot: null,
+        name: 'production',
+        slot: {
+          day: null,
+        },
         items: [],
       },
     },
   }),
+  getters: {
+    isEmpty: (state) => (source) => {
+      return state.baskets[source].items.length === 0;
+    },
+
+    allBasketsEmpty: (state) => {
+      return Object.values(state.baskets).every(
+        (basket) => basket.items.length === 0,
+      );
+    },
+
+    getTotalItemsBySource: (state) => (source) => {
+      const sourceItems = state.baskets[source]?.items;
+      return sourceItems ? sourceItems.length : 0;
+    },
+
+    getTotalPriceBySource: (state) => (source) => {
+      const sourceItems = state.baskets[source]?.items;
+      let totalPrice = 0;
+
+      if (sourceItems) {
+        totalPrice = sourceItems.reduce(
+          (total, item) => total + item.price * item.quantity,
+          0,
+        );
+      }
+
+      return totalPrice.toFixed(2);
+    },
+
+    getAllItems: (state) => {
+      const allItems = [];
+
+      Object.keys(state.baskets).forEach((source) => {
+        allItems.push(...state.baskets[source].items);
+      });
+
+      return allItems;
+    },
+
+    getTotalPriceForProduct: (state) => (productId, source) => {
+      const sourceItems = state.baskets[source]?.items;
+      const item = sourceItems?.find((item) => item.productId === productId);
+
+      if (item) {
+        return (item.price * item.quantity).toFixed(2);
+      }
+
+      return 0;
+    },
+
+    getTotalPriceForAllProducts: (state) => (source) => {
+      const sourceItems = state.baskets[source]?.items;
+      let totalPrice = 0;
+
+      if (sourceItems) {
+        totalPrice = sourceItems.reduce(
+          (total, item) => total + item.price * item.quantity,
+          0,
+        );
+      }
+
+      return totalPrice.toFixed(2);
+    },
+  },
   actions: {
     selectSlot(source, day, time) {
-      const dateAndOrTime = day.dateString + (time ? ` ${time}` : ''); // Construct a string with date and time if provided
-      if (this.baskets[source].slot === dateAndOrTime) {
-        // If the slot is already selected, deselect it (toggle off)
-        this.baskets[source].slot = null;
+      if (!this.baskets[source]) {
+        console.error(`Invalid source: ${source}`);
+        return;
+      }
+
+      const dateAndOrTime = {
+        day: day,
+        time: time ? time : null,
+      };
+
+      if (
+        this.baskets[source].slot &&
+        this.baskets[source].slot.day?.dateString === day.dateString &&
+        this.baskets[source].slot.time === time
+      ) {
+        this.baskets[source].slot = {
+          day: null,
+          time: null,
+        };
       } else {
-        // If the slot is not yet selected, select it (toggle on)
         this.baskets[source].slot = dateAndOrTime;
       }
     },
-    toggleSlot(slot, source) {
-      if (this.baskets[source].slot === slot) {
-        this.baskets[source].slot = null;
-      } else {
-        this.baskets[source].slot = slot;
-      }
-    },
-    addItem(product) {
-      // Assuming the product object contains 'source' and 'productId' fields
-      const sourceItems = this.baskets[product.source].items;
+
+    addItem(source, product) {
+      const sourceItems = this.baskets[source].items;
       const existingItem = sourceItems.find(
         (item) => item.productId === product.productId,
       );
@@ -50,25 +131,37 @@ export const useFulfillment = defineStore({
         sourceItems.push({
           productId: product.productId,
           quantity: 1,
+          price: product.price,
+          unitAmount: product.unitAmount,
+          mainImage: product.mainImage,
+          shortName: product.shortName,
+          source: product.source,
         });
       }
     },
-    incrementQuantity(productId, source) {
-      const sourceItems = this.baskets[source].items;
-      const item = sourceItems.find((item) => item.productId === productId);
 
-      if (item) {
-        item.quantity += 1;
+    removeItem(source, product) {
+      const sourceItems = this.baskets[source].items;
+      const itemIndex = sourceItems.findIndex(
+        (item) => item.productId === product.productId,
+      );
+
+      if (itemIndex !== -1) {
+        sourceItems.splice(itemIndex, 1);
       }
     },
-    decrementQuantity(productId, source) {
-      const sourceItems = this.baskets[source].items;
-      const item = sourceItems.find((item) => item.productId === productId);
 
-      if (item && item.quantity > 0) {
-        item.quantity -= 1;
-      }
+    clearBasket(source) {
+      this.baskets[source].items = [];
     },
+
+    removeAllItems(productId, source) {
+      const sourceItems = this.baskets[source].items;
+      this.baskets[source].items = sourceItems.filter(
+        (item) => item.productId !== productId,
+      );
+    },
+
     getQuantityForProduct(productId, source) {
       const sourceItems = this.baskets[source]?.items;
       const item = sourceItems?.find((item) => item.productId === productId);

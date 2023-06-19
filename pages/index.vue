@@ -9,12 +9,7 @@
   </div>
 </template>
 
-<script setup>
-const calendar = useCalendarStore();
-onMounted(() => {
-  calendar.loadCalendar();
-});
-</script>
+<script setup></script>
 
 <style scoped lang="scss">
 .welcome {

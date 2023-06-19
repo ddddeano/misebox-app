@@ -1,39 +1,39 @@
 <template>
   <div class="index">
     <h1 class="title">Production</h1>
-    <CalendarProductsToggle
-      v-if="device === 'mobile'"
-      @update:view="handleToggle"
-    />
+
+    <client-only>
+      <CalendarProductsToggle
+        v-if="device === 'mobile'"
+        @update:view="handleToggle"
+      />
+    </client-only>
+
     <div class="content" :class="{ 'content--split': device !== 'mobile' }">
       <div
         class="products"
         v-show="device !== 'mobile' || (device === 'mobile' && showProducts)"
       >
         <div v-for="product in products" :key="product.id">
-          <Product :product="product" />
+          <ProductCard :product="product" />
         </div>
       </div>
-      <CalendarGrid
-        source="production"
-        v-show="device !== 'mobile' || (device === 'mobile' && !showProducts)"
-      />
+      <CalendarGrid source="production" />
     </div>
   </div>
 </template>
 
 <script setup>
-const { device } = useDevice();
-const { data: products } = useFetch('/api/products?source=production');
-const calendar = useCalendarStore();
-const showProducts = ref(true);
+import ProductCard from '~~/components/ProductCard.vue';
 
-onMounted(() => {
-  calendar.loadCalendar();
-});
+const { device } = useDevice();
+console.log('device:', device); // Debug line
+const { data: products } = useFetch('/api/products?source=production');
+const showProducts = ref(true);
 
 const handleToggle = (view) => {
   showProducts.value = view === 'products';
+  console.log('showProducts:', showProducts.value); // Debug line
 };
 </script>
 

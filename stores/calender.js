@@ -18,10 +18,6 @@ export const useCalendarStore = defineStore('calendar', {
     kitchenCalendar: [],
   }),
   actions: {
-    loadCalendar() {
-      console.log('Current period:', this.currentPeriod);
-      this.fetchFirestoreDates();
-    },
     async fetchFirestoreDates() {
       const { $firestore } = useNuxtApp();
 
@@ -54,27 +50,26 @@ export const useCalendarStore = defineStore('calendar', {
         console.log('Shop calendar:', this.shopCalendar);
         console.log('Kitchen calendar:', this.kitchenCalendar);
       });
-    },
-    getOpenDays(source) {
-      if (source === 'production') {
-        return computed(() => this.openProductionDays);
-      } else if (source === 'shop') {
-        return computed(() => this.openShopDays);
-      } else if (source === 'kitchen') {
-        return computed(() => this.openKitchenDays);
-      }
-      return [];
+
+      return unsubscribe;
     },
   },
   getters: {
-    openProductionDays() {
-      return this.productionCalendar.filter((day) => day.status === 'open');
+    openDaysBySource: (state) => (source, param) => {
+      const openDays = state[source + 'Calendar'].filter(
+        (day) => day.status === 'open',
+      );
+      return param === 'ALL' ? openDays : openDays.slice(0, param);
     },
-    openShopDays() {
-      return this.shopCalendar.filter((day) => day.status === 'open');
+    getSelectedDayBySource: () => (source) => {
+      const fulfillment = useFulfillment();
+      const selectedDay = fulfillment.baskets[source]?.slot?.day || null;
+      return selectedDay;
     },
-    openKitchenDays() {
-      return this.kitchenCalendar.filter((day) => day.status === 'open');
+    getSelectedTimeBySource: () => (source) => {
+      const fulfillment = useFulfillment();
+      const selectedTime = fulfillment.baskets[source]?.slot?.time || null;
+      return selectedTime;
     },
   },
 });

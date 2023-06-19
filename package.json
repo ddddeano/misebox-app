@@ -16,16 +16,15 @@
     "firebase-admin": "^11.6.0",
     "firebase-functions": "^4.4.0",
     "firebase-functions-test": "^3.0.0",
-    "nuxt": "^3.3.2",
     "nuxt-icon": "^0.3.3",
     "prettier": "^2.8.8"
   },
   "dependencies": {
-    "@pinia/nuxt": "^0.4.7",
+    "@pinia/nuxt": "^0.4.11",
     "@vueuse/nuxt": "^9.13.0",
     "firebase": "^9.19.1",
     "moment": "^2.29.4",
-    "pinia": "^2.0.33",
+    "pinia": "^2.1.4",
     "sass": "^1.60.0",
     "unctx": "^2.1.2"
   },

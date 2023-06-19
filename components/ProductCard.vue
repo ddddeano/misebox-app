@@ -35,19 +35,23 @@ const props = defineProps({
 const fulfillment = useFulfillment();
 
 const qty = computed(() => {
-  return fulfillment.getQuantityForProduct(props.product.productId);
+  return fulfillment.getQuantityForProduct(
+    props.product.productId,
+    props.product.source,
+  );
 });
 
 const addItem = () => {
-  fulfillment.addItem(props.product);
+  fulfillment.addItem(props.product.source, props.product);
+  console.log(fulfillment.baskets);
 };
 
 const incrementQuantity = () => {
-  fulfillment.incrementQuantity(props.product.productId);
+  fulfillment.incrementQuantity(props.product.productId, props.product.source);
 };
 
 const decrementQuantity = () => {
-  fulfillment.decrementQuantity(props.product.productId);
+  fulfillment.decrementQuantity(props.product.productId, props.product.source);
 };
 </script>
 

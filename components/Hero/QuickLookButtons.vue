@@ -4,45 +4,65 @@
       <div class="delivery-toggle">
         <button
           class="icon-text-button toggle-button"
-          @click="clickDeliveryToggle()"
+          @click="clickDeliveryToggle"
         >
           <span class="text">Deliveries</span>
-          <Icon class="icon" name="jam:chevron-circle-down" />
+          <client-only>
+            <Icon
+              class="icon"
+              :name="
+                viewDeliveryInfos
+                  ? 'jam:chevron-circle-up'
+                  : 'jam:chevron-circle-down'
+              "
+            />
+          </client-only>
         </button>
       </div>
       <div class="chocolate-toggle">
         <button
           class="icon-text-button toggle-button"
-          @click="clickChocolateToggle()"
+          @click="clickChocolateToggle"
         >
           <span class="text">Chocolate</span>
-          <Icon class="icon" name="jam:chevron-circle-down" />
+          <client-only>
+            <Icon
+              class="icon"
+              :name="
+                viewChocolateInfos
+                  ? 'jam:chevron-circle-up'
+                  : 'jam:chevron-circle-down'
+              "
+            />
+          </client-only>
         </button>
       </div>
     </div>
-    <div v-show="viewDeliveryInfos" class="pop delivery show">
-      <div class="delivery-heading">Delivery Information</div>
+    <transition name="slide-fade">
+      <div v-show="viewDeliveryInfos" class="pop delivery">
+        <div class="delivery-heading">Delivery Information</div>
 
-      <div class="delivery-list">
-        <div class="delivery-item">
-          <div class="delivery-item-title">Shop</div>
-          <div class="delivery-item-details">Delivery on Friday!</div>
-        </div>
+        <div class="delivery-list">
+          <div class="delivery-item">
+            <div class="delivery-item-title">Shop</div>
+            <CalendarGrid source="shop" view="quick" />
+          </div>
 
-        <div class="delivery-item">
-          <div class="delivery-item-title">Kitchen</div>
-          <div class="delivery-item-details">Pick the next slot</div>
-        </div>
+          <div class="delivery-item">
+            <div class="delivery-item-title">Kitchen</div>
+            <CalendarGrid source="kitchen" view="quick" />
+          </div>
 
-        <div class="delivery-item">
-          <div class="delivery-item-title">Production</div>
-          <div class="delivery-item-details">
-            Next delivery between Friday and Monday
+          <div class="delivery-item">
+            <div class="delivery-item-title">Production</div>
+            <CalendarGrid source="production" view="quick" />
           </div>
         </div>
       </div>
-    </div>
-    <div v-show="viewChocolateInfos" class="pop chocolate show">Chocolate</div>
+    </transition>
+    <transition name="slide-fade">
+      <div v-show="viewChocolateInfos" class="pop chocolate">Chocolate</div>
+    </transition>
   </div>
 </template>
 
@@ -78,20 +98,40 @@ const clickChocolateToggle = () => {
   background-color: var(--primary-color);
   color: var(--secondary-color-dark);
   border: 1px solid var(--secondary-color-dark);
+  transition: transform 0.2s ease-in-out;
 }
 
 .icon {
   font-size: 1rem;
   color: var(--secondary-color-dark);
-  transition: transform 0.2s ease-in-out;
   margin-left: 1rem;
   vertical-align: -0.2rem;
+  transition: transform 0.2s ease-in-out;
 }
 
-.pop {
-  .show {
-    max-height: 1000px;
-    transition: max-height 1s ease-in-out;
+.delivery-item {
+  padding: 1em;
+  border-bottom: 1px solid #ccc;
+  transition: all 0.3s ease;
+
+  .delivery-item-title {
+    font-weight: bold;
+    color: #333;
   }
+
+  .delivery-item-details {
+    font-size: 0.9em;
+    color: #666;
+  }
+}
+.slide-fade-enter-active,
+.slide-fade-leave-active {
+  transition: height 0.3s ease-out, opacity 0.3s ease-out;
+}
+
+.slide-fade-enter,
+.slide-fade-leave-to {
+  opacity: 0;
+  height: 0;
 }
 </style>

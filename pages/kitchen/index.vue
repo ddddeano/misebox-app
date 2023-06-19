@@ -11,7 +11,7 @@
         v-show="device !== 'mobile' || (device === 'mobile' && showProducts)"
       >
         <div v-for="product in products" :key="product.id">
-          <Product :product="product" />
+          <ProductCard :product="product" />
         </div>
       </div>
       <CalendarGrid
@@ -23,14 +23,11 @@
 </template>
 
 <script setup>
+import ProductCard from '~~/components/ProductCard.vue';
+
 const { device } = useDevice();
 const { data: products } = useFetch('/api/products?source=kitchen');
-const calendar = useCalendarStore();
 const showProducts = ref(true);
-
-onMounted(() => {
-  calendar.loadCalendar();
-});
 
 const handleToggle = (view) => {
   showProducts.value = view === 'products';

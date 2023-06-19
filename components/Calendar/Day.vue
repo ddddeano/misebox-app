@@ -2,7 +2,7 @@
   <div
     class="day-tile"
     :class="[source, { selected: isSelected(), 'show-slots': state.showSlots }]"
-    @click="select"
+    @click="selectDate"
   >
     <div class="day-header">
       <h2 class="day-title">{{ formattedDate.weekday }}</h2>
@@ -17,7 +17,7 @@
             :key="index"
             class="slot"
             :class="{ selected: isSelected(slot) }"
-            @click.stop="selectSlot(slot)"
+            @click.stop="selectKitchenTimeSlot(slot)"
           >
             {{ slot.time }}
           </li>
@@ -32,6 +32,7 @@ const props = defineProps({
   day: {
     type: Object,
     required: true,
+    default: () => ({ dateString: '' }),
   },
   slots: {
     type: Array,
@@ -48,20 +49,34 @@ const state = reactive({
 });
 
 const fulfillment = useFulfillment();
+const calendar = useCalendarStore();
 
-const select = () => {
+const selectDate = () => {
+  console.log('day object', JSON.stringify(props.day, null, 2));
+  console.log('Selecting date', props.day.dateString);
   if (props.source === 'kitchen') {
     state.showSlots = !state.showSlots;
-    console.log(`showSlots after click: ${state.showSlots}`);
+    console.log(
+      'Toggling kitchen slot visibility, showSlots is now',
+      state.showSlots,
+    );
   } else {
-    console.log(`${props.source} was clicked`);
-    fulfillment.selectSlot(props.source, props.day);
+    console.log('Selecting slot for', props.source);
+    fulfillment.selectSlot(props.source, props.day, null); // Passing the whole day object
   }
+  console.log(
+    'Fulfillment state:',
+    JSON.stringify(fulfillment.baskets, null, 2),
+  );
 };
 
-const selectSlot = (slot) => {
-  console.log('kitchen', props.day.dateString, slot.time);
-  fulfillment.selectSlot('kitchen', props.day, slot.time);
+const selectKitchenTimeSlot = (slot) => {
+  console.log('Selecting kitchen time slot', slot.time);
+  fulfillment.selectSlot('kitchen', props.day, slot.time); // Passing the whole day object
+  console.log(
+    'Fulfillment state:',
+    JSON.stringify(fulfillment.baskets, null, 2),
+  );
 };
 
 const formattedDate = computed(() => {
@@ -74,15 +89,16 @@ const formattedDate = computed(() => {
 });
 
 const isSelected = (slot) => {
-  const selected = fulfillment.baskets[props.source].slot;
+  let selectedDay = calendar.getSelectedDayBySource(props.source);
+  let selectedTime = calendar.getSelectedTimeBySource(props.source);
+
   if (props.source === 'kitchen' && slot) {
     return (
-      selected &&
-      selected.startsWith(props.day.dateString) &&
-      selected.endsWith(slot.time)
+      selectedDay?.dateString === props.day.dateString &&
+      selectedTime === slot.time
     );
   } else {
-    return selected && selected.startsWith(props.day.dateString);
+    return selectedDay?.dateString === props.day.dateString;
   }
 };
 </script>
