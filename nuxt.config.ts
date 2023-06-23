@@ -19,7 +19,12 @@ export default defineNuxtConfig({
       firebaseApiKey: process.env.firebase_api_key,
     },
   },
-  modules: ['@vueuse/nuxt', '@pinia/nuxt', 'nuxt-icon'],
+  modules: [
+    '@vueuse/nuxt',
+    '@pinia/nuxt',
+    'nuxt-icon',
+    '@pinia-plugin-persistedstate/nuxt',
+  ],
   imports: {
     dirs: ['stores', 'composables', 'types'],
   },

@@ -107,6 +107,7 @@ export const useFulfillment = defineStore({
 
       if (
         this.baskets[source].slot &&
+        day &&
         this.baskets[source].slot.day?.dateString === day.dateString &&
         this.baskets[source].slot.time === time
       ) {
@@ -169,4 +170,5 @@ export const useFulfillment = defineStore({
       return item ? item.quantity : 0;
     },
   },
+  persist: true,
 });

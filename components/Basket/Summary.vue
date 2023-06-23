@@ -1,25 +1,10 @@
 <template>
-  <div class="basket-summary">
+  <div class="basket-summary" :class="`source-${basket.name}`">
     <div class="header">
-      <div v-if="fulfillment.baskets[basket.name].slot.day !== null">
-        <CalendarDay
-          :source="basket.name"
-          :day="fulfillment.baskets[basket.name].slot.day"
-          :time="fulfillment.baskets[basket.name].slot.time"
-          :isBasketView="true"
-        />
-      </div>
       <h2 class="title">{{ basket.name }}</h2>
       <div class="total">
         {{ getTotalItemsBySource() }} Items | {{ getTotalPriceBySource() }}
       </div>
-    </div>
-
-    <div
-      v-if="fulfillment.baskets[basket.name].slot.day == null"
-      class="date-options"
-    >
-      <CalendarGrid :source="basket.name" view="basket" />
     </div>
     <div
       v-for="item in getItemsBySource()"
@@ -27,6 +12,20 @@
       class="basket-item"
     >
       <BasketItem :item="item" />
+    </div>
+    <div v-if="fulfillment.baskets[basket.name].slot.day !== null">
+      <CalendarDayTile
+        :source="basket.name"
+        :day="fulfillment.baskets[basket.name].slot.day"
+        :time="fulfillment.baskets[basket.name].slot.time"
+        view="basket"
+      />
+    </div>
+    <div
+      v-if="fulfillment.baskets[basket.name].slot.day == null"
+      class="date-options"
+    >
+      <CalendarGrid :source="basket.name" view="basket" />
     </div>
   </div>
 </template>
@@ -95,10 +94,17 @@ const getItemsBySource = () => {
       overflow-y: scroll;
     }
   }
+}
 
-  .basket-item {
-    border-bottom: 1px solid #e5e5e5;
-    padding: 10px 0;
-  }
+.basket-summary.source-kitchen {
+  background-color: #f0f8ff; // Example color, adjust to your needs
+}
+
+.basket-summary.source-shop {
+  background-color: #e6e6fa; // Example color, adjust to your needs
+}
+
+.basket-summary.source-production {
+  background-color: #f5f5dc; // Example color, adjust to your needs
 }
 </style>

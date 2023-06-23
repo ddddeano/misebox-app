@@ -2,16 +2,17 @@
   <div
     :class="[
       'grid',
-      view === 'quick' ? 'quicklook' : '',
-      view === 'basket' ? 'basket-look' : '',
+      view === 'quick' ? 'grid-quick' : '',
+      view === 'basket' ? 'grid-basket' : '',
     ]"
   >
-    <CalendarDay
+    <CalendarDayTile
       v-for="day in shownDays"
       :key="day.id"
       :source="source"
       :day="day"
       :slots="day.slots"
+      view="default"
     />
   </div>
 </template>
@@ -48,32 +49,30 @@ const shownDays = computed(() => {
 
 <style scoped>
 .grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  display: flex;
   gap: 1em;
 }
 
-.grid.quicklook {
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+.grid-quick {
+  justify-content: flex-start;
   overflow-x: auto;
   gap: 0.5em;
 }
 
-.grid.basket-look {
-  display: flex;
+.grid-basket {
   overflow-x: auto;
   gap: 1em;
   white-space: nowrap;
 }
 
 @media (max-width: 768px) {
-  .grid.basket-look {
+  .grid-basket {
     gap: 0.5em;
   }
 }
 
 @media (max-width: 480px) {
-  .grid.basket-look {
+  .grid-basket {
     gap: 0.3em;
   }
 }

@@ -6,11 +6,7 @@
   </div>
 </template>
 
-<script setup>
-import { useStorage } from '@vueuse/core';
-
-const fulfillment = useFulfillment();
-</script>
+<script setup></script>
 
 <style lang="scss">
 :root {

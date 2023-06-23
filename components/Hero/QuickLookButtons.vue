@@ -40,7 +40,7 @@
     </div>
     <transition name="slide-fade">
       <div v-show="viewDeliveryInfos" class="pop delivery">
-        <div class="delivery-heading">Delivery Information</div>
+        <h3>Next Available Delivery Days:</h3>
 
         <div class="delivery-list">
           <div class="delivery-item">
@@ -61,7 +61,13 @@
       </div>
     </transition>
     <transition name="slide-fade">
-      <div v-show="viewChocolateInfos" class="pop chocolate">Chocolate</div>
+      <div v-show="viewChocolateInfos" class="pop chocolate">
+        <h3>Secret Chocolat Button</h3>
+        <div>
+          you have found the button for secret hand made chocolates, watch this
+          space
+        </div>
+      </div>
     </transition>
   </div>
 </template>

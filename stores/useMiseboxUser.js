@@ -144,4 +144,5 @@ export const useMiseboxUserStore = defineStore('miseboxUser', {
       this.exists = false;
     },
   },
+  persist: true,
 });
