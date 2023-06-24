@@ -4,7 +4,7 @@ import { doc, onSnapshot, updateDoc } from 'firebase/firestore';
 const DEFAULT_IMAGE_URL =
   'https://firebasestorage.googleapis.com/v0/b/misebox-78f9c.appspot.com/o/Avatar.png?alt=media&token=15d85b80-8088-4c72-a33e-d0c62c4fef23';
 
-export const useMiseboxUserStore = defineStore('miseboxUser', {
+export const useMiseboxUser = defineStore('miseboxUser', {
   state: () => ({
     userInfo: {
       id: '',

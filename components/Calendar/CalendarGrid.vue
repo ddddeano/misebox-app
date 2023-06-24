@@ -4,6 +4,7 @@
       'grid',
       view === 'quick' ? 'grid-quick' : '',
       view === 'basket' ? 'grid-basket' : '',
+      device === 'mobile' ? 'grid-mobile' : '',
     ]"
   >
     <CalendarDayTile
@@ -31,6 +32,7 @@ const props = defineProps({
 });
 
 const calendarStore = useCalendarStore();
+const { device } = useDevice();
 
 onMounted(async () => {
   console.log('Component mounted, fetching Firestore dates...');
@@ -55,7 +57,6 @@ const shownDays = computed(() => {
 
 .grid-quick {
   justify-content: flex-start;
-  overflow-x: auto;
   gap: 0.5em;
 }
 
@@ -65,15 +66,12 @@ const shownDays = computed(() => {
   white-space: nowrap;
 }
 
-@media (max-width: 768px) {
-  .grid-basket {
-    gap: 0.5em;
-  }
+.grid-mobile {
+  display: flex;
+  flex-wrap: wrap;
 }
 
-@media (max-width: 480px) {
-  .grid-basket {
-    gap: 0.3em;
-  }
+.grid-mobile > * {
+  flex: 1 1 100%;
 }
 </style>

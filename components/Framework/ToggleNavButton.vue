@@ -1,6 +1,11 @@
+<!-- FrameWork/ToggleNavbutton -->
 <template>
   <div class="toggle-nav-button" @click="emitToggleNav">
-    <img src="@/assets/icons/menu.svg" :class="{ rotate: rotate }" alt="Menu Icon" />
+    <img
+      src="@/assets/icons/menu.svg"
+      :class="{ rotate: rotate }"
+      alt="Menu Icon"
+    />
   </div>
 </template>
 
@@ -12,10 +17,10 @@ const props = defineProps({
   },
 });
 
-const emits = defineEmits(["toggle-nav"]);
+const emits = defineEmits(['toggle-nav']);
 
 const emitToggleNav = () => {
-  emits("toggle-nav");
+  emits('toggle-nav');
 };
 </script>
 

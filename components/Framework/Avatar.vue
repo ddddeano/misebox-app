@@ -1,3 +1,4 @@
+<!-- Framework/Avatar -->
 <template>
   <div :class="['component-avatar', `size-${size}`]">
     <img :src="url" alt="User's avatar" />
@@ -8,15 +9,14 @@
 const props = defineProps({
   url: {
     type: String,
-    required: true
+    required: true,
   },
   size: {
     type: String,
     required: true,
-    validator: (value) => ["small", "medium", "large"].includes(value),
+    validator: (value) => ['small', 'medium', 'large'].includes(value),
   },
 });
-
 </script>
 
 <style scoped>

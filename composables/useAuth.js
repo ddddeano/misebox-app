@@ -12,7 +12,7 @@ export const errorMessage = ref('');
 
 export const initUser = async () => {
   const auth = getAuth();
-  const miseboxUserStore = useMiseboxUserStore();
+  const miseboxUserStore = useMiseboxUser();
 
   onAuthStateChanged(auth, async (user) => {
     if (user) {
@@ -58,7 +58,7 @@ export const signInUser = async (email, password) => {
 
 export const signOutUser = async () => {
   const auth = getAuth();
-  const miseboxUserStore = useMiseboxUserStore();
+  const miseboxUserStore = useMiseboxUser();
 
   try {
     await signOut(auth);

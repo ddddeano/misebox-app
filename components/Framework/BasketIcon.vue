@@ -1,12 +1,11 @@
+<!-- Framework/BasketIcon -->
 <template>
   <div class="basket-icon">
     <Icon name="ph:bag-simple-fill" />
   </div>
 </template>
 
-<script setup>
-const basket = useBasket();
-</script>
+<script setup></script>
 
 <style scoped lang="scss">
 .basket-icon {
@@ -17,7 +16,6 @@ const basket = useBasket();
   width: 3.5rem;
   height: 3.5rem;
   border-radius: 50%;
-  // color: var(--quaternary-color-dark);
   margin-right: 1rem;
 }
 </style>

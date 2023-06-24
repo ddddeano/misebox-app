@@ -1,3 +1,4 @@
+<!-- FrameworkFooter -->
 <template>
   <footer>
     <div class="footer-content">

@@ -17,6 +17,4 @@
 const { device } = useDevice();
 </script>
 
-<style scoped lang="scss">
-@import "@/assets/styles/layout.scss";
-</style>
+<style scoped lang="scss"></style>

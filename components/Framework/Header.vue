@@ -4,18 +4,18 @@
       <Framework-Logo @click="closeNav" />
       <div class="header-right">
         <client-only>
-          <Framework-BasketIcon
+          <FrameworkBasketIcon
             class="basket-icon"
             @click="navigateTo('/basket')"
             v-if="fulfillment.getTotalItems > 0"
           />
-          <Framework-Avatar
+          <FrameworkAvatar
             class="avatar"
             @click="navigateToDashboard()"
             size="medium"
             :url="user.userInfo.imageUrl"
           />
-          <Framework-ToggleNavButton
+          <FrameworkToggleNavButton
             v-show="device === 'mobile'"
             :rotate="showNav"
             @toggle-nav="toggleNav"
@@ -31,7 +31,7 @@
       ></div>
       <client-only>
         <transition name="mobile-nav-transition">
-          <Framework-NavigationLinks
+          <FrameworkNavigationLinks
             class="mobile-nav-container"
             v-show="device === 'mobile' && showNav"
             @link-clicked="closeNav"
@@ -46,7 +46,7 @@
 const { device } = useDevice();
 const { showNav, toggleNav, closeNav } = useShowNav();
 const fulfillment = useFulfillment();
-const user = useMiseboxUserStore();
+const user = useMiseboxUser();
 const router = useRouter();
 
 const navigateToDashboard = () => {

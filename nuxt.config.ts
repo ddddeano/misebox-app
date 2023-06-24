@@ -8,6 +8,7 @@ export default defineNuxtConfig({
     '@/assets/styles/defaults.scss',
     '@/assets/styles/global.scss',
     '@/assets/styles/application.scss',
+    '@/assets/styles/layout.scss',
   ],
   modules: [
     ['@pinia/nuxt', { autoImports: ['defineStore', 'definePiniaStore'] }],

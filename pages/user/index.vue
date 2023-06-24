@@ -24,7 +24,7 @@
 
 <script setup>
 const router = useRouter();
-const user = useMiseboxUserStore();
+const user = useMiseboxUser();
 
 const navigateToDashboard = () => {
   if (user.exists) {

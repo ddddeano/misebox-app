@@ -1,21 +1,27 @@
+<!-- Framework/NavigationLinks -->
 <template>
   <nav>
     <ul class="nav-links">
       <li v-for="(item, index) in navItems" :key="index">
-        <NuxtLink :to="`/${item.toLowerCase()}`" @click="emitLinkClicked" exact-active-class="active">{{ item }}</NuxtLink>
+        <NuxtLink
+          :to="`/${item.toLowerCase()}`"
+          @click="emitLinkClicked"
+          exact-active-class="active"
+          >{{ item }}</NuxtLink
+        >
       </li>
     </ul>
   </nav>
 </template>
 
 <script setup>
-const navItems = ["Shop", "Kitchen", "Production", "Blog", "Basket"];
+const navItems = ['Shop', 'Kitchen', 'Production', 'Blog', 'Basket'];
 
-const emits = defineEmits(["link-clicked"]);
+const emits = defineEmits(['link-clicked']);
 
 const emitLinkClicked = () => {
-  emits("link-clicked");
-  console.log("navigation link clicked");
+  emits('link-clicked');
+  console.log('navigation link clicked');
 };
 </script>
 

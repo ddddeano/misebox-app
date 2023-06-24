@@ -40,57 +40,70 @@ export const useFulfillment = defineStore({
     },
 
     getTotalItemsBySource: (state) => (source) => {
-      const sourceItems = state.baskets[source]?.items;
-      return sourceItems ? sourceItems.length : 0;
+      return state.baskets[source]?.items.length || 0;
     },
 
     getTotalPriceBySource: (state) => (source) => {
-      const sourceItems = state.baskets[source]?.items;
-      let totalPrice = 0;
-
-      if (sourceItems) {
-        totalPrice = sourceItems.reduce(
-          (total, item) => total + item.price * item.quantity,
-          0,
-        );
-      }
-
-      return totalPrice.toFixed(2);
+      return (
+        state.baskets[source]?.items
+          .reduce((total, item) => total + item.price * item.quantity, 0)
+          ?.toFixed(2) || 0
+      );
     },
 
     getAllItems: (state) => {
-      const allItems = [];
-
-      Object.keys(state.baskets).forEach((source) => {
-        allItems.push(...state.baskets[source].items);
-      });
-
-      return allItems;
+      return Object.values(state.baskets).flatMap((basket) => basket.items);
     },
 
     getTotalPriceForProduct: (state) => (productId, source) => {
-      const sourceItems = state.baskets[source]?.items;
-      const item = sourceItems?.find((item) => item.productId === productId);
+      const item = state.baskets[source]?.items.find(
+        (item) => item.productId === productId,
+      );
 
-      if (item) {
-        return (item.price * item.quantity).toFixed(2);
-      }
-
-      return 0;
+      return item ? (item.price * item.quantity).toFixed(2) : 0;
     },
 
     getTotalPriceForAllProducts: (state) => (source) => {
-      const sourceItems = state.baskets[source]?.items;
-      let totalPrice = 0;
+      return (
+        state.baskets[source]?.items
+          .reduce((total, item) => total + item.price * item.quantity, 0)
+          ?.toFixed(2) || 0
+      );
+    },
 
-      if (sourceItems) {
-        totalPrice = sourceItems.reduce(
-          (total, item) => total + item.price * item.quantity,
-          0,
-        );
+    getBasketItems: (state) => (expanded) => {
+      const hierarchy = [];
+      const topLevel = {
+        name: 'Total',
+        items: [
+          {
+            totalItems: state.getAllItems.length,
+            totalPrice: state.getAllItems
+              .reduce((total, item) => total + item.price * item.quantity, 0)
+              .toFixed(2),
+            sourceItems: [],
+          },
+        ],
+      };
+      const sourceItems = {};
+
+      state.getAllItems.forEach((item) => {
+        if (!sourceItems[item.source]) {
+          sourceItems[item.source] = {
+            source: item.source,
+            items: [],
+          };
+        }
+        sourceItems[item.source].items.push(item);
+      });
+
+      if (expanded) {
+        topLevel.items[0].sourceItems = Object.values(sourceItems);
       }
 
-      return totalPrice.toFixed(2);
+      hierarchy.push(topLevel);
+
+      return hierarchy;
     },
   },
   actions: {
@@ -164,8 +177,9 @@ export const useFulfillment = defineStore({
     },
 
     getQuantityForProduct(productId, source) {
-      const sourceItems = this.baskets[source]?.items;
-      const item = sourceItems?.find((item) => item.productId === productId);
+      const item = this.baskets[source]?.items.find(
+        (item) => item.productId === productId,
+      );
 
       return item ? item.quantity : 0;
     },

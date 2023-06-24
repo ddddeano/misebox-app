@@ -5,7 +5,7 @@
       Your basket is empty
     </div>
     <div v-else>
-      <div class="description">confirm your basket</div>
+      <h>confirm your basket</h>
       <div class="basket-summary">
         <div v-for="source in fulfillment.baskets" :key="source">
           <BasketSummary

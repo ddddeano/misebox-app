@@ -1,7 +1,7 @@
 # Nuxt 3 Minimal Starter
 
-firebase admin firebase init hosting
-
+1 firebase init hosting
+2 npm install -D firebase-admin firebase-functions
 .output/public
 
 NO to the choice
@@ -24,14 +24,13 @@ NO to the choice
 "ignore": ["firebase.json", "**/.*", "**/node_modules/**"]
 }
 }
+"NITRO_PRESET=firebase
 
 # npm
 
-npm install -D firebase-admin firebase-functions firebase-functions-test
-
 # deploy
 
-"fire": "NITRO_PRESET=firebase npm run build"
+"fire": npm run build"
 delete output/server/node_modules -> open server in integrated terminal -> npm i -> close -> npx firebase deploy in main terminal
 
 Look at the [Nuxt 3 documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.

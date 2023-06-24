@@ -74,7 +74,7 @@
 
 <script setup>
 const { zoneNames } = useDeliveryZones();
-const user = useMiseboxUserStore();
+const user = useMiseboxUser();
 const avatarUrls = useAvatarUrls();
 
 const showUpdateEffect = reactive({

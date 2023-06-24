@@ -1,3 +1,4 @@
+<!-- Framework/Logo -->
 <template>
   <div class="logo-container">
     <NuxtLink to="/">

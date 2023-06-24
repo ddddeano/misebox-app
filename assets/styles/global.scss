@@ -19,6 +19,7 @@ h4,
 h5,
 h6 {
   text-align: center;
+  margin: 1rem;
 }
 
 button {
@@ -73,9 +74,12 @@ p {
   align-items: center;
 
   .title {
-    font-size: 2rem;
+    margin-bottom: 0.5em;
+    text-align: center;
     font-weight: bold;
+    font-size: 2em;
   }
+
   .subheading {
     font-size: 1rem;
     line-height: 1.4;
