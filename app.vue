@@ -6,7 +6,15 @@
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+const calendarStore = useCalendarStore();
+
+onMounted(async () => {
+  console.log('Component mounted, fetching Firestore dates...');
+  await calendarStore.fetchFirestoreDates();
+  console.log('Firestore dates fetched.');
+});
+</script>
 
 <style lang="scss">
 :root {

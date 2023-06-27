@@ -1,5 +1,5 @@
 export const useDevice = () => {
-  let device = ref(process.server ? 'mobile' : 'desktop');
+  const device = ref(process.server ? 'mobile' : 'desktop');
 
   if (process.client) {
     const { width } = useWindowSize();
@@ -17,9 +17,19 @@ export const useDevice = () => {
 
     // Watch for changes in screen width and update device type
     watch(width, (newWidthValue) => {
-      device.value = getDeviceType(parseInt(newWidthValue));
+      const newDeviceType = getDeviceType(parseInt(newWidthValue));
+      if (newDeviceType !== device.value) {
+        console.log(`Device changed: ${device.value} => ${newDeviceType}`);
+        device.value = newDeviceType;
+      }
     });
   }
 
   return { device };
+};
+
+export const breakpoints = {
+  mobile: '576px',
+  tablet: '768px',
+  desktop: '992px',
 };

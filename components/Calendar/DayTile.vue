@@ -1,27 +1,24 @@
 <template>
-  <div>
-    <div
-      class="day-tile"
-      :class="[source, view, { 'selected-date': isSelectedDate() }]"
-      @click="handleClick"
-    >
+  <div class="day-tile-wrapper" :class="{ 'selected-date': isSelectedDate() }">
+    <div class="day-tile" :class="[source]" @click="handleClick">
       <CalendarDayBody
         :formattedDate="formattedDate"
         :time="selectedKitchenTime()"
+        :class="source"
       />
     </div>
-    <CalendarTimeSlots
-      v-if="showTimeSlots"
-      :day="day"
-      :slots="slots"
-      class="time-slots"
-    />
+    <Transition name="fade">
+      <CalendarTimeSlots
+        v-if="showTimeSlots"
+        :day="day"
+        :slots="slots"
+        class="time-slots"
+      />
+    </Transition>
   </div>
 </template>
 
 <script setup>
-import { watch } from 'vue';
-
 const fulfillment = useFulfillment();
 
 const props = defineProps({
@@ -37,11 +34,6 @@ const props = defineProps({
   time: {
     type: String,
     default: null,
-  },
-  view: {
-    type: String,
-    required: true,
-    validator: (value) => ['quicklook', 'basket', 'default'].includes(value),
   },
   slots: {
     type: Array,
@@ -100,50 +92,44 @@ watch(
 );
 </script>
 
-<style lang="scss" scoped>
-.day-tile {
+<style>
+.day-tile-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  width: 7rem;
-  height: 7rem;
-  padding: 0.5rem;
-  cursor: pointer;
-  border-radius: 10px;
-  transition: all 0.3s ease;
-  border: 1px solid #ccc;
-  background-color: #f0f0f0;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
 }
 
-.day-tile:hover {
-  transform: scale(1.05);
+.day-tile {
+  width: 150px; /* adjust as needed */
+  height: 150px; /* adjust as needed */
+  transition: margin-bottom 0.5s;
 }
 
-.day-tile.basket {
-  transform: scale(0.7);
+.day-body.kitchen {
+  background-color: var(--highlight-kitchen);
 }
 
-.day-tile.quicklook {
-  transform: scale(0.5);
+.day-body.shop {
+  background-color: var(--highlight-shop);
 }
 
-.day-tile.kitchen {
-  background-color: #add8e6;
+.day-body.production {
+  background-color: var(--highlight-production);
 }
 
-.day-tile.shop {
-  background-color: #98fb98;
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
 }
 
-.day-tile.production {
-  background-color: #ffa07a;
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 
-.day-tile.selected-date {
-  background-color: #1e1eb8;
-  color: #fff;
-  box-shadow: 0 0 10px rgba(30, 30, 184, 0.5);
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
 }
 </style>

@@ -5,6 +5,10 @@ $delivery-kitchen-unavailable: #fe3e03; //vibrant red
 $delivery-kitchen-booked: #8916e8; //vibrant purple
 $selected: #2196f3;
 
+$highlight-kitchen: #ffa07a; // Light Salmon
+$highlight-shop: #87cefa; // Light Sky Blue
+$highlight-production: #f0e68c; // Khaki
+
 $colors: (
   primary-color: $primary-color,
   primary-color-light: lighten($primary-color, 15%),
@@ -23,6 +27,10 @@ $colors: (
   secondary-color-dark-text: darken($secondary-color, 15%),
   delivery-production: #2196f3,
   selected: $selected,
+
+  highlight-kitchen: $highlight-kitchen,
+  highlight-shop: $highlight-shop,
+  highlight-production: $highlight-production,
 );
 
 :root {

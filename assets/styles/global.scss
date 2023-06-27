@@ -11,9 +11,11 @@ html {
   margin-top: 0;
   padding-top: 0;
 }
+
 h1 {
   margin: 0;
 }
+
 h3,
 h4,
 h5,
@@ -32,14 +34,14 @@ button {
   border: none;
   cursor: pointer;
   outline: none;
+}
 
-  &.icon-text-button {
-    display: inline-flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 12px 12px 24px;
-    box-shadow: inherit;
-  }
+button.icon-text-button {
+  display: inline-flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 12px 12px 24px;
+  box-shadow: inherit;
 }
 
 button:hover {
@@ -65,13 +67,18 @@ label {
   padding-top: 0.5rem;
   margin-bottom: 0.5rem;
 }
+
 p {
   margin-top: 0;
 }
+
 .index,
 .page {
-  padding: 0.5em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
   align-items: center;
+  padding: 0.5em;
 
   .title {
     margin-bottom: 0.5em;
@@ -86,6 +93,7 @@ p {
     padding: 0.4rem;
     font-weight: 300;
   }
+
   .description,
   .welcome {
     font-family: 'Didact Gothic', sans-serif;
@@ -95,18 +103,23 @@ p {
     padding-inline: 1rem;
     line-height: normal;
   }
-  @media screen and (min-width: 800px) {
-    width: 800px;
+}
+
+@media screen and (min-width: 800px) {
+  .index,
+  .page {
+    width: 1100px;
   }
 }
+
 .icon {
-  // <IconCSS name="uil:github" class="icon" />
   font-size: 2rem;
 }
+
 .delivery-info {
   color: white;
   font-weight: bold;
   text-align: center;
   margin-bottom: 1rem;
-  background-color: var(--color); /* Apply the custom color property */
+  background-color: var(--color);
 }

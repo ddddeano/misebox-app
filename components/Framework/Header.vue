@@ -75,13 +75,6 @@ header {
 .avatar {
   cursor: pointer;
 }
-.big-screen {
-  position: fixed;
-  top: 4.5rem;
-  width: 100%;
-  z-index: 998;
-  padding: 0 1rem;
-}
 .elements {
   display: flex;
   align-items: center;

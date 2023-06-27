@@ -45,17 +45,17 @@
         <div class="delivery-list">
           <div class="delivery-item">
             <div class="delivery-item-title">Shop</div>
-            <CalendarGrid source="shop" view="quick" />
+            <CalendarDayGrid source="shop" view="quick" />
           </div>
 
           <div class="delivery-item">
             <div class="delivery-item-title">Kitchen</div>
-            <CalendarGrid source="kitchen" view="quick" />
+            <CalendarDayGrid source="kitchen" view="quick" />
           </div>
 
           <div class="delivery-item">
             <div class="delivery-item-title">Production</div>
-            <CalendarGrid source="production" view="quick" />
+            <CalendarDayGrid source="production" view="quick" />
           </div>
         </div>
       </div>

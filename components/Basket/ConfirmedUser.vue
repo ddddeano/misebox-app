@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-import { doc, onSnapshot } from "firebase/firestore";
+import { doc, onSnapshot } from 'firebase/firestore';
 const props = defineProps({
   userId: {
     type: String,
@@ -17,19 +17,10 @@ const customer = ref(null);
 
 onMounted(async () => {
   const { $firestore } = useNuxtApp();
-  const userRef = doc($firestore, "customers", props.userId);
+  const userRef = doc($firestore, 'customers', props.userId);
   const unsub = onSnapshot(userRef, (doc) => {
     const data = doc.data();
     customer.value = data;
   });
 });
 </script>
-
-
-onMounted(async() => {
-  const { firestore } = useFirebase();
-  const docRef = doc(firestore, `animals`, 'dog');
-  onSnapshot(docRef, (snap) => {
-      data.value = snap.data();
-  });
-});

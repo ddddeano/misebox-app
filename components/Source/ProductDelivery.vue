@@ -1,22 +1,24 @@
 <template>
   <ClientOnly>
-    <div>
+    <div class="product-delivery-container">
       <CalendarProductsToggle
+        class="product-delivery-toggle-button"
         v-if="device === 'mobile'"
-        @update:view="handleToggle"
+        @update:view="handleViewToggle"
       />
-      <div class="content" :class="{ 'content--split': device !== 'mobile' }">
-        <div
-          class="products"
-          v-show="device !== 'mobile' || (device === 'mobile' && showProducts)"
-        >
-          <div v-for="product in products" :key="product.id">
-            <ProductCard :product="product" />
-          </div>
-        </div>
-        <CalendarGrid
+      <div class="product-calendar-split">
+        <SourceProductGrid
           :source="source"
-          v-show="device !== 'mobile' || (device === 'mobile' && !showProducts)"
+          v-show="
+            device !== 'mobile' || (device === 'mobile' && view === 'products')
+          "
+        />
+        <CalendarDayGrid
+          :source="source"
+          view="default"
+          v-show="
+            device !== 'mobile' || (device === 'mobile' && view === 'calendar')
+          "
         />
       </div>
     </div>
@@ -33,19 +35,46 @@ const props = defineProps({
 });
 
 const { device } = useDevice();
-const { data: products } = useFetch(`/api/products?source=${props.source}`);
-const showProducts = ref(true);
+const view = ref('products');
 
-const handleToggle = (view) => {
-  showProducts.value = view === 'products';
+const handleViewToggle = (newView) => {
+  view.value = newView;
 };
-
-const source = props.source;
 </script>
 
 <style scoped lang="scss">
-.content--split {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+.product-delivery-container {
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: 576px) {
+    flex-direction: row;
+  }
+
+  .product-delivery-toggle-button {
+    display: block;
+
+    @media (min-width: 576px) {
+      display: none;
+    }
+  }
+
+  .product-calendar-split {
+    display: flex;
+    flex-direction: column;
+
+    @media (min-width: 576px) {
+      flex-direction: row;
+    }
+  }
+
+  SourceProductGrid,
+  CalendarDayGrid {
+    flex-basis: 100%;
+
+    @media (min-width: 576px) {
+      flex-basis: 50%;
+    }
+  }
 }
 </style>

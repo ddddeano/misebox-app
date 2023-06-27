@@ -20,8 +20,10 @@ const props = defineProps({
 });
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 .day-body {
+  border-radius: 10px;
+
   display: flex;
   flex-direction: column;
   align-items: center;

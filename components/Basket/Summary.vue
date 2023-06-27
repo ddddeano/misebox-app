@@ -25,7 +25,7 @@
       v-if="fulfillment.baskets[basket.name].slot.day == null"
       class="date-options"
     >
-      <CalendarGrid :source="basket.name" view="basket" />
+      <CalendarDayGrid :source="basket.name" view="basket" />
     </div>
   </div>
 </template>

@@ -2,7 +2,7 @@
   <div class="layout">
     <FrameworkHeader />
     <div class="content">
-      <div class="big-screen" v-show="device !== 'mobile'">
+      <div v-show="device !== 'mobile'">
         <client-only>
           <Framework-NavigationLinks />
         </client-only>

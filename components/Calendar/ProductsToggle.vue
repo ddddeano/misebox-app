@@ -2,14 +2,14 @@
   <div class="toggle-container">
     <button
       class="toggle-button"
-      :class="{ active: showProducts }"
+      :class="{ 'toggle-button--active': view === 'products' }"
       @click="setProducts"
     >
       Products
     </button>
     <button
       class="toggle-button"
-      :class="{ active: !showProducts }"
+      :class="{ 'toggle-button--active': view === 'calendar' }"
       @click="setCalendar"
     >
       Delivery
@@ -18,15 +18,15 @@
 </template>
 
 <script setup>
-const showProducts = ref(true);
+const view = ref('products');
 
 const setProducts = () => {
-  showProducts.value = true;
+  view.value = 'products';
   emit('update:view', 'products');
 };
 
 const setCalendar = () => {
-  showProducts.value = false;
+  view.value = 'calendar';
   emit('update:view', 'calendar');
 };
 
@@ -36,6 +36,8 @@ const emit = defineEmits(['update:view']);
 <style scoped lang="scss">
 .toggle-container {
   display: flex;
+  min-width: 20rem;
+  justify-content: space-around;
   border: 2px solid var(--secondary-color);
   border-radius: 25px;
   overflow: hidden;
@@ -46,20 +48,25 @@ const emit = defineEmits(['update:view']);
 }
 
 .toggle-button {
+  margin-inline: 0.4rem;
   flex-grow: 1;
+  width: 120px;
   padding: 0.5rem;
   font-size: 0.9rem;
   font-weight: bold;
   text-transform: uppercase;
   border: none;
-  background-color: var(--primary-color);
+  background-color: var(
+    --primary-color
+  ) !important; /* Override the global button style */
   color: var(--secondary-color-dark-text);
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;
-  margin-inline: 0.5rem;
 }
 
-.toggle-button.active {
-  background-color: var(--primary-color-dark);
+.toggle-button--active {
+  background-color: var(
+    --primary-color-dark
+  ) !important; /* Override the global button style */
 }
 </style>

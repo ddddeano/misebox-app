@@ -119,36 +119,25 @@ const decrementQuantity = () => {
   height: 1.5rem;
   opacity: 0;
   transition: opacity 0.3s ease-in-out;
+  background-color: var(--primary-color);
+  color: var(--primary-color-opposite);
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: var(--secondary-color-dark);
-  color: var(--primary-color);
-  @media (min-width: 576px) {
-    right: 50px;
-  }
+  cursor: pointer;
+  z-index: 2;
 }
-.cart-button {
-  margin-inline: 1.5rem;
-}
-.product-qty.show,
-.product-minus.show {
+
+.product.show {
   opacity: 1;
 }
+
 .product-minus {
-  margin-top: 2rem;
+  top: 175px;
+  opacity: 0;
 }
 
-/* Specific overrides for each source */
-.product.shop {
-  /* Add shop-specific styles here */
-}
-
-.product.kitchen {
-  /* Add kitchen-specific styles here */
-}
-
-.product.production {
-  /* Add production-specific styles here */
+.product.show {
+  opacity: 1;
 }
 </style>

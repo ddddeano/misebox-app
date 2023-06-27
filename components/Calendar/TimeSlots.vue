@@ -54,17 +54,13 @@ const selectTimeSlot = (slot) => {
 </script>
 
 <style lang="scss" scoped>
-/* Your existing styles */
-</style>
-
-<style lang="scss" scoped>
 .time-slots {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
+  grid-template-columns: repeat(2, 1fr); /* Display slots in a row of two */
   gap: 0.5rem;
-  padding: 1rem;
+  padding: 0.5rem;
   border-radius: 5px;
-  background-color: #fff;
+  background-color: var(--secondary-color);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
   transition: all 0.3s ease;
   max-height: 200px;
@@ -78,19 +74,20 @@ const selectTimeSlot = (slot) => {
   align-items: center;
   height: 50px;
   border-radius: 5px;
-  background-color: #f0f0f0;
+  background-color: var(--primary-color);
   cursor: pointer;
   transition: all 0.3s ease;
   font-weight: bold;
-}
 
-.slot:hover {
-  transform: scale(1.1);
-}
+  &:hover {
+    transform: scale(1.1);
+    background-color: var(--highlight-kitchen);
+  }
 
-.slot.selected-time {
-  background-color: #add8e6;
-  color: #fff;
-  box-shadow: 0 0 10px rgba(173, 216, 230, 0.5);
+  &.selected-time {
+    background-color: var(--selected);
+    color: #fff;
+    box-shadow: 0 0 10px rgba(173, 216, 230, 0.5);
+  }
 }
 </style>

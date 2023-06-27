@@ -7,7 +7,4 @@
 
 <script setup></script>
 
-<style scoped lang="scss">
-.index {
-}
-</style>
+<style scoped lang="scss"></style>
