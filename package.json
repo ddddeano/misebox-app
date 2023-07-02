@@ -6,7 +6,7 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "fire": "NITRO_PRESET=firebase npm run build"
+    "fire": "NITRO_PRESET=firebase npm run build && npx firebase deploy"
   },
   "devDependencies": {
     "@nuxt/types": "^2.16.3",
@@ -24,6 +24,7 @@
     "@pinia/nuxt": "^0.4.11",
     "@vueuse/nuxt": "^9.13.0",
     "firebase": "^9.19.1",
+    "masonry-layout": "^4.2.2",
     "moment": "^2.29.4",
     "pinia": "^2.1.4",
     "sass": "^1.60.0",

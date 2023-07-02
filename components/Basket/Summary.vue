@@ -3,29 +3,60 @@
     <div class="header">
       <h2 class="title">{{ basket.name }}</h2>
       <div class="total">
-        {{ getTotalItemsBySource() }} Items | {{ getTotalPriceBySource() }}
+        {{ sourceDetail.numberOfItems }} Items | {{ sourceDetail.totalPrice }}
       </div>
     </div>
     <div
-      v-for="item in getItemsBySource()"
+      v-for="item in sourceDetail.items"
       :key="item.productId"
       class="basket-item"
     >
       <BasketItem :item="item" />
     </div>
-    <div v-if="fulfillment.baskets[basket.name].slot.day !== null">
+    <div
+      v-if="fulfillment.baskets[basket.name].slot.day !== '' && !showTimeSlots"
+    >
       <CalendarDayTile
         :source="basket.name"
-        :day="fulfillment.baskets[basket.name].slot.day"
-        :time="fulfillment.baskets[basket.name].slot.time"
-        view="basket"
+        :dateString="fulfillment.baskets[basket.name].slot.day"
+        @toggleTimeSlots="toggleTimeSlots"
       />
     </div>
+    <button
+      v-if="fulfillment.baskets[basket.name].slot.day !== ''"
+      @click="clearDate('kitchen')"
+      class="clear-date"
+    >
+      Clear date
+    </button>
+
+    <!-- Add a button to clear the selected time -->
+    <button
+      v-if="
+        fulfillment.baskets[basket.name].slot.day !== '' &&
+        fulfillment.baskets[basket.name].slot.time !== ''
+      "
+      @click="clearTime('kitchen')"
+      class="clear-time"
+    >
+      Clear time
+    </button>
     <div
-      v-if="fulfillment.baskets[basket.name].slot.day == null"
+      v-show="showTimeSlots && selectedDay !== ''"
+      class="time-slots-container"
+    >
+      <CalendarTimeSlots :dateString="selectedDay" />
+    </div>
+
+    <div
+      v-if="fulfillment.baskets[basket.name].slot.day === '' || showTimeSlots"
       class="date-options"
     >
-      <CalendarDayGrid :source="basket.name" view="basket" />
+      <CalendarDayGrid
+        :source="basket.name"
+        view="basket"
+        @toggleTimeSlots="toggleTimeSlots"
+      />
     </div>
   </div>
 </template>
@@ -39,23 +70,23 @@ const props = defineProps({
 });
 
 const fulfillment = useFulfillment();
+const sourceDetail = computed(() =>
+  fulfillment.sourceDetails(props.basket.name),
+);
+const showTimeSlots = ref(false);
+const selectedDay = computed(
+  () => fulfillment.getSelectedDay(props.basket.name) || '',
+);
 
-const getTotalItemsBySource = () => {
-  const sourceItems = fulfillment.baskets[props.basket.name]?.items;
-  return sourceItems
-    ? sourceItems.reduce((total, item) => total + item.quantity, 0)
-    : 0;
+const toggleTimeSlots = () => {
+  showTimeSlots.value = !showTimeSlots.value;
 };
 
-const getTotalPriceBySource = () => {
-  const sourceItems = fulfillment.baskets[props.basket.name]?.items;
-  return sourceItems
-    ? sourceItems.reduce((total, item) => total + item.price * item.quantity, 0)
-    : 0;
+const clearDate = () => {
+  fulfillment.clearDate(props.basket.name);
 };
-
-const getItemsBySource = () => {
-  return fulfillment.baskets[props.basket.name]?.items || [];
+const clearTime = () => {
+  fulfillment.clearTime(props.basket.name);
 };
 </script>
 
@@ -88,23 +119,23 @@ const getItemsBySource = () => {
       font-size: 0.9rem;
       min-width: fit-content;
     }
+  }
 
-    .date-options {
-      height: 200px;
-      overflow-y: scroll;
-    }
+  .date-options {
+    height: 200px;
+    overflow-y: scroll;
   }
 }
 
 .basket-summary.source-kitchen {
-  background-color: #f0f8ff; // Example color, adjust to your needs
+  background-color: #f0f8ff;
 }
 
 .basket-summary.source-shop {
-  background-color: #e6e6fa; // Example color, adjust to your needs
+  background-color: #e6e6fa;
 }
 
 .basket-summary.source-production {
-  background-color: #f5f5dc; // Example color, adjust to your needs
+  background-color: #f5f5dc;
 }
 </style>

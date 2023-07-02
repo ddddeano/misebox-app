@@ -1,23 +1,31 @@
 <template>
-  <div
-    :class="[
-      'calendar-grid',
-      view === 'quick' ? 'grid-quick' : '',
-      view === 'basket' ? 'grid-basket' : '',
-    ]"
-  >
-    <CalendarDayTile
-      v-for="day in shownDays"
-      :key="day"
-      :source="source"
-      :day="day"
-      :slots="day.slots"
-    />
-
-    <div v-if="view === 'quick'" :class="['calendar-day-tile', 'more-button']">
-      <NuxtLink :to="`/calendar/source-${source}`" class="more-button-link">
-        More
-      </NuxtLink>
+  <div class="calendar-container">
+    <div
+      :class="[
+        'calendar-grid',
+        view === 'quick' ? 'grid-quick' : '',
+        view === 'basket' ? 'grid-basket' : '',
+      ]"
+    >
+      <div
+        v-for="day in shownDays"
+        :key="day.dateString"
+        class="calendar-day-container"
+      >
+        <CalendarDayTile
+          :source="source"
+          :dateString="day.dateString"
+          @toggleTimeSlots="handleToggleTimeSlots"
+        />
+      </div>
+      <div
+        v-if="view === 'quick'"
+        :class="['calendar-day-tile', 'more-button']"
+      >
+        <NuxtLink :to="`/calendar/source-${source}`" class="more-button-link">
+          More
+        </NuxtLink>
+      </div>
     </div>
   </div>
 </template>
@@ -37,6 +45,8 @@ const props = defineProps({
   },
 });
 
+const emits = defineEmits(['toggleTimeSlots']);
+
 const shownDays = computed(() => {
   const openDays = calendarStore.openDaysBySource(
     props.source,
@@ -44,26 +54,28 @@ const shownDays = computed(() => {
   );
   return openDays;
 });
+
+const handleToggleTimeSlots = () => {
+  emits('toggleTimeSlots');
+};
 </script>
 
 <style lang="scss">
+.calendar-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.calendar-day-container {
+  flex: 1 0 33.33%;
+  display: flex;
+  justify-content: center; /* Horizontal centering */
+  align-items: center; /* Vertical centering */
+}
+
 .calendar-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-gap: 1rem;
-  justify-content: center;
-  align-items: center;
-  padding: 1rem;
-}
-
-.grid-quick,
-.grid-basket {
-  grid-template-columns: repeat(5, 1fr);
-}
-
-@media (min-width: 768px) {
-  .calendar-grid {
-    grid-template-columns: repeat(3, 1fr);
-  }
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div class="day-body">
+  <div class="day-details">
     <div class="day-name">{{ formattedDate.dayName }}</div>
     <div class="day-number">{{ formattedDate.day }}</div>
     <div class="time" v-if="time">{{ time }}</div>
@@ -21,21 +21,23 @@ const props = defineProps({
 </script>
 
 <style lang="scss">
-.day-body {
-  border-radius: 10px;
+/* day body */
 
+.day-details {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   height: 100%;
-  padding: 0.5rem;
+  width: 100%;
+  padding: 0.25rem; /* reduced padding */
 }
 
 .day-name {
-  font-size: 1rem;
+  font-size: 0.8rem; /* reduced font size */
   font-weight: bold;
-  margin-bottom: 0.2rem;
+  width: 100%;
+  text-align: center;
 }
 
 .day-number {
@@ -45,7 +47,6 @@ const props = defineProps({
 
 .month {
   font-size: 1rem;
-  margin-top: 0.2rem;
 }
 
 .time {

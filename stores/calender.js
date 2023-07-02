@@ -7,15 +7,18 @@ import {
   endAt,
   onSnapshot,
 } from 'firebase/firestore';
-
 export const useCalendarStore = defineStore('calendar', {
   state: () => ({
     currentPeriod: generatePeriod(0, 2),
-    firestoreCalendar: [],
-    globalCalendar: [],
-    productionCalendar: [],
-    shopCalendar: [],
-    kitchenCalendar: [],
+    calendars: {
+      firestoreCalendar: [],
+      globalCalendar: [],
+      sources: {
+        production: [],
+        shop: [],
+        kitchen: [],
+      },
+    },
   }),
   actions: {
     async fetchFirestoreDates() {
@@ -29,26 +32,33 @@ export const useCalendarStore = defineStore('calendar', {
       );
 
       const unsubscribe = onSnapshot(datesRef, (snapshot) => {
-        this.firestoreCalendar = snapshot.docs.map((doc) => ({
+        this.calendars.firestoreCalendar = snapshot.docs.map((doc) => ({
           ...doc.data(),
           id: doc.id,
         }));
 
-        this.globalCalendar = generateGlobalCalendar(
+        this.calendars.globalCalendar = generateGlobalCalendar(
           this.currentPeriod,
-          this.firestoreCalendar,
+          this.calendars.firestoreCalendar,
         );
-        this.productionCalendar = generateProductionCalendar(
-          this.globalCalendar,
+        this.calendars.sources.production = generateProductionCalendar(
+          this.calendars.globalCalendar,
         );
-        this.shopCalendar = generateShopCalendar(this.globalCalendar);
-        this.kitchenCalendar = generateKitchenCalendar(this.globalCalendar);
+        this.calendars.sources.shop = generateShopCalendar(
+          this.calendars.globalCalendar,
+        );
+        this.calendars.sources.kitchen = generateKitchenCalendar(
+          this.calendars.globalCalendar,
+        );
 
-        console.log('Fetched data from Firestore:', this.firestoreCalendar);
-        console.log('Global calendar:', this.globalCalendar);
-        console.log('Production calendar:', this.productionCalendar);
-        console.log('Shop calendar:', this.shopCalendar);
-        console.log('Kitchen calendar:', this.kitchenCalendar);
+        console.log(
+          'Fetched data from Firestore:',
+          this.calendars.firestoreCalendar,
+        );
+        console.log('Global calendar:', this.calendars.globalCalendar);
+        console.log('Production calendar:', this.calendars.sources.production);
+        console.log('Shop calendar:', this.calendars.sources.shop);
+        console.log('Kitchen calendar:', this.calendars.sources.kitchen);
       });
 
       return unsubscribe;
@@ -56,9 +66,13 @@ export const useCalendarStore = defineStore('calendar', {
   },
   getters: {
     openDaysBySource: (state) => (source, param) => {
-      const openDays = state[source + 'Calendar'].filter(
-        (day) => day.status === 'open',
-      );
+      const openDays = state.calendars[source + 'Calendar']
+        ? state.calendars[source + 'Calendar'].filter(
+            (day) => day.status === 'open',
+          )
+        : state.calendars.sources[source].filter(
+            (day) => day.status === 'open',
+          );
       return param === 'ALL' ? openDays : openDays.slice(0, param);
     },
     getSelectedDayBySource: () => (source) => {
@@ -71,5 +85,19 @@ export const useCalendarStore = defineStore('calendar', {
       const selectedTime = fulfillment.baskets[source]?.slot?.time || null;
       return selectedTime;
     },
+    getTimeSlotsForDay:
+      (state) =>
+      (source = 'kitchen', dayString) => {
+        if (source === 'kitchen') {
+          const kitchenDay = state.calendars.sources.kitchen.find(
+            (day) => day.dateString === dayString,
+          );
+          if (kitchenDay) {
+            return kitchenDay.slots;
+          }
+        }
+
+        return []; // Return an empty array if the source is not 'kitchen' or the day is not found
+      },
   },
 });

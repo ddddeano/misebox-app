@@ -1,7 +1,8 @@
 <template>
   <div class="time-slots">
+    <div class="date-display">{{ dateString }}</div>
     <div
-      v-for="(slot, index) in slots"
+      v-for="(slot, index) in timeSlots"
       :key="index"
       :class="{ 'selected-time': isSelectedTime(slot) }"
       class="slot"
@@ -14,41 +15,40 @@
 
 <script setup>
 const fulfillment = useFulfillment();
+const calendar = useCalendarStore();
 
 const props = defineProps({
-  day: {
-    type: Object,
-    required: true,
+  dateString: {
+    type: String,
+    default: '',
   },
-  slots: {
-    type: Array,
-    required: true,
-  },
+});
+
+const timeSlots = computed(() => {
+  return calendar.getTimeSlotsForDay('kitchen', props.dateString);
 });
 
 const isSelectedTime = (slot) => {
   const kitchenSlot = fulfillment.baskets['kitchen'].slot;
-
   return (
     kitchenSlot &&
-    kitchenSlot.day?.dateString === props.day.dateString &&
+    kitchenSlot.day === props.dateString &&
     kitchenSlot.time === slot.time
   );
 };
 
 const selectTimeSlot = (slot) => {
   const kitchenSlot = fulfillment.baskets['kitchen'].slot;
-
   if (
     kitchenSlot &&
-    kitchenSlot.day?.dateString === props.day.dateString &&
+    kitchenSlot.day === props.dateString &&
     kitchenSlot.time === slot.time
   ) {
-    console.log('Deselecting slot:', props.day.dateString, slot.time);
+    console.log('Deselecting slot:', props.dateString, slot.time);
     fulfillment.selectSlot('kitchen', null, null);
   } else {
-    console.log('Selecting slot:', props.day.dateString, slot.time);
-    fulfillment.selectSlot('kitchen', props.day, slot.time);
+    console.log('Selecting slot:', props.dateString, slot.time);
+    fulfillment.selectSlot('kitchen', props.dateString, slot.time);
   }
 };
 </script>
@@ -56,38 +56,43 @@ const selectTimeSlot = (slot) => {
 <style lang="scss" scoped>
 .time-slots {
   display: grid;
-  grid-template-columns: repeat(2, 1fr); /* Display slots in a row of two */
+  grid-template-columns: repeat(4, 1fr);
   gap: 0.5rem;
+  background-color: var(--secondary-color-dark);
   padding: 0.5rem;
-  border-radius: 5px;
+  border-radius: 0.25rem;
+  align-items: center; /* Center the slots vertically */
+  width: 100%; /* Take up the full width of the container */
+}
+
+.date-display {
+  grid-column: span 4;
+  padding: 0.5rem;
+  text-align: center;
   background-color: var(--secondary-color);
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
-  transition: all 0.3s ease;
-  max-height: 200px;
-  overflow: auto;
-  margin-top: 0.5rem;
+  color: var(--secondary-color-dark-text);
+  font-weight: bold;
+  border-radius: 0.25rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
 }
 
 .slot {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 50px;
-  border-radius: 5px;
-  background-color: var(--primary-color);
-  cursor: pointer;
-  transition: all 0.3s ease;
-  font-weight: bold;
+  padding: 0.5rem;
+  text-align: center;
+  background-color: var(--primary-color-dark);
+  color: #fff;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s ease;
+  font-size: 0.8rem;
 
   &:hover {
-    transform: scale(1.1);
-    background-color: var(--highlight-kitchen);
+    background-color: var(--primary-color-light);
+    cursor: pointer;
   }
 
   &.selected-time {
     background-color: var(--selected);
-    color: #fff;
-    box-shadow: 0 0 10px rgba(173, 216, 230, 0.5);
   }
 }
 </style>

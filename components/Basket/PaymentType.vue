@@ -1,5 +1,9 @@
 <template>
-  <div class="payment-type" :class="{ disabled: !paymentType.enabled }" @click="selectOption">
+  <div
+    class="payment-type"
+    :class="{ disabled: !paymentType.enabled }"
+    @click="selectOption"
+  >
     <div class="payment-type-label">{{ paymentType.name }}</div>
     <Icon :name="paymentType.icon" />
   </div>
@@ -20,6 +24,7 @@ const selectOption = () => {
   }
 };
 </script>
+
 <style scoped lang="scss">
 .payment-type {
   display: flex;
@@ -30,21 +35,21 @@ const selectOption = () => {
   height: 100px;
   width: 100px;
   padding: 10px;
-  border: 1px solid var(--tertiary-color-dark);
+  border: 1px solid var(--dev-todo);
   border-radius: 12px;
-  // background-color: var(--secondary-color-light);
+  background-color: var(--dev-todo);
   margin-bottom: 1rem;
 }
 
 .payment-type.disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  // background-color: var(--alert-color-light);
+  background-color: var(--dev-todo);
 }
 
 .payment-type.active {
-  // background-color: var(--quinary-color);
-  // color: var(--secondary-color-light);
+  background-color: var(--dev-todo);
+  color: var(--secondary-color-light);
 }
 
 .payment-type:hover {

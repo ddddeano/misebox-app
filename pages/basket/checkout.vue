@@ -2,8 +2,6 @@
   <div class="page checkout">
     <h1 class="title">Process Checkout</h1>
 
-    <BasketItemsHierarchy :items="getBasketItems()" />
-
     <div class="payment-types">
       <!-- ... -->
     </div>

@@ -85,10 +85,10 @@ footer {
 }
 
 .social-links a {
-  /* color: var(--secondary-color); */
+  color: var(--secondary-color);
 }
 
 .social-links a:hover {
-  /* color: var(--tertiary-color); */
+  color: var(--dev-todo);
 }
 </style>

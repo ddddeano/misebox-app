@@ -16,6 +16,9 @@ h1 {
   margin: 0;
 }
 
+h2 {
+  text-align: left;
+}
 h3,
 h4,
 h5,
@@ -122,4 +125,17 @@ p {
   text-align: center;
   margin-bottom: 1rem;
   background-color: var(--color);
+}
+
+.message {
+  box-shadow: var(--box-shadow-element);
+  border-radius: 0.5rem;
+  padding: 1rem;
+  align-content: center;
+}
+
+@media screen and (min-width: 576px) {
+  .message {
+    width: 800px;
+  }
 }

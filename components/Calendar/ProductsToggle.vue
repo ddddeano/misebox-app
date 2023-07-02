@@ -56,17 +56,13 @@ const emit = defineEmits(['update:view']);
   font-weight: bold;
   text-transform: uppercase;
   border: none;
-  background-color: var(
-    --primary-color
-  ) !important; /* Override the global button style */
+  background-color: var(--primary-color);
   color: var(--secondary-color-dark-text);
   cursor: pointer;
   transition: background-color 0.3s ease-in-out;
 }
 
 .toggle-button--active {
-  background-color: var(
-    --primary-color-dark
-  ) !important; /* Override the global button style */
+  background-color: var(--primary-color-dark);
 }
 </style>

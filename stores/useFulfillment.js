@@ -7,133 +7,148 @@ export const useFulfillment = defineStore({
       kitchen: {
         name: 'kitchen',
         slot: {
-          day: null,
-          time: null,
+          day: '',
+          time: '',
         },
         items: [],
       },
       shop: {
         name: 'shop',
         slot: {
-          day: null,
+          day: '',
         },
         items: [],
       },
       production: {
         name: 'production',
         slot: {
-          day: null,
+          day: '',
         },
         items: [],
       },
     },
   }),
   getters: {
-    isEmpty: (state) => (source) => {
-      return state.baskets[source].items.length === 0;
-    },
-
-    allBasketsEmpty: (state) => {
-      return Object.values(state.baskets).every(
-        (basket) => basket.items.length === 0,
+    basketDetails: (state) => {
+      const hasItems = Object.values(state.baskets).some(
+        (basket) => basket.items.length > 0,
       );
-    },
-
-    getTotalItemsBySource: (state) => (source) => {
-      return state.baskets[source]?.items.length || 0;
-    },
-
-    getTotalPriceBySource: (state) => (source) => {
-      return (
-        state.baskets[source]?.items
-          .reduce((total, item) => total + item.price * item.quantity, 0)
-          ?.toFixed(2) || 0
+      const numberOfItems = Object.values(state.baskets).reduce(
+        (sum, basket) => sum + basket.items.length,
+        0,
       );
-    },
+      const totalPrice = Object.values(state.baskets).reduce((sum, basket) => {
+        return (
+          sum +
+          basket.items.reduce(
+            (subtotal, item) => subtotal + item.price * item.quantity,
+            0,
+          )
+        );
+      }, 0);
 
-    getAllItems: (state) => {
-      return Object.values(state.baskets).flatMap((basket) => basket.items);
-    },
-
-    getTotalPriceForProduct: (state) => (productId, source) => {
-      const item = state.baskets[source]?.items.find(
-        (item) => item.productId === productId,
-      );
-
-      return item ? (item.price * item.quantity).toFixed(2) : 0;
-    },
-
-    getTotalPriceForAllProducts: (state) => (source) => {
-      return (
-        state.baskets[source]?.items
-          .reduce((total, item) => total + item.price * item.quantity, 0)
-          ?.toFixed(2) || 0
-      );
-    },
-
-    getBasketItems: (state) => (expanded) => {
-      const hierarchy = [];
-      const topLevel = {
-        name: 'Total',
-        items: [
-          {
-            totalItems: state.getAllItems.length,
-            totalPrice: state.getAllItems
-              .reduce((total, item) => total + item.price * item.quantity, 0)
-              .toFixed(2),
-            sourceItems: [],
-          },
-        ],
+      return {
+        hasItems,
+        numberOfItems,
+        totalPrice,
       };
-      const sourceItems = {};
+    },
+    getSelectedDay: (state) => (source) => {
+      return state.baskets[source]?.slot?.day;
+    },
 
-      state.getAllItems.forEach((item) => {
-        if (!sourceItems[item.source]) {
-          sourceItems[item.source] = {
-            source: item.source,
-            items: [],
-          };
-        }
-        sourceItems[item.source].items.push(item);
-      });
+    sourceDetails: (state) => (source) => {
+      console.log('Source:', source); // Add this line for debugging
 
-      if (expanded) {
-        topLevel.items[0].sourceItems = Object.values(sourceItems);
+      const basket = state.baskets[source];
+      if (!basket) {
+        return { hasItems: false, numberOfItems: 0, totalPrice: 0 };
       }
 
-      hierarchy.push(topLevel);
+      const hasItems = basket.items.length > 0;
+      const numberOfItems = basket.items.reduce(
+        (sum, item) => sum + item.quantity,
+        0,
+      );
+      const totalPrice = basket.items.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0,
+      );
 
-      return hierarchy;
+      return {
+        hasItems,
+        numberOfItems,
+        totalPrice,
+        items: basket.items, // include items in the return object
+      };
+    },
+
+    productDetails: (state) => (source, productId) => {
+      const basket = state.baskets[source];
+      if (!basket) {
+        return { productQuantity: 0, totalPrice: 0 };
+      }
+
+      const product = basket.items.find((item) => item.productId === productId);
+      const productQuantity = product ? product.quantity : 0;
+      const totalPrice = product ? product.price * product.quantity : 0;
+
+      return {
+        productQuantity,
+        totalPrice,
+      };
+    },
+
+    isSelectedDate: (state) => (source, dateString) => {
+      return (
+        state.baskets[source] &&
+        state.baskets[source].slot &&
+        state.baskets[source].slot.day === dateString
+      );
+    },
+
+    selectedTime: (state) => (source, dateString) => {
+      if (source === 'kitchen') {
+        if (state.baskets.kitchen.slot?.day === dateString) {
+          return state.baskets.kitchen.slot.time;
+        }
+      }
+      return null;
     },
   },
+
   actions: {
-    selectSlot(source, day, time) {
+    // Select or deselect a delivery slot
+    // Select or deselect a delivery slot
+    selectSlot(source, dateString, time) {
       if (!this.baskets[source]) {
         console.error(`Invalid source: ${source}`);
         return;
       }
 
-      const dateAndOrTime = {
-        day: day,
-        time: time ? time : null,
-      };
-
       if (
         this.baskets[source].slot &&
-        day &&
-        this.baskets[source].slot.day?.dateString === day.dateString &&
+        this.baskets[source].slot.day === dateString &&
         this.baskets[source].slot.time === time
       ) {
         this.baskets[source].slot = {
-          day: null,
-          time: null,
+          day: '',
+          time: '',
         };
       } else {
-        this.baskets[source].slot = dateAndOrTime;
+        this.baskets[source].slot = {
+          day: dateString,
+          time: time ? time : '',
+        };
       }
     },
 
-    addItem(source, product) {
+    // Add product to the specified source basket
+    addProduct(source, product) {
+      if (!this.baskets[source]) {
+        console.error(`Invalid source: ${source}`);
+        return;
+      }
       const sourceItems = this.baskets[source].items;
       const existingItem = sourceItems.find(
         (item) => item.productId === product.productId,
@@ -154,34 +169,48 @@ export const useFulfillment = defineStore({
       }
     },
 
-    removeItem(source, product) {
-      const sourceItems = this.baskets[source].items;
-      const itemIndex = sourceItems.findIndex(
-        (item) => item.productId === product.productId,
-      );
+    // Removes product(s) from the specified source basket
+    removeItems(source, product = 'all') {
+      if (!this.baskets[source]) {
+        console.error(`Invalid source: ${source}`);
+        return;
+      }
+      if (product === 'all') {
+        this.baskets[source].items = [];
+      } else {
+        const itemIndex = this.baskets[source].items.findIndex(
+          (item) => item.productId === product.productId,
+        );
 
-      if (itemIndex !== -1) {
-        sourceItems.splice(itemIndex, 1);
+        if (itemIndex !== -1) {
+          this.baskets[source].items.splice(itemIndex, 1);
+        }
+      }
+    },
+    clearDate(source) {
+      if (!this.baskets[source]) {
+        console.error(`Invalid source: ${source}`);
+        return;
+      }
+
+      this.baskets[source].slot.day = '';
+
+      // If source is kitchen, also clear time
+      if (source === 'kitchen') {
+        this.baskets[source].slot.time = '';
       }
     },
 
-    clearBasket(source) {
-      this.baskets[source].items = [];
-    },
+    // Clear the selected time for a given source, only for kitchen at the moment
+    clearTime(source) {
+      if (source !== 'kitchen') {
+        console.error(
+          `Invalid source: ${source}. Only kitchen has time slots.`,
+        );
+        return;
+      }
 
-    removeAllItems(productId, source) {
-      const sourceItems = this.baskets[source].items;
-      this.baskets[source].items = sourceItems.filter(
-        (item) => item.productId !== productId,
-      );
-    },
-
-    getQuantityForProduct(productId, source) {
-      const item = this.baskets[source]?.items.find(
-        (item) => item.productId === productId,
-      );
-
-      return item ? item.quantity : 0;
+      this.baskets[source].slot.time = '';
     },
   },
   persist: true,

@@ -1,20 +1,16 @@
 <template>
-  <div class="day-tile-wrapper" :class="{ 'selected-date': isSelectedDate() }">
-    <div class="day-tile" :class="[source]" @click="handleClick">
-      <CalendarDayBody
-        :formattedDate="formattedDate"
-        :time="selectedKitchenTime()"
-        :class="source"
-      />
+  <div class="tile-container">
+    <div
+      class="day-tile"
+      :class="{ 'selected-date': isSelectedDate, [source]: true }"
+    >
+      <div class="day-body" @click="handleClick">
+        <CalendarDayBody
+          :formattedDate="formattedDate"
+          :time="selectedKitchenTime"
+        />
+      </div>
     </div>
-    <Transition name="fade">
-      <CalendarTimeSlots
-        v-if="showTimeSlots"
-        :day="day"
-        :slots="slots"
-        class="time-slots"
-      />
-    </Transition>
   </div>
 </template>
 
@@ -27,109 +23,74 @@ const props = defineProps({
     required: true,
     validator: (value) => ['kitchen', 'shop', 'production'].includes(value),
   },
-  day: {
-    type: Object,
-    required: true,
-  },
-  time: {
+  dateString: {
     type: String,
-    default: null,
-  },
-  slots: {
-    type: Array,
-    required: false,
+    required: true,
   },
 });
 
-const formattedDate = formatDay(props.day.dateString);
-const showTimeSlots = ref(false);
+const emits = defineEmits(['toggleTimeSlots']);
 
-const isSelectedDate = () => {
-  return (
-    (fulfillment.baskets[props.source] &&
-      fulfillment.baskets[props.source].slot &&
-      fulfillment.baskets[props.source].slot.day &&
-      fulfillment.baskets[props.source].slot.day.dateString ===
-        props.day.dateString) ||
-    false
-  );
-};
+const formattedDate = computed(() => formatDay(props.dateString));
+const selectedKitchenTime = computed(() => {
+  return fulfillment.selectedTime(props.source, props.dateString);
+});
+
+const isSelectedDate = computed(() => {
+  return fulfillment.isSelectedDate(props.source, props.dateString);
+});
 
 const handleClick = () => {
+  fulfillment.selectSlot(props.source, props.dateString, null);
   if (props.source === 'kitchen') {
-    // For 'kitchen', toggle the visibility of the time slots
-    showTimeSlots.value = !showTimeSlots.value;
-    console.log('Time slots Toggle');
-  } else {
-    // For other sources, directly select the day
-    fulfillment.selectSlot(props.source, props.day, null);
-    console.log('selecting Day', props.source, props.day.dateString);
+    emits('toggleTimeSlots');
   }
 };
-
-const selectedKitchenTime = () => {
-  if (props.source === 'kitchen') {
-    if (
-      fulfillment.baskets.kitchen.slot.day?.dateString === props.day.dateString
-    ) {
-      return fulfillment.baskets.kitchen.slot.time;
-    }
-  }
-};
-
-// Watch for changes in the kitchen time slot
-watch(
-  () => [
-    fulfillment.baskets['kitchen'].slot.day,
-    fulfillment.baskets['kitchen'].slot.time,
-  ],
-  ([newDay, newTime]) => {
-    if (newDay !== null || newTime !== null) {
-      showTimeSlots.value = false;
-      console.log('Change detected, closing time slots');
-    }
-  },
-);
 </script>
+<style scoped>
+/* tile container */
+.tile-container {
+  width: 100px;
+  height: 100px;
+  margin: 10px;
+}
 
-<style>
-.day-tile-wrapper {
+/* day tile */
+.day-tile {
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
+  width: 100%;
+  height: 100%;
+  transition: all 0.5s ease-in-out;
+  border: 1px solid #ccc;
+  box-shadow: 0 0 10px #ccc;
+  border-radius: 10px; /* rounded corners */
+  padding: 5px; /* add some padding */
 }
 
-.day-tile {
-  width: 150px; /* adjust as needed */
-  height: 150px; /* adjust as needed */
-  transition: margin-bottom 0.5s;
+.day-tile.selected-date {
+  filter: brightness(50%);
 }
 
-.day-body.kitchen {
-  background-color: var(--highlight-kitchen);
+.day-tile.kitchen {
+  --tile-color-1: var(--kitchen-main);
+  --tile-color-2: lighten(var(--kitchen-main), 15%);
+  --tile-color-3: darken(var(--kitchen-main), 15%);
+  background-color: var(--tile-color-1);
 }
 
-.day-body.shop {
-  background-color: var(--highlight-shop);
+.day-tile.shop {
+  --tile-color-1: var(--shop-main);
+  --tile-color-2: lighten(var(--shop-main), 15%);
+  --tile-color-3: darken(var(--shop-main), 15%);
+  background-color: var(--tile-color-1);
 }
 
-.day-body.production {
-  background-color: var(--highlight-production);
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
-}
-
-.fade-enter-to,
-.fade-leave-from {
-  opacity: 1;
+.day-tile.production {
+  --tile-color-1: var(--production-main);
+  --tile-color-2: lighten(var(--production-main), 15%);
+  --tile-color-3: darken(var(--production-main), 15%);
+  background-color: var(--tile-color-1);
 }
 </style>

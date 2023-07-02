@@ -1,36 +1,29 @@
-$primary-color: #d9e3ac; //slightly desaturated green
-$secondary-color: #5f7055; //deep greenish grey
-$delivery-kitchen-available: #4caf50; //strong green
-$delivery-kitchen-unavailable: #fe3e03; //vibrant red
-$delivery-kitchen-booked: #8916e8; //vibrant purple
-$selected: #2196f3;
-
-$highlight-kitchen: #ffa07a; // Light Salmon
-$highlight-shop: #87cefa; // Light Sky Blue
-$highlight-production: #f0e68c; // Khaki
+$primary-color: #d9e3ac; // slightly desaturated green
+$secondary-color: #5f7055; // deep greenish grey
+$selected: #ffcc00; // universal highlight color
 
 $colors: (
+  // App
   primary-color: $primary-color,
   primary-color-light: lighten($primary-color, 15%),
   primary-color-dark: darken($primary-color, 15%),
   secondary-color: $secondary-color,
   secondary-color-light: lighten($secondary-color, 17%),
   secondary-color-dark: darken($secondary-color, 17%),
-  delivery-shop: #f5a623,
-  delivery-kitchen-available: $delivery-kitchen-available,
-  delivery-kitchen-unavailable: $delivery-kitchen-unavailable,
-  delivery-kitchen-booked: $delivery-kitchen-booked,
-
-  delivery-kitchen-available-dark: darken($delivery-kitchen-available, 15%),
-  delivery-kitchen-unavailable-dark: darken($delivery-kitchen-unavailable, 15%),
-  delivery-kitchen-booked-dark: darken($delivery-kitchen-booked, 15%),
   secondary-color-dark-text: darken($secondary-color, 15%),
-  delivery-production: #2196f3,
   selected: $selected,
+  dev-todo: #e10ed7,
+  // Shop
+  shop-main: #ffa07a,
 
-  highlight-kitchen: $highlight-kitchen,
-  highlight-shop: $highlight-shop,
-  highlight-production: $highlight-production,
+  // Main color for Shop
+  // Kitchen
+  kitchen-main: #87cefa,
+
+  // Main color for Kitchen
+  // Production
+  production-main: #f0e68c,
+  // Main color for Production
 );
 
 :root {

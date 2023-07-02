@@ -26,6 +26,9 @@ const action = () => {
   padding: 1rem;
   box-shadow: var(--box-shadow-element);
   border-radius: 0.5rem;
+  height: fit-content;
+  width: 100%;
+  max-width: 300px;
 }
 
 .title {

@@ -18,6 +18,10 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       firebaseApiKey: process.env.firebase_api_key,
+      apiUrl:
+        process.env.NODE_ENV === 'production'
+          ? 'https://misebox.app'
+          : 'http://localhost:3000',
     },
   },
   modules: [
@@ -27,6 +31,6 @@ export default defineNuxtConfig({
     '@pinia-plugin-persistedstate/nuxt',
   ],
   imports: {
-    dirs: ['stores', 'composables', 'types'],
+    dirs: ['stores', 'composables'],
   },
 });
