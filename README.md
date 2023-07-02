@@ -26,6 +26,12 @@ NO to the choice
 }
 "NITRO_PRESET=firebase
 
+# git:
+
+git add. is for staging your changes, preparing them to be included in your next commit.
+git commit -m "Your message here" is for creating a new commit (a 'snapshot' of your code at this point in time).
+git git push origin main is for sending your commits to the remote repository (like GitHub), making these changes visible to others and stored off your local machine.
+
 # npm
 
 # deploy
