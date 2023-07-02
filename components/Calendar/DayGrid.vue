@@ -15,7 +15,7 @@
         <CalendarDayTile
           :source="source"
           :dateString="day.dateString"
-          @toggleTimeSlots="handleToggleTimeSlots"
+          @handleTimeSlots="handleTimeSlots"
         />
       </div>
       <div
@@ -45,8 +45,6 @@ const props = defineProps({
   },
 });
 
-const emits = defineEmits(['toggleTimeSlots']);
-
 const shownDays = computed(() => {
   const openDays = calendarStore.openDaysBySource(
     props.source,
@@ -54,9 +52,9 @@ const shownDays = computed(() => {
   );
   return openDays;
 });
-
-const handleToggleTimeSlots = () => {
-  emits('toggleTimeSlots');
+const emits = defineEmits(['handleTimeSlots']);
+const handleTimeSlots = () => {
+  emits('handleTimeSlots');
 };
 </script>
 

@@ -19,33 +19,29 @@
       <CalendarDayTile
         :source="basket.name"
         :dateString="fulfillment.baskets[basket.name].slot.day"
-        @toggleTimeSlots="toggleTimeSlots"
+        @handleTimeSlots="handleTimeSlots"
       />
     </div>
     <button
       v-if="fulfillment.baskets[basket.name].slot.day !== ''"
-      @click="clearDate('kitchen')"
+      @click="clearDate(basket.name)"
       class="clear-date"
     >
       Clear date
     </button>
 
-    <!-- Add a button to clear the selected time -->
     <button
-      v-if="
-        fulfillment.baskets[basket.name].slot.day !== '' &&
-        fulfillment.baskets[basket.name].slot.time !== ''
-      "
+      v-if="fulfillment.baskets[basket.name].slot.time !== ''"
       @click="clearTime('kitchen')"
       class="clear-time"
     >
       Clear time
     </button>
-    <div
-      v-show="showTimeSlots && selectedDay !== ''"
-      class="time-slots-container"
-    >
-      <CalendarTimeSlots :dateString="selectedDay" />
+    <div v-show="showTimeSlots" class="time-slots-container">
+      <CalendarTimeSlots
+        :dateString="selectedDay"
+        @closeTimeSlots="closeTimeSlots"
+      />
     </div>
 
     <div
@@ -55,7 +51,7 @@
       <CalendarDayGrid
         :source="basket.name"
         view="basket"
-        @toggleTimeSlots="toggleTimeSlots"
+        @handleTimeSlots="handleTimeSlots"
       />
     </div>
   </div>
@@ -78,15 +74,21 @@ const selectedDay = computed(
   () => fulfillment.getSelectedDay(props.basket.name) || '',
 );
 
-const toggleTimeSlots = () => {
-  showTimeSlots.value = !showTimeSlots.value;
+const handleTimeSlots = () => {
+  showTimeSlots.value = true;
+  clearTime();
 };
 
 const clearDate = () => {
   fulfillment.clearDate(props.basket.name);
+  showTimeSlots.value = false;
 };
 const clearTime = () => {
   fulfillment.clearTime(props.basket.name);
+};
+
+const closeTimeSlots = () => {
+  showTimeSlots.value = false;
 };
 </script>
 

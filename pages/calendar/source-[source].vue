@@ -1,8 +1,27 @@
 <template>
   <div class="calendar">
     <div>{{ source }}</div>
-    <div v-if="showTimeSlots && selectedDay" class="time-slots-container">
-      <CalendarTimeSlots :dateString="selectedDay" />
+    <div class="button-container">
+      <button
+        v-if="fulfillment.baskets[source].slot.day !== ''"
+        @click="clearDate()"
+        class="clear-date"
+      >
+        Clear date
+      </button>
+      <button
+        v-if="fulfillment.baskets[source].slot.time !== ''"
+        @click="clearTime('kitchen')"
+        class="clear-time"
+      >
+        Clear time
+      </button>
+    </div>
+    <div v-if="showTimeSlots" class="time-slots-container">
+      <CalendarTimeSlots
+        :dateString="selectedDay"
+        @closeTimeSlots="closeTimeSlots"
+      />
     </div>
     <div v-else class="message-container">
       <div class="message">Please select a day, then a timeslot.</div>
@@ -12,7 +31,7 @@
     <CalendarDayGrid
       :source="source"
       :view="currentView"
-      @selectDayAndToggleTimeSlots="selectDayAndToggleTimeSlots"
+      @handleTimeSlots="handleTimeSlots"
       key="grid"
     />
   </div>
@@ -25,7 +44,7 @@ const fulfillment = useFulfillment();
 const views = ['default', 'basket', 'quick'];
 const currentView = ref(views[0]);
 const showTimeSlots = ref(false);
-const selectedDay = ref(null);
+const selectedDay = computed(() => fulfillment.baskets[source].slot.day || '');
 
 if (!(source in calendar.calendars.sources)) {
   throw new Error(`Invalid calendar source: ${source}`);
@@ -36,13 +55,22 @@ const cycleView = () => {
   currentView.value = views[(index + 1) % views.length];
 };
 
-const selectDayAndToggleTimeSlots = (dateString, source) => {
-  if (source === 'kitchen') {
-    showTimeSlots.value = !showTimeSlots.value;
-    selectedDay.value = dateString;
-  } else {
-    fulfillment.selectSlot(source, dateString, null);
-  }
+const handleTimeSlots = () => {
+  showTimeSlots.value = true;
+  clearTime();
+};
+
+const closeTimeSlots = () => {
+  showTimeSlots.value = false;
+};
+
+const clearDate = () => {
+  showTimeSlots.value = false;
+  fulfillment.clearDate(source);
+};
+
+const clearTime = () => {
+  fulfillment.clearTime(source);
 };
 </script>
 
@@ -53,6 +81,17 @@ const selectDayAndToggleTimeSlots = (dateString, source) => {
   align-items: center;
   height: 100vh;
   transition: 0.5s;
+}
+
+.button-container {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.clear-date,
+.clear-time {
+  flex-basis: 45%;
 }
 
 .time-slots-container {

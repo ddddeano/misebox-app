@@ -118,9 +118,22 @@ export const useFulfillment = defineStore({
   },
 
   actions: {
-    // Select or deselect a delivery slot
-    // Select or deselect a delivery slot
-    selectSlot(source, dateString, time) {
+    selectDate(source, dateString) {
+      if (!this.baskets[source]) {
+        console.error(`Invalid source: ${source}`);
+        return;
+      }
+
+      if (
+        this.baskets[source].slot &&
+        this.baskets[source].slot.day === dateString
+      ) {
+        this.baskets[source].slot.day = ''; // deselects the date if it's already selected
+      } else {
+        this.baskets[source].slot.day = dateString; // selects the date
+      }
+    },
+    selectTime(source, dateString, time) {
       if (!this.baskets[source]) {
         console.error(`Invalid source: ${source}`);
         return;
@@ -131,15 +144,10 @@ export const useFulfillment = defineStore({
         this.baskets[source].slot.day === dateString &&
         this.baskets[source].slot.time === time
       ) {
-        this.baskets[source].slot = {
-          day: '',
-          time: '',
-        };
+        this.baskets[source].slot.time = ''; // deselects the time if it's already selected for the day
       } else {
-        this.baskets[source].slot = {
-          day: dateString,
-          time: time ? time : '',
-        };
+        this.baskets[source].slot.day = dateString; // ensures the correct day is selected
+        this.baskets[source].slot.time = time; // selects the time
       }
     },
 

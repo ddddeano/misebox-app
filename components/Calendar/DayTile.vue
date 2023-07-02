@@ -29,7 +29,7 @@ const props = defineProps({
   },
 });
 
-const emits = defineEmits(['toggleTimeSlots']);
+const emits = defineEmits(['handleTimeSlots']);
 
 const formattedDate = computed(() => formatDay(props.dateString));
 const selectedKitchenTime = computed(() => {
@@ -41,9 +41,9 @@ const isSelectedDate = computed(() => {
 });
 
 const handleClick = () => {
-  fulfillment.selectSlot(props.source, props.dateString, null);
+  fulfillment.selectDate(props.source, props.dateString, null);
   if (props.source === 'kitchen') {
-    emits('toggleTimeSlots');
+    emits('handleTimeSlots');
   }
 };
 </script>

@@ -1,12 +1,17 @@
 <template>
   <div class="time-slots">
     <div class="date-display">{{ dateString }}</div>
+    <button class="close-button" @click="closeTimeSlots">Close</button>
+
     <div
       v-for="(slot, index) in timeSlots"
       :key="index"
-      :class="{ 'selected-time': isSelectedTime(slot) }"
+      :class="{
+        'selected-time': isSelectedTime(slot),
+        unavailable: slot.status === 'unavailable',
+      }"
       class="slot"
-      @click="selectTimeSlot(slot)"
+      @click="slot.status !== 'unavailable' && selectTimeSlot(slot)"
     >
       {{ slot.time }}
     </div>
@@ -29,27 +34,17 @@ const timeSlots = computed(() => {
 });
 
 const isSelectedTime = (slot) => {
-  const kitchenSlot = fulfillment.baskets['kitchen'].slot;
-  return (
-    kitchenSlot &&
-    kitchenSlot.day === props.dateString &&
-    kitchenSlot.time === slot.time
-  );
+  const kitchenTime = fulfillment.selectedTime('kitchen', props.dateString);
+  return kitchenTime === slot.time;
 };
 
 const selectTimeSlot = (slot) => {
-  const kitchenSlot = fulfillment.baskets['kitchen'].slot;
-  if (
-    kitchenSlot &&
-    kitchenSlot.day === props.dateString &&
-    kitchenSlot.time === slot.time
-  ) {
-    console.log('Deselecting slot:', props.dateString, slot.time);
-    fulfillment.selectSlot('kitchen', null, null);
-  } else {
-    console.log('Selecting slot:', props.dateString, slot.time);
-    fulfillment.selectSlot('kitchen', props.dateString, slot.time);
-  }
+  fulfillment.selectTime('kitchen', props.dateString, slot.time);
+};
+const emits = defineEmits(['closeTimeSlots']);
+const closeTimeSlots = () => {
+  // Emit the "closeTimeSlots" event
+  emits('closeTimeSlots');
 };
 </script>
 
@@ -93,6 +88,10 @@ const selectTimeSlot = (slot) => {
 
   &.selected-time {
     background-color: var(--selected);
+  }
+  &.unavailable {
+    background-color: var(--dev-todo);
+    cursor: not-allowed;
   }
 }
 </style>
