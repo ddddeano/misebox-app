@@ -1,5 +1,5 @@
 <template>
-  <div class="index">
+  <div class="index app-index">
     <div class="message">
       Welcome to Misebox! A food and tech micro nestled above Lake Brienz,
       Switzerland.

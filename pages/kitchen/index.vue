@@ -1,5 +1,5 @@
 <template>
-  <div class="index">
+  <div class="index kitchen-index">
     <h1 class="title">Kitchen</h1>
     <SourceProductDelivery source="kitchen" />
   </div>

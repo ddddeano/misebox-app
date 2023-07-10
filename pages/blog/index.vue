@@ -1,5 +1,5 @@
 <template>
-  <div class="index">
+  <div class="index blog-index">
     <h1 class="title">Blog</h1>
     <div class="description">
       we update our blog on the regular so please subscribe to keep in the loop

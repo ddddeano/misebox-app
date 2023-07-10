@@ -1,5 +1,5 @@
 <template>
-  <div class="page">
+  <div class="index user-index">
     <h1 class="title">Authentication</h1>
     <div class="card" v-if="user.exists">
       <div class="avatar">

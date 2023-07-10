@@ -19,6 +19,7 @@ h1 {
 h2 {
   text-align: left;
 }
+
 h3,
 h4,
 h5,
@@ -31,7 +32,7 @@ button {
   padding: 12px 24px;
   border-radius: 10px;
   font-weight: bold;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(var(--primary-color-dark), 0.1);
   white-space: nowrap;
   transition: all 0.2s ease-in-out;
   border: none;
@@ -49,7 +50,7 @@ button.icon-text-button {
 
 button:hover {
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 8px rgba(var(--primary-color-dark), 0.1);
 }
 
 select,
@@ -60,7 +61,7 @@ input {
   cursor: pointer;
   appearance: none;
   margin-top: 0.1rem;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(var(--primary-color-dark), 0.1);
 }
 
 label {
@@ -75,14 +76,8 @@ p {
   margin-top: 0;
 }
 
-.index,
-.page {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 0.5em;
-
+.index {
+  padding-inline: 2px;
   .title {
     margin-bottom: 0.5em;
     text-align: center;
@@ -98,19 +93,20 @@ p {
   }
 
   .description,
-  .welcome {
+  .message {
     font-family: 'Didact Gothic', sans-serif;
     font-size: 1.5rem;
-    text-align: center;
     margin-bottom: 0.5rem;
-    padding-inline: 1rem;
+    padding: 1rem;
     line-height: normal;
+    box-shadow: var(--box-shadow-element);
+    border-radius: 0.5rem;
+    text-align: center;
   }
 }
 
 @media screen and (min-width: 800px) {
-  .index,
-  .page {
+  .index {
     width: 1100px;
   }
 }
@@ -124,18 +120,56 @@ p {
   font-weight: bold;
   text-align: center;
   margin-bottom: 1rem;
-  background-color: var(--color);
-}
-
-.message {
-  box-shadow: var(--box-shadow-element);
-  border-radius: 0.5rem;
-  padding: 1rem;
-  align-content: center;
+  background-color: var(--primary-color);
 }
 
 @media screen and (min-width: 576px) {
   .message {
     width: 800px;
+  }
+}
+
+.date-display {
+  grid-column: span 4;
+  padding: 0.5rem;
+  text-align: center;
+  background-color: var(--secondary-color);
+  color: var(--secondary-color-dark-text);
+  font-weight: bold;
+  border-radius: 0.25rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+}
+
+.slots-container {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.slot {
+  padding: 0.5rem;
+  text-align: center;
+  background-color: var(--primary-color-dark);
+  color: #fff;
+  border-radius: 0.25rem;
+  transition: background-color 0.2s ease;
+  font-size: 0.8rem;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    background-color: var(--primary-color-light);
+    cursor: pointer;
+  }
+
+  &.selected-time {
+    background-color: var(--selected);
+  }
+
+  &.unavailable {
+    background-color: var(--dev-todo);
+    cursor: not-allowed;
   }
 }

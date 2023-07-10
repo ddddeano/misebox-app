@@ -1,11 +1,25 @@
 <template>
   <div class="basket-summary" :class="`source-${basket.name}`">
     <div class="header">
-      <h2 class="title">{{ basket.name }}</h2>
-      <div class="total">
-        {{ sourceDetail.numberOfItems }} Items | {{ sourceDetail.totalPrice }}
+      <div class="left">
+        <h2>{{ basket.name }}</h2>
+        <div class="total">
+          {{ sourceDetail.numberOfItems }} Items | {{ sourceDetail.totalPrice }}
+        </div>
       </div>
+      <div class="right"><CalendarSelectedSlot :source="basket.name" /></div>
     </div>
+    <client-only>
+      <CalendarDaySelection
+        v-if="!sourceDetail.slot.day"
+        :source="basket.name"
+      />
+      <CalendarTimeSlotSelection
+        v-if="!sourceDetail.slot.time && 'time' in sourceDetail.slot"
+        :source="basket.name"
+        :dateString="sourceDetail.slot.day"
+      />
+    </client-only>
     <div
       v-for="item in sourceDetail.items"
       :key="item.productId"
@@ -13,51 +27,12 @@
     >
       <BasketItem :item="item" />
     </div>
-    <div
-      v-if="fulfillment.baskets[basket.name].slot.day !== '' && !showTimeSlots"
-    >
-      <CalendarDayTile
-        :source="basket.name"
-        :dateString="fulfillment.baskets[basket.name].slot.day"
-        @handleTimeSlots="handleTimeSlots"
-      />
-    </div>
-    <button
-      v-if="fulfillment.baskets[basket.name].slot.day !== ''"
-      @click="clearDate(basket.name)"
-      class="clear-date"
-    >
-      Clear date
-    </button>
-
-    <button
-      v-if="fulfillment.baskets[basket.name].slot.time !== ''"
-      @click="clearTime('kitchen')"
-      class="clear-time"
-    >
-      Clear time
-    </button>
-    <div v-show="showTimeSlots" class="time-slots-container">
-      <CalendarTimeSlots
-        :dateString="selectedDay"
-        @closeTimeSlots="closeTimeSlots"
-      />
-    </div>
-
-    <div
-      v-if="fulfillment.baskets[basket.name].slot.day === '' || showTimeSlots"
-      class="date-options"
-    >
-      <CalendarDayGrid
-        :source="basket.name"
-        view="basket"
-        @handleTimeSlots="handleTimeSlots"
-      />
-    </div>
   </div>
 </template>
 
 <script setup>
+const fulfillment = useFulfillment();
+
 const props = defineProps({
   basket: {
     type: Object,
@@ -65,79 +40,79 @@ const props = defineProps({
   },
 });
 
-const fulfillment = useFulfillment();
 const sourceDetail = computed(() =>
   fulfillment.sourceDetails(props.basket.name),
 );
-const showTimeSlots = ref(false);
-const selectedDay = computed(
-  () => fulfillment.getSelectedDay(props.basket.name) || '',
-);
-
-const handleTimeSlots = () => {
-  showTimeSlots.value = true;
-  clearTime();
-};
-
-const clearDate = () => {
-  fulfillment.clearDate(props.basket.name);
-  showTimeSlots.value = false;
-};
-const clearTime = () => {
-  fulfillment.clearTime(props.basket.name);
-};
-
-const closeTimeSlots = () => {
-  showTimeSlots.value = false;
-};
 </script>
 
 <style scoped lang="scss">
 .basket-summary {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; // change this to start to align items to the left
   width: 100%;
   border-radius: 4px;
-  padding: 0.5rem;
+  padding: 1rem; // increase padding a bit
   margin-bottom: 1.5rem;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); // add a shadow for depth
+  background-color: white; // add a background color
 
   .header {
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    margin-bottom: 1rem;
+    justify-content: space-between;
+    align-items: center; // align items in the center
     width: 100%;
-    border-bottom: 1px solid #e5e5e5;
-    padding-bottom: 10px;
+    margin-bottom: 1rem; // increase bottom margin a bit
 
-    .title {
-      margin-right: auto;
-      margin-left: 0.5rem;
-      font-size: 1.2rem;
-      font-weight: bold;
-      width: 100%;
+    .left {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
     }
 
-    .total {
-      margin: 0;
-      font-size: 0.9rem;
-      min-width: fit-content;
+    .right {
+      flex: 1;
+      display: flex;
+      justify-content: flex-end;
     }
   }
 
-  .date-options {
-    height: 200px;
-    overflow-y: scroll;
+  h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: var(
+      --text-color-primary
+    ); // add a primary text color variable in your CSS root
+  }
+
+  .total {
+    margin-top: 0.2rem; // reduce the top margin a bit
+    font-size: 0.9rem;
+    color: var(
+      --text-color-secondary
+    ); // add a secondary text color variable in your CSS root
+  }
+
+  .basket-item {
+    margin-top: 0.5rem;
+    border-top: 1px solid var(--border-color); // add a border color variable in your CSS root
+    padding-top: 0.5rem;
   }
 }
 
 .basket-summary.source-kitchen {
-  background-color: #f0f8ff;
+  background-color: var(--kitchen-main);
+  filter: brightness(120%);
 }
 
 .basket-summary.source-shop {
-  background-color: #e6e6fa;
+  background-color: var(--shop-main);
+  filter: brightness(120%);
 }
 
 .basket-summary.source-production {
-  background-color: #f5f5dc;
+  background-color: var(--production-main);
+  filter: brightness(120%);
 }
 </style>

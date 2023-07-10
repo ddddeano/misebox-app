@@ -85,19 +85,39 @@ export const useCalendarStore = defineStore('calendar', {
       const selectedTime = fulfillment.baskets[source]?.slot?.time || null;
       return selectedTime;
     },
-    getTimeSlotsForDay:
-      (state) =>
-      (source = 'kitchen', dayString) => {
-        if (source === 'kitchen') {
-          const kitchenDay = state.calendars.sources.kitchen.find(
-            (day) => day.dateString === dayString,
-          );
-          if (kitchenDay) {
-            return kitchenDay.slots;
-          }
-        }
+    getTimeSlotsForDay: (state) => (source, dateString) => {
+      console.log(
+        `getTimeSlotsForDay called with source: ${source} and dateString: ${dateString}`,
+      );
 
-        return []; // Return an empty array if the source is not 'kitchen' or the day is not found
-      },
+      if (source === 'kitchen') {
+        console.log(
+          `Source is kitchen. Searching for day with dateString: ${dateString} in kitchen calendar.`,
+        );
+
+        const kitchenDay = state.calendars.sources.kitchen.find(
+          (day) => day.dateString === dateString,
+        );
+
+        if (kitchenDay) {
+          console.log(
+            `Found day in kitchen calendar: ${JSON.stringify(kitchenDay)}`,
+          );
+          console.log(
+            `Returning time slots: ${JSON.stringify(kitchenDay.slots)}`,
+          );
+          return kitchenDay.slots;
+        } else {
+          console.log(
+            `No matching day found in kitchen calendar for dateString: ${dateString}`,
+          );
+        }
+      } else {
+        console.log(`Source is not kitchen. Source: ${source}`);
+      }
+
+      console.log(`Returning empty array. No time slots found.`);
+      return []; // Return an empty array if the source is not 'kitchen' or the day is not found
+    },
   },
 });

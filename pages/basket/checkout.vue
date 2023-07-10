@@ -1,5 +1,5 @@
 <template>
-  <div class="page checkout">
+  <div class="checkout">
     <h1 class="title">Process Checkout</h1>
 
     <div class="payment-types">

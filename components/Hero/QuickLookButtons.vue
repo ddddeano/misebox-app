@@ -42,20 +42,11 @@
       <div v-show="viewDeliveryInfos" class="pop delivery">
         <h3>Next Available Delivery Days:</h3>
 
-        <div class="delivery-list">
+        <div v-for="source in sources" class="delivery-list">
           <div class="delivery-item">
             <div class="delivery-item-title">Shop</div>
-            <CalendarDayGrid source="shop" view="quick" />
-          </div>
-
-          <div class="delivery-item">
-            <div class="delivery-item-title">Kitchen</div>
-            <CalendarDayGrid source="kitchen" view="quick" />
-          </div>
-
-          <div class="delivery-item">
-            <div class="delivery-item-title">Production</div>
-            <CalendarDayGrid source="production" view="quick" />
+            <CalendarSlot :source="source" />
+            <CalendarSelection :source="source" />
           </div>
         </div>
       </div>
@@ -75,6 +66,7 @@
 <script setup>
 const viewDeliveryInfos = ref(false);
 const viewChocolateInfos = ref(false);
+const sources = ref(['kitchen', 'shop', 'production']);
 
 const clickDeliveryToggle = () => {
   viewChocolateInfos.value = false;

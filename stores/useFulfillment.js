@@ -53,16 +53,17 @@ export const useFulfillment = defineStore({
         totalPrice,
       };
     },
-    getSelectedDay: (state) => (source) => {
-      return state.baskets[source]?.slot?.day;
-    },
 
     sourceDetails: (state) => (source) => {
-      console.log('Source:', source); // Add this line for debugging
-
       const basket = state.baskets[source];
       if (!basket) {
-        return { hasItems: false, numberOfItems: 0, totalPrice: 0 };
+        return {
+          hasItems: false,
+          numberOfItems: 0,
+          totalPrice: 0,
+          slot: null,
+          selectedDay: null,
+        };
       }
 
       const hasItems = basket.items.length > 0;
@@ -75,11 +76,20 @@ export const useFulfillment = defineStore({
         0,
       );
 
+      // Find the selected day object
+      const calendar = useCalendarStore(); // Ensure you can access this here
+      let openDays = calendar.openDaysBySource(source, 'ALL');
+      let selectedDayObject = basket.slot.day
+        ? openDays.find((day) => day.dateString === basket.slot.day)
+        : null;
+
       return {
         hasItems,
         numberOfItems,
         totalPrice,
-        items: basket.items, // include items in the return object
+        items: basket.items,
+        slot: basket.slot,
+        selectedDay: selectedDayObject, // Add the selected day object
       };
     },
 
@@ -98,7 +108,9 @@ export const useFulfillment = defineStore({
         totalPrice,
       };
     },
-
+    getSelectedDay: (state) => (source) => {
+      return state.baskets[source]?.slot?.day;
+    },
     isSelectedDate: (state) => (source, dateString) => {
       return (
         state.baskets[source] &&
@@ -124,31 +136,66 @@ export const useFulfillment = defineStore({
         return;
       }
 
-      if (
-        this.baskets[source].slot &&
-        this.baskets[source].slot.day === dateString
-      ) {
-        this.baskets[source].slot.day = ''; // deselects the date if it's already selected
-      } else {
-        this.baskets[source].slot.day = dateString; // selects the date
-      }
+      // Always set the selected day to dateString, removing the possibility to deselect it.
+      this.baskets[source].slot.day = dateString;
     },
-    selectTime(source, dateString, time) {
+    clearDate(source) {
       if (!this.baskets[source]) {
         console.error(`Invalid source: ${source}`);
         return;
       }
 
-      if (
-        this.baskets[source].slot &&
-        this.baskets[source].slot.day === dateString &&
-        this.baskets[source].slot.time === time
-      ) {
-        this.baskets[source].slot.time = ''; // deselects the time if it's already selected for the day
-      } else {
-        this.baskets[source].slot.day = dateString; // ensures the correct day is selected
-        this.baskets[source].slot.time = time; // selects the time
+      this.baskets[source].slot.day = '';
+      this.baskets[source].slot.time = '';
+    },
+
+    deselectTime(source) {
+      console.log(`deselectTime called with source=${source}`);
+
+      if (!this.baskets[source]) {
+        console.error(`Invalid source: ${source}`);
+        return;
       }
+
+      console.log(
+        `Current time slot for ${source} is ${this.baskets[source].slot.time}`,
+      );
+
+      console.log('Deselecting time');
+      this.baskets[source].slot.time = ''; // clear the time
+
+      console.log(
+        `Time slot for ${source} after deselecting is ${this.baskets[source].slot.time}`,
+      );
+    },
+
+    selectTime(source, time) {
+      console.log(`selectTime called with source=${source} and time=${time}`);
+
+      if (!this.baskets[source]) {
+        console.error(`Invalid source: ${source}`);
+        return;
+      }
+
+      console.log(
+        `Current time slot for ${source} is ${this.baskets[source].slot.time}`,
+      );
+
+      console.log('Selecting time');
+      this.baskets[source].slot.time = time; // selects the time
+
+      console.log(
+        `New time slot for ${source} is ${this.baskets[source].slot.time}`,
+      );
+    },
+
+    clearSelection(source) {
+      if (!this.baskets[source]) {
+        console.error(`Invalid source: ${source}`);
+        return;
+      }
+
+      this.baskets[source].slot = { day: '', time: '' }; // Clear date and time
     },
 
     // Add product to the specified source basket
@@ -178,23 +225,72 @@ export const useFulfillment = defineStore({
     },
 
     // Removes product(s) from the specified source basket
-    removeItems(source, product = 'all') {
+    removeItems(source, productId = 'all') {
+      console.log('Current basket before removal:', this.baskets[source].items);
+
       if (!this.baskets[source]) {
         console.error(`Invalid source: ${source}`);
         return;
       }
-      if (product === 'all') {
+
+      if (productId === 'all') {
+        console.log(
+          'Removing all items from the basket:',
+          this.baskets[source].items,
+        );
         this.baskets[source].items = [];
+        console.log('All items removed. Updated basket:', this.baskets[source]);
       } else {
+        console.log(
+          'Current basket before removal:',
+          this.baskets[source].items,
+        );
         const itemIndex = this.baskets[source].items.findIndex(
-          (item) => item.productId === product.productId,
+          (item) => item.productId === productId,
         );
 
         if (itemIndex !== -1) {
+          console.log('Removing item:', this.baskets[source].items[itemIndex]);
           this.baskets[source].items.splice(itemIndex, 1);
+          console.log('Item removed. Updated basket:', this.baskets[source]);
+        } else {
+          console.log('Item not found in the basket');
         }
       }
     },
+    // Renamed the method to "decreaseProductQuantity" to better reflect its purpose.
+    decreaseProductQuantity(source, productId) {
+      if (!this.baskets[source]) {
+        console.error(`Invalid source: ${source}`);
+        return;
+      }
+
+      const product = this.baskets[source].items.find(
+        (item) => item.productId === productId,
+      );
+
+      if (product) {
+        if (product.quantity > 1) {
+          console.log('Decreasing product quantity:', product);
+          product.quantity -= 1;
+          console.log(
+            'Product quantity decreased. Updated basket:',
+            this.baskets[source],
+          );
+        } else {
+          // If product quantity is 1, remove the product entirely
+          const itemIndex = this.baskets[source].items.findIndex(
+            (item) => item.productId === productId,
+          );
+          console.log('Removing item:', this.baskets[source].items[itemIndex]);
+          this.baskets[source].items.splice(itemIndex, 1);
+          console.log('Item removed. Updated basket:', this.baskets[source]);
+        }
+      } else {
+        throw new Error('Item not found in the basket'); // Throw error instead of console log
+      }
+    },
+
     clearDate(source) {
       if (!this.baskets[source]) {
         console.error(`Invalid source: ${source}`);
@@ -212,9 +308,6 @@ export const useFulfillment = defineStore({
     // Clear the selected time for a given source, only for kitchen at the moment
     clearTime(source) {
       if (source !== 'kitchen') {
-        console.error(
-          `Invalid source: ${source}. Only kitchen has time slots.`,
-        );
         return;
       }
 

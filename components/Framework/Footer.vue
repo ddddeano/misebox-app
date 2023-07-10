@@ -3,7 +3,7 @@
   <footer>
     <div class="footer-content">
       <div class="footer-section">
-        <h2>Contact</h2>
+        <h3>Contact</h3>
         <ul>
           <li>Misebox HQ, 21</li>
           <li>Bachtalenweg</li>
@@ -15,7 +15,6 @@
       </div>
 
       <div class="footer-section">
-        <!-- <h2>Follow Us</h2> -->
         <ul class="social-links">
           <li>
             <a href="#"><i class="fab fa-facebook fa-lg"></i></a>

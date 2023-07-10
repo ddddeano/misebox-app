@@ -1,21 +1,18 @@
 <template>
-  <div class="index">
+  <div class="index basket-index">
     <h1 class="title">Basket Confirmation</h1>
     <div v-if="!fulfillment.basketDetails.hasItems" class="empty-basket">
       Your basket is empty
     </div>
     <div v-else>
-      <h1>Confirm your basket</h1>
-      <div class="basket-summary">
-        <div v-for="source in fulfillment.baskets" :key="source">
-          <BasketSummary
-            v-if="sourceDetails(source.name).hasItems"
-            :basket="source"
-          />
-        </div>
+      <div v-for="source in fulfillment.baskets" :key="source">
+        <BasketSummary
+          v-if="sourceDetails(source.name).hasItems"
+          :basket="source"
+        />
       </div>
     </div>
-    <button class="button" @click="checkout">Confirm</button>
+    <button class="button" @click="confirm">Confirm</button>
   </div>
 </template>
 
@@ -27,7 +24,7 @@ const sourceDetails = (source) => {
   return fulfillment.sourceDetails(source);
 };
 
-const checkout = () => {
+const confirm = () => {
   router.push('/basket/checkout');
 };
 </script>

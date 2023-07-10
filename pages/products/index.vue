@@ -1,5 +1,5 @@
 <template>
-  <div class="class">all products</div>
+  <div class="index products-index">all products</div>
 </template>
 
 <script setup></script>
