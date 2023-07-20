@@ -1,7 +1,7 @@
 <template>
   <div class="hero-grid">
     <div v-for="(hero, index) in heroes" :key="hero.id">
-      <SourceProductCard
+      <ProductCard
         v-if="hero.type === 'Product' && hero.product"
         :product="hero.product"
       />

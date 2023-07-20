@@ -1,14 +1,16 @@
+<!-- ProductCard -->
 <template>
   <div class="product">
     <div class="product-name">{{ product.name }}</div>
-
     <div class="product-image-container">
       <img :src="product.images[0]" alt="" />
     </div>
-    <div class="product-short-name">{{ product.shortName }}</div>
-    <div class="product-price">{{ product.price }}</div>
-    <div class="product-qty-control">
-      <SourceProductQtyControl :product="product" />
+    <div class="product-short-name">{{ product.metadata.shortName }}</div>
+    <div class="product-price-and-qty">
+      <div class="product-qty-control">
+        <SourceProductQtyControl :product="product" />
+      </div>
+      <div class="product-price">{{ product.metadata.price }}</div>
     </div>
     <button class="cart-button" @click="increaseQuantity">Add to cart</button>
   </div>
@@ -33,15 +35,12 @@ const increaseQuantity = () => {
   position: relative;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start; /* align items to the top */
   align-items: center;
   padding: 1rem 0;
-  width: 100%;
-  max-width: 300px;
+  height: 100%;
   text-align: center;
-  overflow: hidden;
   transition: all 0.2s ease-in-out;
-  box-shadow: var(--box-shadow-element);
+  box-shadow: var(--primary-shadow);
   border-radius: 0.5rem;
 
   &-qty-control {
@@ -58,6 +57,7 @@ const increaseQuantity = () => {
   }
 
   &-image-container {
+    flex-grow: 1; /* take remaining space */
     width: 150px; // Reduced size
     height: 150px; // Reduced size
     display: flex;
@@ -72,11 +72,17 @@ const increaseQuantity = () => {
     }
   }
 
+  &-price-and-qty {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem; /* create a small gap between qty and price */
+  }
+
   &-price {
     border: 2px solid var(--primary-color);
-    border-radius: 1.5rem;
+    border-radius: 10px;
     font-size: 1rem; // Reduced font size
-    margin-bottom: 1rem;
     padding: 0.2rem 0.5rem;
     font-weight: bold;
 
@@ -87,14 +93,9 @@ const increaseQuantity = () => {
 }
 
 .cart-button {
-  padding: 0.5rem 1rem;
-  font-weight: bold;
-  border-radius: 0.5rem;
   background-color: var(--secondary-color);
   color: var(--primary-color);
   border: 1px solid var(--primary-color);
-  box-shadow: 0 0 5px var(--secondary-color);
-  transition: background-color 0.2s ease-in-out;
 
   &:hover {
     background-color: var(--primary-color-dark);

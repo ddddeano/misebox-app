@@ -47,23 +47,51 @@ export const useFulfillment = defineStore({
         );
       }, 0);
 
+      const fulfillmentItems = Object.values(state.baskets).reduce(
+        (items, basket) => {
+          if (basket.items.length > 0) {
+            return [
+              ...items,
+              ...basket.items.map((item) => ({
+                productId: item.productId,
+                quantity: item.quantity,
+              })),
+            ];
+          }
+          return items;
+        },
+        [],
+      );
+
       return {
         hasItems,
         numberOfItems,
         totalPrice,
+        fulfillmentItems,
       };
     },
-
+    basketRequirements: (state) => {
+      const requirements = {};
+      for (let [name, { slot }] of Object.entries(state.baskets)) {
+        requirements[name] = Object.keys(slot);
+      }
+      return requirements;
+    },
     sourceDetails: (state) => (source) => {
       const basket = state.baskets[source];
+      const sourceSlotRequirements = Object.keys(basket.slot);
+
+      let message = '';
       if (!basket) {
-        return {
-          hasItems: false,
-          numberOfItems: 0,
-          totalPrice: 0,
-          slot: null,
-          selectedDay: null,
-        };
+        message = `Please select some items from the ${source}`;
+      } else if (basket.items.length === 0) {
+        message = `Please select some items from the ${source}`;
+      } else if (sourceSlotRequirements.includes('day') && !basket.slot.day) {
+        message = `Please select a date for the ${source}`;
+      } else if (sourceSlotRequirements.includes('time') && !basket.slot.time) {
+        message = `Please select a time for the ${source}`;
+      } else {
+        message = `You have selected products and deleivery, please proceed to the checkout when you are ready`;
       }
 
       const hasItems = basket.items.length > 0;
@@ -76,12 +104,18 @@ export const useFulfillment = defineStore({
         0,
       );
 
-      // Find the selected day object
       const calendar = useCalendarStore(); // Ensure you can access this here
-      let openDays = calendar.openDaysBySource(source, 'ALL');
-      let selectedDayObject = basket.slot.day
+      const openDays = calendar.openDaysBySource(source, 'ALL');
+      const selectedDayObject = basket.slot.day
         ? openDays.find((day) => day.dateString === basket.slot.day)
         : null;
+
+      const selectedTime = sourceSlotRequirements.includes('time')
+        ? basket.slot.time
+        : null;
+
+      const isSelectedDate = (dateString) =>
+        basket.slot && basket.slot.day === dateString;
 
       return {
         hasItems,
@@ -89,7 +123,10 @@ export const useFulfillment = defineStore({
         totalPrice,
         items: basket.items,
         slot: basket.slot,
-        selectedDay: selectedDayObject, // Add the selected day object
+        selectedDay: selectedDayObject,
+        selectedTime,
+        isSelectedDate,
+        message,
       };
     },
 
@@ -108,28 +145,51 @@ export const useFulfillment = defineStore({
         totalPrice,
       };
     },
-    getSelectedDay: (state) => (source) => {
-      return state.baskets[source]?.slot?.day;
-    },
-    isSelectedDate: (state) => (source, dateString) => {
-      return (
-        state.baskets[source] &&
-        state.baskets[source].slot &&
-        state.baskets[source].slot.day === dateString
-      );
-    },
+    getOrderData: (state) => {
+      const paymentType = 'card';
 
-    selectedTime: (state) => (source, dateString) => {
-      if (source === 'kitchen') {
-        if (state.baskets.kitchen.slot?.day === dateString) {
-          return state.baskets.kitchen.slot.time;
-        }
-      }
-      return null;
+      let lineItems = [];
+
+      Object.values(state.baskets).forEach((basket) => {
+        basket.items.forEach((item) => {
+          lineItems.push({
+            price: item.priceId,
+            quantity: item.quantity,
+          });
+        });
+      });
+
+      let orderData = {
+        lineItems,
+        paymentMethod: paymentType,
+      };
+
+      return orderData;
     },
   },
-
   actions: {
+    confirmationButton() {
+      let errors = [],
+        hasItems = false;
+
+      for (let [name, { items, slot }] of Object.entries(this.baskets)) {
+        if (items.length > 0) {
+          hasItems = true;
+          this.basketRequirements[name].forEach((field) => {
+            if (slot[field] === '')
+              errors.push(
+                `Error: please pick a ${field} for the ${name} basket`,
+              );
+          });
+        }
+      }
+
+      if (!hasItems)
+        errors.push('Error: please choose an item from at least one basket');
+      if (errors.length) console.error(errors.join('\n'));
+      return errors.length === 0;
+    },
+
     selectDate(source, dateString) {
       if (!this.baskets[source]) {
         console.error(`Invalid source: ${source}`);
@@ -214,17 +274,17 @@ export const useFulfillment = defineStore({
       } else {
         sourceItems.push({
           productId: product.productId,
+          priceId: product.stripe_metadata_stripePriceId,
           quantity: 1,
-          price: product.price,
+          price: parseInt(product.metadata.price), // Parse the price as an integer
           unitAmount: product.unitAmount,
           mainImage: product.mainImage,
-          shortName: product.shortName,
+          shortName: product.metadata.shortName,
           source: product.source,
         });
       }
     },
 
-    // Removes product(s) from the specified source basket
     removeItems(source, productId = 'all') {
       console.log('Current basket before removal:', this.baskets[source].items);
 

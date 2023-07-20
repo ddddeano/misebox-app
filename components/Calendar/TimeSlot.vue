@@ -10,7 +10,7 @@
     @click="statusActions[status]?.click && statusActions[status].click()"
   >
     <div class="time">{{ time }}</div>
-    <div class="status">{{ status }}</div>
+    <div v-show="status !== 'selected'" class="status">{{ status }}</div>
   </div>
 </template>
 
@@ -63,6 +63,8 @@ const statusActions = {
 
 <style scoped>
 .time-slot {
+  width: 80px; /* Add this */
+  height: 80px; /* Add this */
   display: flex;
   flex-direction: column;
   justify-content: center;

@@ -1,10 +1,13 @@
 <template>
-  <div class="index shop-index">
-    <h1 class="title">Shop</h1>
-    <SourceProductDelivery source="shop" />
+  <div class="index">
+    <h1>{{ source }}</h1>
+    <Products :source="source" :products="products" />
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+let source = 'shop';
+const { data: products } = await useFetch(`/api/products?source=${source}`);
+</script>
 
 <style scoped lang="scss"></style>

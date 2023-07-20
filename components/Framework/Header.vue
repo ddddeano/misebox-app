@@ -15,12 +15,12 @@
             size="medium"
             :url="user.userInfo.imageUrl"
           />
-          <FrameworkToggleNavButton
-            v-show="device === 'mobile'"
-            :rotate="showNav"
-            @toggle-nav="toggleNav"
-          />
         </client-only>
+        <FrameworkToggleNavButton
+          v-show="device === 'mobile'"
+          :rotate="showNav"
+          @toggle-nav="toggleNav"
+        />
       </div>
     </div>
     <div class="trans-wrapper">
@@ -59,27 +59,20 @@ const navigateToDashboard = () => {
 </script>
 
 <style scoped lang="scss">
-header {
-  position: fixed;
-  top: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  width: 100%;
-  height: 4.5rem;
-  box-shadow: var(--box-shadow-element);
-  z-index: 999;
-  padding: 0 1rem;
-}
-.avatar {
-  cursor: pointer;
-}
 .elements {
   display: flex;
   align-items: center;
   justify-content: space-between;
   width: 100%;
+  @media (min-width: 768px) {
+    width: 90%;
+    margin: auto; /* this is to center the content, remove if not needed */
+  }
+
+  @media (min-width: 992px) {
+    width: 70%;
+    margin: auto; /* this is to center the content, remove if not needed */
+  }
 }
 
 .header-right {

@@ -3,7 +3,6 @@ $secondary-color: #5f7055; // deep greenish grey
 $selected: #ebd376; // universal highlight color
 
 $colors: (
-  // App
   primary-color: $primary-color,
   primary-color-light: lighten($primary-color, 15%),
   primary-color-dark: darken($primary-color, 15%),
@@ -13,21 +12,29 @@ $colors: (
   secondary-color-dark-text: darken($secondary-color, 15%),
   selected: $selected,
   dev-todo: #e10ed7,
-  // Shop
   shop-main: #ffa07a,
-
-  // Main color for Shop
-  // Kitchen
   kitchen-main: #87cefa,
-
-  // Main color for Kitchen
-  // Production
   production-main: #f0e68c,
-  // Main color for Production
 );
+
+$shadows: (
+  primary-shadow: 0 0 10px rgba(0, 0, 0, 0.2),
+  secondary-shadow: 0 0 10px rgba($secondary-color, 0.2),
+  button-shadow: 0 0 10px rgba($primary-color, 0.2),
+  hover-shadow: 0px 2px 6px rgba($secondary-color, 0.2),
+);
+
+// min-width
+$mobile: 576px;
+$tablet: 768px;
+$desktop: 992px;
 
 :root {
   @each $key, $value in $colors {
+    --#{$key}: #{$value};
+  }
+
+  @each $key, $value in $shadows {
     --#{$key}: #{$value};
   }
 }

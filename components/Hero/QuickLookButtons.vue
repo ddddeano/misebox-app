@@ -44,9 +44,10 @@
 
         <div v-for="source in sources" class="delivery-list">
           <div class="delivery-item">
-            <div class="delivery-item-title">Shop</div>
-            <CalendarSlot :source="source" />
-            <CalendarSelection :source="source" />
+            <div class="delivery-item-title">{{ source }}</div>
+            {{ source }}
+            <!-- <CalendarSlot :source="source" />
+            <CalendarSelection :source="source" /> -->
           </div>
         </div>
       </div>

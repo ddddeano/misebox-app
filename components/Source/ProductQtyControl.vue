@@ -56,6 +56,6 @@ const decreaseQuantity = () => {
   height: 24px;
   border-radius: 50%;
   border: 1px solid var(--primary-color); /* border color */
-  box-shadow: 0 0 5px var(--secondary-color);
+  box-shadow: var(--primary-shadow);
 }
 </style>

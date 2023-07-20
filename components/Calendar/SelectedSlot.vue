@@ -42,12 +42,13 @@ const deselect = () => {
 <style scoped lang="scss">
 .selected-slot-container {
   display: flex;
-  flex-direction: row;
+  justify-content: space-between;
   align-items: center;
 }
 
 .selected-time-container,
 .selected-day-container {
+  flex: 1;
   margin-bottom: 1rem;
 }
 </style>

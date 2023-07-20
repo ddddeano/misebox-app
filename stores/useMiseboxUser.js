@@ -13,7 +13,7 @@ export const useMiseboxUser = defineStore('miseboxUser', {
       badge: '',
       email: '',
       faves: [],
-      payment: 'Cash',
+      payment: 'cash',
       defaultAddress: {
         deliveryZone: '',
         dwelling: '',

@@ -1,56 +1,90 @@
 @import url('https://fonts.googleapis.com/css2?family=Didact+Gothic&family=Poppins:wght@300;500;700&display=swap');
 
-body {
-  font-family: 'Poppins', sans-serif;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
+$breakpoints: (
+  mobile: 576px,
+  tablet: 768px,
+  desktop: 992px,
+);
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
 }
 
 html {
-  margin-top: 0;
-  padding-top: 0;
-}
-
-h1 {
+  font-size: 16px;
+  line-height: 1.5;
+  overflow-x: hidden;
   margin: 0;
+  padding: 0;
 }
 
-h2 {
-  text-align: left;
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Poppins', sans-serif;
+  color: var(--secondary-color-dark);
+  background-color: var(--primary-color-light);
+  overflow-x: hidden;
 }
 
-h3,
-h4,
-h5,
-h6 {
-  text-align: center;
-  margin: 1rem;
+pre {
+  white-space: pre-wrap;
+}
+
+hr {
+  border: 1px 0 0 solid;
+  height: 0;
+  overflow: visible;
+}
+
+img,
+svg,
+canvas,
+audio,
+iframe,
+embed,
+object {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+audio:not([controls]) {
+  display: none;
+}
+
+[type='checkbox'],
+[type='radio'] {
+  padding: 0;
 }
 
 button {
   padding: 12px 24px;
   border-radius: 10px;
   font-weight: bold;
-  box-shadow: 0 2px 4px rgba(var(--primary-color-dark), 0.1);
   white-space: nowrap;
   transition: all 0.2s ease-in-out;
   border: none;
   cursor: pointer;
   outline: none;
-}
+  margin-top: 6px;
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
 
-button.icon-text-button {
-  display: inline-flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 12px 12px 12px 24px;
-  box-shadow: inherit;
-}
+  &.icon-text-button {
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 12px 12px 24px;
+  }
 
-button:hover {
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(var(--primary-color-dark), 0.1);
+  &:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    background-color: var(--primary-color);
+    color: var(--secondary-color);
+  }
 }
 
 select,
@@ -61,7 +95,24 @@ input {
   cursor: pointer;
   appearance: none;
   margin-top: 0.1rem;
-  box-shadow: 0 2px 4px rgba(var(--primary-color-dark), 0.1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+h1 {
+  margin: 1rem;
+  align-self: start;
+
+  ::first-letter {
+    text-transform: uppercase;
+  }
+}
+
+h2 {
+  margin: 0.5rem;
+}
+
+p {
+  margin-top: 0;
 }
 
 label {
@@ -72,104 +123,30 @@ label {
   margin-bottom: 0.5rem;
 }
 
-p {
-  margin-top: 0;
+h1,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0.67em 0;
+  font-weight: 500;
+  line-height: 1.2;
 }
 
-.index {
-  padding-inline: 2px;
-  .title {
-    margin-bottom: 0.5em;
-    text-align: center;
-    font-weight: bold;
-    font-size: 2em;
-  }
-
-  .subheading {
-    font-size: 1rem;
-    line-height: 1.4;
-    padding: 0.4rem;
-    font-weight: 300;
-  }
-
-  .description,
-  .message {
-    font-family: 'Didact Gothic', sans-serif;
-    font-size: 1.5rem;
-    margin-bottom: 0.5rem;
-    padding: 1rem;
-    line-height: normal;
-    box-shadow: var(--box-shadow-element);
-    border-radius: 0.5rem;
-    text-align: center;
-  }
-}
-
-@media screen and (min-width: 800px) {
-  .index {
-    width: 1100px;
-  }
-}
-
-.icon {
-  font-size: 2rem;
-}
-
-.delivery-info {
-  color: white;
-  font-weight: bold;
-  text-align: center;
-  margin-bottom: 1rem;
-  background-color: var(--primary-color);
-}
-
-@media screen and (min-width: 576px) {
-  .message {
-    width: 800px;
-  }
-}
-
-.date-display {
-  grid-column: span 4;
-  padding: 0.5rem;
-  text-align: center;
-  background-color: var(--secondary-color);
-  color: var(--secondary-color-dark-text);
-  font-weight: bold;
-  border-radius: 0.25rem;
-  margin-bottom: 0.5rem;
-  font-size: 0.9rem;
-}
-
-.slots-container {
+header {
+  position: fixed;
+  top: 0;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
-.slot {
-  padding: 0.5rem;
-  text-align: center;
-  background-color: var(--primary-color-dark);
-  color: #fff;
-  border-radius: 0.25rem;
-  transition: background-color 0.2s ease;
-  font-size: 0.8rem;
   align-items: center;
   justify-content: center;
-
-  &:hover {
-    background-color: var(--primary-color-light);
-    cursor: pointer;
-  }
-
-  &.selected-time {
-    background-color: var(--selected);
-  }
-
-  &.unavailable {
-    background-color: var(--dev-todo);
-    cursor: not-allowed;
-  }
+  width: 100%;
+  height: 4.5rem;
+  box-shadow: var(--box-shadow-element);
+  background-color: var(--secondary-color-light);
+  z-index: 999;
+  padding: 0 1rem;
+}
+.avatar {
+  cursor: pointer;
 }

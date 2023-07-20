@@ -24,8 +24,8 @@ const props = defineProps({
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 100px; /* Adjust as necessary */
-  height: 100px; /* Adjust as necessary */
+  // width: 100px; /* Adjust as necessary */
+  // height: 100px; /* Adjust as necessary */
   padding: 5px;
   box-sizing: border-box;
 }

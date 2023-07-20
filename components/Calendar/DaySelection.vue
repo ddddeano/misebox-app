@@ -1,7 +1,6 @@
-<!-- Day-Selection -->
 <template>
-  <div class="scroll-container">
-    <div v-for="day in days" :key="day.id" class="scroll-item">
+  <div :class="`${display}-container`">
+    <div v-for="day in days" :key="day.id" class="item">
       <CalendarDayTile
         :source="source"
         :dateString="day.dateString"
@@ -18,6 +17,11 @@ const props = defineProps({
     required: true,
     validator: (value) => ['kitchen', 'shop', 'production'].includes(value),
   },
+  display: {
+    type: String,
+    default: 'grid', // Default to scroll if no prop provided
+    validator: (value) => ['grid', 'scroll'].includes(value), // Only allow 'grid' or 'scroll' as values
+  },
 });
 const calendar = useCalendarStore();
 const fulfillment = useFulfillment();
@@ -30,28 +34,25 @@ const select = (dateString) => {
   fulfillment.selectDate(props.source, dateString);
 };
 </script>
+
 <style scoped lang="scss">
+.grid-container {
+  display: grid;
+  grid-template-columns: repeat(
+    auto-fill,
+    minmax(80px, 1fr)
+  ); /* Adjust the minmax value as needed */
+  gap: 20px;
+  width: 100%;
+}
+
 .scroll-container {
   display: flex;
+  flex-direction: row;
   overflow-x: auto;
-  scrollbar-width: thin;
-  scrollbar-color: var(--primary-color) var(--background-color);
-  max-width: 100%; /* Adjust this value as needed */
 
-  &::-webkit-scrollbar {
-    width: 5px;
+  .item {
+    margin-right: 20px;
   }
-
-  &::-webkit-scrollbar-track {
-    background: var(--background-color);
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background-color: var(--primary-color);
-  }
-}
-.scroll-item {
-  flex: none;
-  margin-right: 10px; /* adjust as needed */
 }
 </style>

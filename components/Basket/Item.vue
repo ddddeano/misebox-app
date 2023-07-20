@@ -31,11 +31,18 @@ const props = defineProps({
 const fulfillment = useFulfillment();
 
 const incrementQuantity = () => {
-  fulfillment.addItem(props.item.source, props.item);
+  fulfillment.addProduct(props.item.source, props.item);
 };
 
 const decrementQuantity = () => {
-  fulfillment.removeItem(props.item.source, props.item);
+  if (props.item.quantity === 1) {
+    fulfillment.removeItems(props.item.source, props.item.productId);
+  } else {
+    fulfillment.decreaseProductQuantity(
+      props.item.source,
+      props.item.productId,
+    );
+  }
 };
 
 const totalPrice = computed(() => {
@@ -48,15 +55,6 @@ const totalPrice = computed(() => {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  align-items: center;
-  border-radius: 10px;
-  margin-bottom: 0.1rem;
-  width: auto;
-}
-
-.name {
-  font-size: 0.9rem; /* adjust as needed */
-  padding-left: 1rem;
 }
 
 .quantity-price {
@@ -95,5 +93,6 @@ const totalPrice = computed(() => {
   font-size: 0.9rem; /* adjust as needed */
   text-align: right;
   width: 3rem;
+  margin-left: 1.5rem;
 }
 </style>

@@ -29,7 +29,7 @@ const action = () => {
   flex-direction: column; // Arranges the child elements in a column
   justify-content: space-between; // Distributes space evenly between child elements
   padding: 0.5rem;
-  box-shadow: var(--box-shadow-element);
+  box-shadow: var(--primary-shadow);
   border-radius: 0.5rem;
   height: 100%;
   width: 100%;
@@ -55,7 +55,7 @@ const action = () => {
   background-color: var(--secondary-color);
   color: var(--primary-color);
   border: 1px solid var(--primary-color);
-  box-shadow: 0 0 5px var(--secondary-color);
+  box-shadow: var(--primary-shadow);
   transition: background-color 0.2s ease-in-out;
   margin-bottom: 0.5rem;
 

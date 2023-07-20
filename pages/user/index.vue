@@ -1,6 +1,6 @@
 <template>
   <div class="index user-index">
-    <h1 class="title">Authentication</h1>
+    <h1>Authentication</h1>
     <div class="card" v-if="user.exists">
       <div class="avatar">
         <img :src="user.userInfo.imageUrl" :alt="user.userInfo.displayName" />
@@ -43,7 +43,7 @@ const navigateToDashboard = () => {
   margin-top: 2rem;
   border-radius: 8px;
   border: 2px solid var(--secondary-color);
-  box-shadow: var(--box-shadow-element);
+  box-shadow: var(--primary-shadow);
   padding: 1rem;
 }
 

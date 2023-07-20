@@ -2,11 +2,9 @@
   <div class="layout">
     <FrameworkHeader />
     <div class="content">
-      <div v-show="device !== 'mobile'">
-        <client-only>
-          <Framework-NavigationLinks />
-        </client-only>
-      </div>
+      <client-only>
+        <FrameworkNavigationLinks v-if="device !== 'mobile'" />
+      </client-only>
       <slot />
     </div>
     <FrameworkFooter />

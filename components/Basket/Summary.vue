@@ -1,18 +1,24 @@
 <template>
   <div class="basket-summary" :class="`source-${basket.name}`">
-    <div class="header">
+    <div class="summary-top">
       <div class="left">
         <h2>{{ basket.name }}</h2>
         <div class="total">
-          {{ sourceDetail.numberOfItems }} Items | {{ sourceDetail.totalPrice }}
+          <span class="total-items"
+            >{{ basketSummary.numberOfItems }} Items</span
+          >
+          <span class="total-price">{{ basketSummary.totalPrice }}</span>
         </div>
       </div>
-      <div class="right"><CalendarSelectedSlot :source="basket.name" /></div>
+      <div class="right">
+        <CalendarSelectedSlot :source="basket.name" />
+      </div>
     </div>
     <client-only>
       <CalendarDaySelection
         v-if="!sourceDetail.slot.day"
         :source="basket.name"
+        displayMode="grid"
       />
       <CalendarTimeSlotSelection
         v-if="!sourceDetail.slot.time && 'time' in sourceDetail.slot"
@@ -20,11 +26,7 @@
         :dateString="sourceDetail.slot.day"
       />
     </client-only>
-    <div
-      v-for="item in sourceDetail.items"
-      :key="item.productId"
-      class="basket-item"
-    >
+    <div v-for="item in sourceDetail.items" :key="item.productId">
       <BasketItem :item="item" />
     </div>
   </div>
@@ -43,31 +45,48 @@ const props = defineProps({
 const sourceDetail = computed(() =>
   fulfillment.sourceDetails(props.basket.name),
 );
+
+const basketSummary = computed(() => {
+  const totalPriceFormatted = new Intl.NumberFormat('en-CH', {
+    style: 'currency',
+    currency: 'CHF',
+  }).format(sourceDetail.value.totalPrice);
+
+  return {
+    numberOfItems: `${sourceDetail.value.numberOfItems}`,
+    totalPrice: totalPriceFormatted,
+  };
+});
 </script>
 
 <style scoped lang="scss">
 .basket-summary {
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
-  align-items: flex-start; // change this to start to align items to the left
   width: 100%;
   border-radius: 4px;
-  padding: 1rem; // increase padding a bit
+  padding: 1rem;
   margin-bottom: 1.5rem;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); // add a shadow for depth
-  background-color: white; // add a background color
+  box-shadow: var(--primary-shadow);
+  background-color: white;
 
-  .header {
+  .summary-top {
     display: flex;
     justify-content: space-between;
-    align-items: center; // align items in the center
     width: 100%;
-    margin-bottom: 1rem; // increase bottom margin a bit
+    margin-bottom: 1rem;
 
     .left {
       display: flex;
       flex-direction: column;
       align-items: flex-start;
+
+      .total {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+      }
     }
 
     .right {
@@ -81,23 +100,13 @@ const sourceDetail = computed(() =>
     margin: 0;
     font-size: 1.2rem;
     font-weight: bold;
-    color: var(
-      --text-color-primary
-    ); // add a primary text color variable in your CSS root
+    color: var(--text-color-primary);
   }
 
   .total {
-    margin-top: 0.2rem; // reduce the top margin a bit
+    margin-top: 0.2rem;
     font-size: 0.9rem;
-    color: var(
-      --text-color-secondary
-    ); // add a secondary text color variable in your CSS root
-  }
-
-  .basket-item {
-    margin-top: 0.5rem;
-    border-top: 1px solid var(--border-color); // add a border color variable in your CSS root
-    padding-top: 0.5rem;
+    color: var(--text-color-secondary);
   }
 }
 
