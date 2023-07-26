@@ -1,56 +1,76 @@
-<!-- pages/checkout.vue -->
-
 <template>
   <div class="checkout">
-    <h1>Checkout</h1>
-    <pre>{{ fulfillment.getOrderData }}</pre>
-    <p>Are you happy then confirm?</p>
-    <button class="confirm-button interactive" @click="confirm">
-      Confirm Order
-    </button>
+    <div class="form" v-if="show === 'form'">
+      <button @click="formBackButton">back</button>
+      <BasketFulfillmentForm />
+      <button @click="showSummary">confirm</button>
+    </div>
+    <div class="summary" v-if="show === 'summary'">
+      <BasketOrderSummary
+        v-if="isFormValid"
+        :fulfillmentDetails="fulfillment.fulfillmentDetails"
+        @confirmOrder="confirmOrder"
+        @summaryBackButton="summaryBackButton"
+      />
+      <button @click="summaryBackButton">back</button>
+    </div>
   </div>
 </template>
 
 <script setup>
-const fulfillment = useFulfillment();
 const router = useRouter();
+const fulfillment = useFulfillment();
+const isFormValid = ref(false);
+const show = ref('form');
 import { loadStripe } from '@stripe/stripe-js';
-const config = useRuntimeConfig();
 
-const stripe = await loadStripe(config.public.stripePublicKey);
+const {
+  public: { stripePublicKey },
+} = useRuntimeConfig();
 
-const confirm = async () => {
-  const { data } = await useFetch('/api/create-order', {
+const stripePromise = loadStripe(stripePublicKey);
+
+const formBackButton = () => {
+  router.push('/basket');
+};
+const summaryBackButton = () => {
+  show.value = 'form';
+};
+
+const showSummary = () => {
+  isFormValid.value = true;
+  show.value = 'summary';
+};
+
+const confirmOrder = async () => {
+  console.log(
+    'Hello from before api',
+    fulfillment.fulfillmentDetails.orderPayload,
+  );
+  const { data, error } = await useFetch('/api/create-order', {
     method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(fulfillment.getOrderData),
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(fulfillment.fulfillmentDetails.orderPayload),
   });
 
-  switch (data.value.paymentMethod) {
-    case 'card':
-      console.log('preparing stripe checkout');
-      stripe
-        .redirectToCheckout({ sessionId: data.value.apiSessionId })
-        .then(function (result) {
-          if (result.error) {
-            // Inform the user if there was an error
-            console.log(result.error.message);
-          }
-        })
-        .catch(function (error) {
-          console.error('Error:', error);
-        });
-      break;
-    case 'cash':
-      console.log('Cash Payment method not supported yet');
-      break;
-    case 'twint':
-      console.log('Twint Payment method not supported yet');
-      break;
-    default:
-      console.log('Payment method not supported yet');
+  if (error.value) {
+    console.error(error.value);
+    return;
+  }
+
+  console.log(JSON.stringify(data.value));
+
+  if (data.value.processing === 'stripe') {
+    const stripe = await stripePromise;
+    await stripe.redirectToCheckout({ sessionId: data.value.sessionId });
+  } else {
+    router.push({
+      path: `/basket/confirmation`,
+      query: {
+        orderId: data.value.docRef.id,
+        paymentMethod: data.value.processing,
+      },
+    });
   }
 };
 </script>
@@ -61,11 +81,40 @@ const confirm = async () => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  text-align: center;
+  text-align: left;
+  background-color: var(--primary-color-light);
+  padding: 20px;
+  border-radius: 5px;
 }
 
-.confirm-button {
-  display: block;
-  margin: 1rem auto;
+.form,
+.summary {
+  width: 100%;
+  box-shadow: var(--secondary-shadow);
+  background-color: var(--primary-color);
+  border-radius: 5px;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+}
+
+button {
+  padding: 10px;
+  margin-bottom: 20px;
+  background-color: var(--secondary-color);
+  color: var(--primary-color);
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: var(--secondary-color-dark);
+    color: var(--primary-color-light);
+  }
+}
+
+h1 {
+  color: var(--secondary-color-dark);
+  font-size: 2rem;
 }
 </style>

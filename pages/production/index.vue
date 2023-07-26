@@ -1,7 +1,7 @@
 <template>
   <div class="index">
     <h1>{{ source }}</h1>
-    <Products :source="source" :products="products" />
+    <ProductionProducts :products="products" />
   </div>
 </template>
 

@@ -6,7 +6,7 @@ export default defineEventHandler(async (event) => {
   let productsRef = firestore.collection('products');
 
   if (source) {
-    productsRef = productsRef.where('source', '==', source);
+    productsRef = productsRef.where('metadata.source', '==', source);
   }
 
   // Fetch the products

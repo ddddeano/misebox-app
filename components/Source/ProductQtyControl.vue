@@ -19,19 +19,19 @@ const fulfillment = useFulfillment();
 
 const qty = computed(() => {
   return fulfillment.productDetails(
-    props.product.source,
+    props.product.metadata.source,
     props.product.productId,
   ).productQuantity;
 });
 
 const increaseQuantity = () => {
-  fulfillment.addProduct(props.product.source, props.product);
+  fulfillment.addProduct(props.product.metadata.source, props.product);
 };
 
 const decreaseQuantity = () => {
   try {
     fulfillment.decreaseProductQuantity(
-      props.product.source,
+      props.product.metadata.source,
       props.product.productId,
     );
   } catch (error) {

@@ -5,6 +5,7 @@ const DEFAULT_IMAGE_URL =
   'https://firebasestorage.googleapis.com/v0/b/misebox-78f9c.appspot.com/o/Avatar.png?alt=media&token=15d85b80-8088-4c72-a33e-d0c62c4fef23';
 
 export const useMiseboxUser = defineStore('miseboxUser', {
+  persist: true,
   state: () => ({
     userInfo: {
       id: '',
@@ -129,7 +130,7 @@ export const useMiseboxUser = defineStore('miseboxUser', {
         badge: '',
         email: '',
         faves: [],
-        payment: 'Cash',
+        payment: 'cash',
         defaultAddress: {
           deliveryZone: '',
           dwelling: '',
@@ -144,5 +145,4 @@ export const useMiseboxUser = defineStore('miseboxUser', {
       this.exists = false;
     },
   },
-  persist: true,
 });

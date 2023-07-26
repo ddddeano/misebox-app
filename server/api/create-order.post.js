@@ -16,50 +16,62 @@ export default defineEventHandler(async (event) => {
     body = event.node.req.body;
   }
 
-  const { paymentMethod, lineItems } = body;
+  console.log('Body received:', body);
 
-  let apiSessionId = '';
-
+  let { paymentMethod, line_items } = body;
+  let processing = '';
+  let sessionId = '';
+  if (process.env.NODE_ENV === 'development') {
+    line_items = [{ price: 'price_1NXGkcAKk2OnxQzLhxjxdgm7', quantity: 1 }];
+  }
+  // Create the order document for all payment methods
   const docRef = await firestore.collection('orders').add({
     paymentMethod: paymentMethod,
-    items: lineItems,
+    items: line_items,
     status: 'pending',
   });
 
   switch (paymentMethod) {
+    case 'apple':
     case 'card':
-      // Create Stripe checkout session with the line items
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
-        line_items: lineItems,
+        line_items: line_items,
         mode: 'payment',
-        success_url: `${apiUrl}/basket/confirmation-${docRef.id}`,
+        success_url: `${apiUrl}/basket/confirmation?orderId=${docRef.id}`,
         cancel_url: `${apiUrl}/cancel`,
       });
 
-      // Update the Firestore document with the session ID
       await firestore.collection('orders').doc(docRef.id).update({
         sessionId: session.id,
+        method: 'stripe',
       });
-      apiSessionId = session.id;
+
+      processing = 'stripe';
+      sessionId = session.id; // Save the session ID
       break;
+
     case 'cash':
-      // Handle cash payment
-      // Update the order document in Firestore
       await firestore.collection('orders').doc(docRef.id).update({
-        status: 'processing',
+        method: 'cash',
       });
+      processing = 'cash';
       break;
+
     case 'twint':
-      // Handle twint payment
-      // Update the order document in Firestore
       await firestore.collection('orders').doc(docRef.id).update({
-        status: 'processing',
+        method: 'twint',
       });
+      processing = 'twint';
       break;
+
     default:
       throw new Error(`Unsupported payment method: ${paymentMethod}`);
   }
 
-  return { paymentMethod, lineItems, apiSessionId, docRef };
+  return {
+    processing,
+    sessionId,
+    docRef,
+  };
 });

@@ -1,7 +1,7 @@
 <template>
   <div class="index basket-index">
-    <h1>Basket Confirmation</h1>
-    <div v-if="!fulfillment.basketDetails.hasItems" class="empty-basket">
+    <h1>Basket</h1>
+    <div v-if="!fulfillment.fulfillmentDetails.hasItems" class="empty-basket">
       Your basket is empty
     </div>
     <div v-else class="baskets">
@@ -18,6 +18,7 @@
 
 <script setup>
 const fulfillment = useFulfillment();
+const user = useMiseboxUser();
 const router = useRouter();
 
 const sourceDetails = (source) => {
@@ -33,6 +34,15 @@ const confirm = async () => {
     console.error('Baskets are not ready for confirmation.');
   }
 };
+
+onMounted(() => {
+  fulfillment.updateCustomerAndOrAddress(
+    user.userInfo.displayName,
+    user.userInfo.id,
+    user.userInfo.payment,
+    user.userInfo.defaultAddress,
+  );
+});
 </script>
 
 <style lang="scss" scoped>

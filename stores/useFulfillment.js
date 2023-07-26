@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia';
 
-export const useFulfillment = defineStore({
-  id: 'fulfillment',
+export const useFulfillment = defineStore('fulfillment', {
+  persist: true,
   state: () => ({
     baskets: {
       kitchen: {
@@ -27,49 +27,99 @@ export const useFulfillment = defineStore({
         items: [],
       },
     },
+    paymentMethod: '',
+    customer: {
+      name: '',
+      id: '',
+    },
+    address: {
+      deliveryZone: '',
+      dwelling: '',
+      street: '',
+    },
   }),
   getters: {
-    basketDetails: (state) => {
-      const hasItems = Object.values(state.baskets).some(
+    fulfillmentDetails: (state) => {
+      // Check if baskets have items
+      let hasItems = Object.values(state.baskets).some(
         (basket) => basket.items.length > 0,
       );
-      const numberOfItems = Object.values(state.baskets).reduce(
-        (sum, basket) => sum + basket.items.length,
+
+      // Get the total number of items
+      let numberOfItems = Object.values(state.baskets).reduce(
+        (total, basket) =>
+          total + basket.items.reduce((acc, item) => acc + item.quantity, 0),
         0,
       );
-      const totalPrice = Object.values(state.baskets).reduce((sum, basket) => {
-        return (
-          sum +
-          basket.items.reduce(
-            (subtotal, item) => subtotal + item.price * item.quantity,
-            0,
-          )
-        );
-      }, 0);
 
-      const fulfillmentItems = Object.values(state.baskets).reduce(
-        (items, basket) => {
+      // Calculate the total price
+      let totalPrice = Object.values(state.baskets).reduce(
+        (total, basket) =>
+          total +
+          basket.items.reduce(
+            (acc, item) => acc + item.price * item.quantity,
+            0,
+          ),
+        0.0,
+      );
+
+      // Get line items for order payload
+      let lineItems = Object.values(state.baskets).flatMap((basket) =>
+        basket.items.map((item) => ({
+          price: item.priceId,
+          quantity: item.quantity,
+        })),
+      );
+
+      // Get order summary and delivery information
+      // Get order summary
+      // Get order summary
+      let summary = Object.entries(state.baskets).reduce(
+        (acc, [name, basket]) => {
           if (basket.items.length > 0) {
-            return [
-              ...items,
-              ...basket.items.map((item) => ({
-                productId: item.productId,
+            // Only include baskets with items
+            acc[name] = {
+              items: basket.items.map((item) => ({
+                name: item.shortName,
                 quantity: item.quantity,
               })),
-            ];
+              deliveryInfo: Object.entries(basket.slot).reduce(
+                (slotInfo, [key, value]) => {
+                  slotInfo[key] = value ? value : 'N/A';
+                  return slotInfo;
+                },
+                {},
+              ),
+            };
           }
-          return items;
+          return acc;
         },
-        [],
+        {},
       );
+
+      // Get the customer info
+      let customer = state.customer;
+
+      // Get the address
+      let address = state.address;
+
+      // Create the order payload
+      let orderPayload = {
+        line_items: lineItems,
+        paymentMethod: state.paymentMethod,
+      };
 
       return {
         hasItems,
         numberOfItems,
         totalPrice,
-        fulfillmentItems,
+        customer,
+        address,
+        summary,
+        orderPayload,
       };
     },
+
     basketRequirements: (state) => {
       const requirements = {};
       for (let [name, { slot }] of Object.entries(state.baskets)) {
@@ -145,29 +195,16 @@ export const useFulfillment = defineStore({
         totalPrice,
       };
     },
-    getOrderData: (state) => {
-      const paymentType = 'card';
-
-      let lineItems = [];
-
-      Object.values(state.baskets).forEach((basket) => {
-        basket.items.forEach((item) => {
-          lineItems.push({
-            price: item.priceId,
-            quantity: item.quantity,
-          });
-        });
-      });
-
-      let orderData = {
-        lineItems,
-        paymentMethod: paymentType,
-      };
-
-      return orderData;
-    },
   },
   actions: {
+    updateCustomerAndOrAddress(name, id, paymentMethod, address) {
+      this.customer.name = name;
+      this.customer.id = id;
+      this.paymentMethod = paymentMethod;
+      this.address.deliveryZone = address.deliveryZone;
+      this.address.dwelling = address.dwelling;
+      this.address.street = address.street;
+    },
     confirmationButton() {
       let errors = [],
         hasItems = false;
@@ -199,16 +236,12 @@ export const useFulfillment = defineStore({
       // Always set the selected day to dateString, removing the possibility to deselect it.
       this.baskets[source].slot.day = dateString;
     },
-    clearDate(source) {
-      if (!this.baskets[source]) {
-        console.error(`Invalid source: ${source}`);
-        return;
-      }
 
-      this.baskets[source].slot.day = '';
-      this.baskets[source].slot.time = '';
+    updatePaymentMethod(newMethod) {
+      console.log(`Payment Method before:  ${this.paymentMethod}`); // Log the current payment method
+      this.paymentMethod = newMethod; // Update the payment method
+      console.log(`Payment Method after:  ${this.paymentMethod}`); // Log the updated payment method
     },
-
     deselectTime(source) {
       console.log(`deselectTime called with source=${source}`);
 
@@ -280,7 +313,7 @@ export const useFulfillment = defineStore({
           unitAmount: product.unitAmount,
           mainImage: product.mainImage,
           shortName: product.metadata.shortName,
-          source: product.source,
+          source: product.metadata.source,
         });
       }
     },
@@ -374,5 +407,4 @@ export const useFulfillment = defineStore({
       this.baskets[source].slot.time = '';
     },
   },
-  persist: true,
 });

@@ -17,7 +17,7 @@ exports.newUserSignUp = functions.auth.user().onCreate(async (user) => {
     displayName: provider.displayName || "",
     email: provider.email || "",
     faves: [],
-    payment: "Cash",
+    payment: "cash",
     defaultAddress: {
       deliveryZone: "",
       dwelling: "",

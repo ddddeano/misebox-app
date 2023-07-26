@@ -25,26 +25,25 @@ const action = () => {
 
 <style lang="scss" scoped>
 .navigation {
-  display: flex; // Turns .navigation into a flex container
-  flex-direction: column; // Arranges the child elements in a column
-  justify-content: space-between; // Distributes space evenly between child elements
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
   padding: 0.5rem;
   box-shadow: var(--primary-shadow);
   border-radius: 0.5rem;
   height: 100%;
   width: 100%;
-  max-width: 300px;
 }
 
 .title {
-  text-align: left; // Align the text to the left
+  text-align: left;
   line-height: 1.5rem;
   margin-left: 0.3rem;
   font-size: 1.1rem;
 }
 
 .subheading {
-  margin-bottom: auto; // Increase the bottom margin
+  margin-bottom: auto;
   font-size: 0.9rem;
 }
 

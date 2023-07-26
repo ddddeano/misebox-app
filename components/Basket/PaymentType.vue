@@ -1,16 +1,20 @@
 <template>
   <div
     class="payment-type"
-    :class="{ disabled: !paymentType.enabled }"
+    :class="{
+      disabled: !payment.enabled,
+      active: payment.name === fulfillment.paymentMethod,
+    }"
     @click="selectOption"
   >
-    <div class="payment-type-label">{{ paymentType.name }}</div>
-    <Icon :name="paymentType.icon" />
+    <div class="payment-type-label">{{ payment.name }}</div>
+    <Icon :name="payment.icon" />
   </div>
 </template>
+
 <script setup>
 const props = defineProps({
-  paymentType: {
+  payment: {
     type: Object,
     required: true,
   },
@@ -19,9 +23,10 @@ const props = defineProps({
 const fulfillment = useFulfillment();
 
 const selectOption = () => {
-  if (props.paymentType.enabled) {
-    fulfillment.payment = props.paymentType.name;
+  if (props.payment.enabled) {
+    fulfillment.paymentMethod = props.payment.name;
   }
+  console.log('payment type updated:', fulfillment.paymentMethod);
 };
 </script>
 
@@ -30,35 +35,43 @@ const selectOption = () => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
   text-align: center;
-  justify-content: space-evenly;
-  height: 100px;
-  width: 100px;
-  padding: 10px;
-  border: 1px solid var(--dev-todo);
+  height: 100px; // fixed height
+  width: 100px; // fixed width
+  padding: 15px;
+  border: 1px solid var(--primary-color);
   border-radius: 12px;
-  background-color: var(--dev-todo);
-  margin-bottom: 1rem;
+  background-color: var(--primary-color-light);
+  margin: 0.5rem;
+  transition: all 0.3s ease;
+}
+
+.payment-type-label {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 0.5rem;
 }
 
 .payment-type.disabled {
   opacity: 0.5;
   cursor: not-allowed;
-  background-color: var(--dev-todo);
+  background-color: var(--secondary-color-light);
 }
 
 .payment-type.active {
-  background-color: var(--dev-todo);
-  color: var(--secondary-color-light);
+  background-color: var(--selected);
+  border-color: var(--secondary-color);
 }
 
-.payment-type:hover {
+.payment-type:hover:not(.disabled) {
   transform: scale(1.05);
+  border-color: var(--secondary-color);
 }
 
-.payment-type-label {
-  font-size: 16px;
-  font-weight: bold;
+.icon {
+  font-size: 2rem;
+  color: var(--secondary-color-dark);
 }
 
 .coming-soon {

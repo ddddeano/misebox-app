@@ -16,8 +16,6 @@ export function generatePeriod(startOffset = 0, endOffset = 0, unit = 'weeks') {
 }
 
 export function generateGlobalCalendar(currentPeriod, firestoreCalendar) {
-  const { startDate, endDate } = currentPeriod;
-
   const globalCalendar = currentPeriod.dates.map((dateString) => {
     const dayData = firestoreCalendar.find(
       (day) => day.dateString === dateString,

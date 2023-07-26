@@ -66,12 +66,6 @@ const sourceDetail = computed(() => fulfillment.sourceDetails(props.source));
 
 <style scoped lang="scss">
 .products-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 20px;
-  width: 100%;
-
   .products-calendar-container {
     display: flex;
     flex-direction: column;
@@ -104,8 +98,5 @@ const sourceDetail = computed(() => fulfillment.sourceDetails(props.source));
       box-sizing: border-box;
     }
   }
-}
-.flag {
-  text-align: center;
 }
 </style>

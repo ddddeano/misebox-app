@@ -58,18 +58,16 @@ const basketSummary = computed(() => {
   };
 });
 </script>
-
 <style scoped lang="scss">
 .basket-summary {
   display: flex;
-  flex-grow: 1;
   flex-direction: column;
   width: 100%;
-  border-radius: 4px;
   padding: 1rem;
   margin-bottom: 1.5rem;
-  box-shadow: var(--primary-shadow);
-  background-color: white;
+  background-color: #f6f6f6;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 
   .summary-top {
     display: flex;
@@ -86,6 +84,7 @@ const basketSummary = computed(() => {
         display: flex;
         flex-direction: column;
         align-items: flex-start;
+        color: #333;
       }
     }
 
@@ -100,28 +99,25 @@ const basketSummary = computed(() => {
     margin: 0;
     font-size: 1.2rem;
     font-weight: bold;
-    color: var(--text-color-primary);
+    color: #333;
   }
 
   .total {
     margin-top: 0.2rem;
     font-size: 0.9rem;
-    color: var(--text-color-secondary);
+    color: #333;
   }
 }
 
 .basket-summary.source-kitchen {
-  background-color: var(--kitchen-main);
-  filter: brightness(120%);
+  background-color: #2a9d8f;
 }
 
 .basket-summary.source-shop {
-  background-color: var(--shop-main);
-  filter: brightness(120%);
+  background-color: #e9c46a;
 }
 
 .basket-summary.source-production {
-  background-color: var(--production-main);
-  filter: brightness(120%);
+  background-color: #f4a261;
 }
 </style>
